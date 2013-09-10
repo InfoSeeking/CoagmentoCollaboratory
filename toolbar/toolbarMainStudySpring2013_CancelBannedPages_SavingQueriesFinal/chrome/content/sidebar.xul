@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "chrome://sidebar/locale/sidebar.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"  title="&sidebar.title;" id="&sidebar.id;">
+<head>
+<title>&sidebar.title;</title>
+<script type="application/x-javascript" src="coagmento.js"></script>
+</head>
+<body onload="populateSidebar();">
+
+</body>
+</html>

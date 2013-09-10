@@ -1,0 +1,35 @@
+@namespace url(http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul);
+hbox#browser { 
+    direction: rtl !important;
+     }         
+hbox#browser > vbox {
+    direction: ltr !important; 
+    }
+	
+toolbarbutton{
+	style="font-size: 12px; font-weight:bold";
+}
+
+#coagmentoSearchButton {
+    list-style-image: url("chrome://coagmento/skin/cutemenu.png");
+  -moz-image-region: rect(176px 64px 192px 48px);  
+  -moz-box-orient: horizontal;
+}
+
+#coagmentoSnipButton {
+    list-style-image: url("chrome://coagmento/skin/cutemenu.png");
+  -moz-image-region: rect(32px 96px 48px 80px);  
+  -moz-box-orient: horizontal;
+}
+
+#coagmentoEditorButton {
+    list-style-image: url("chrome://coagmento/skin/cutemenu.png");
+  -moz-image-region: rect(0px 205px 17px 192px);  
+  -moz-box-orient: horizontal;
+}
+
+.blue { 
+    color:blue;
+    font-weight:bold;
+    font-size:100%; 
+} 

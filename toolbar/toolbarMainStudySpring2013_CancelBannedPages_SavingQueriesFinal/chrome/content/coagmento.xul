@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<?xml-stylesheet 
+  href="chrome://coagmento/skin/overlay.css"
+  type="text/css" 
+?>
+<!DOCTYPE overlay SYSTEM "chrome://coagmento/locale/sidebar.dtd">
+<overlay id="coagmento-Overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+<script type="application/x-javascript" src="chrome://coagmento/content/coagmento.js" />
+
+    <toolbox id="navigator-toolbox">
+        <toolbar id="coagmento-Toolbar" toolbarname="Coagmento Toolbar" accesskey="S"
+                 class="chromeclass-toolbar" context="toolbar-context-menu"
+                 hidden="false" persist="hidden">
+
+                <toolbarbutton id="coagmentoSearchButton"
+					tooltiptext="Search" 
+					label="Search"
+                                        disabled="true"
+					hidden="true"
+					oncommand="search()"/>
+                  
+				<toolbarseparator id="toolbarseparatorSearch" hidden="true"/>
+
+				<toolbarbutton id="coagmentoSnipButton"
+					tooltiptext="Snip highlighted text from the current page" 
+					label="Snip" 
+                                        disabled="true"
+										hidden="true"
+					oncommand="snip()" />
+
+ 				<toolbarseparator id="toolbarseparatorSnip" hidden="true"/>
+				
+				<toolbarbutton id="coagmentoEditorButton"
+					tooltiptext="Access to the text editor" 
+					label="Editor" 
+                                        disabled="true"
+										hidden="true"
+					oncommand="editor()" />
+
+ 				<toolbarseparator id="toolbarseparatorEditor" hidden="true"/>
+ 				
+ 				<description class="blue" id="msgs"/>
+        </toolbar>
+    </toolbox>
+
+	<menupopup id="viewSidebarMenu">
+    	<menuitem key="key_openSidebar" 
+			observes="viewSidebar"  />
+  	</menupopup>
+  
+	<keyset id="mainKeyset">
+    	<key id="key_openSidebar" command="viewSidebar"
+         	key="&openSidebar.commandkey;"
+         	modifiers="&openSidebar.modifierskey;" />
+  	</keyset>
+ 
+	<broadcasterset id="mainBroadcasterSet">
+    	<broadcaster id="viewSidebar"
+                 label="&sidebar.title;"
+                 autoCheck="false"
+                 type="checkbox"
+                 group="sidebar"
+                 sidebarurl="http://coagmento.rutgers.edu/spring2013/pilot1/sidebar/sidebar.php"
+                 sidebartitle="&sidebar.title;"
+                 oncommand="toggleSidebar('viewSidebar');" />
+	</broadcasterset>
+	
+</overlay>

@@ -1,0 +1,681 @@
+<?php
+	require_once('core/Connection.class.php');
+?>
+<html>
+<head>
+	<title>
+    	Lab Search Study Signup
+    </title>
+<script type="text/javascript">
+	
+	var selectedStudy = 0;
+	var alertColor = "Red";
+	var okColor = "White";
+		
+	function switchMenu(obj) 
+	{
+		var el = document.getElementById(obj);
+		if ( el.style.display != "none" ) 
+		{
+			el.style.display = 'none';
+		}
+		else 
+		{
+			el.style.display = '';
+		}
+	}
+	
+	function selectStudy(obj) 
+	{
+		var num = obj.options[obj.selectedIndex].value;
+		
+		switch(num)
+		{
+			case "1":
+					selectedStudy = 1;
+					document.getElementById("single").style.display = "block";
+					document.getElementById("dyad").style.display = "none";
+					document.getElementById("triad").style.display = "none";
+					document.getElementById("alertStudy").style.display = "none";			
+					break;
+			case "2":
+					selectedStudy = 2;
+					document.getElementById("single").style.display = "none";
+					document.getElementById("dyad").style.display = "block";
+					document.getElementById("triad").style.display = "none";
+					document.getElementById("alertStudy").style.display = "none";			
+					break;
+					
+			case "3":
+					selectedStudy = 3;
+					document.getElementById("single").style.display = "none";
+					document.getElementById("dyad").style.display = "none";
+					document.getElementById("triad").style.display = "block";
+					document.getElementById("alertStudy").style.display = "none";			
+					break;
+					
+			default:
+					document.getElementById("single").style.display = "none";
+					document.getElementById("dyad").style.display = "none";
+					document.getElementById("triad").style.display = "none";
+					document.getElementById("alertStudy").style.display = "none";				
+					selectedStudy = 0;
+					break;
+		
+		}
+	}
+	
+	function validateForm(form)
+	{
+		var isValid = 1;
+		
+		if (selectedStudy == 0)
+		{
+			document.getElementById("alertStudy").style.display = "block";
+			isValid = 0;
+		}
+		else
+		{
+			document.getElementById("alertStudy").style.display = "none";
+			if (selectedStudy == 3)
+			{		
+				form.action = "signupTriad.php";
+				isValid &= validateField(form.TfirstName1);
+				isValid &= validateField(form.TlastName1);
+				isValid &= validateEmail(form.Temail1,form.TreEmail1);
+				isValid &= isRadioSelected(form.Tenglish1, "Tenglish1");
+				isValid &= isRadioSelected(form.Tsex1, "Tsex1");
+				isValid &= validateField(form.TfirstName2);
+				isValid &= validateField(form.TlastName2);
+				isValid &= validateEmail(form.Temail2,form.TreEmail2);
+				isValid &= isRadioSelected(form.Tenglish2, "Tenglish2");
+				isValid &= isRadioSelected(form.Tsex2, "Tsex2");
+				isValid &= validateField(form.TfirstName3);
+				isValid &= validateField(form.TlastName3);
+				isValid &= validateEmail(form.Temail3,form.TreEmail3);
+				isValid &= isRadioSelected(form.Tenglish3, "Tenglish3");
+				isValid &= isRadioSelected(form.Tsex3, "Tsex3");
+				isValid &= validateField(form.TpastCollab);		
+				isValid &= notEqualEmails(form.Temail1,form.Temail2,form.Temail3,"TduplicateEmail");
+				//isValid &= isCheckboxSelected(form.viewInstructionsCheckCollab, "viewInstructionsCheckCollab");
+			}
+			else			
+			if (selectedStudy == 2)
+			{		
+				form.action = "signupDyad.php";
+				isValid &= validateField(form.DfirstName1);
+				isValid &= validateField(form.DlastName1);
+				isValid &= validateEmail(form.Demail1,form.DreEmail1);
+				isValid &= isRadioSelected(form.Denglish1, "Denglish1");
+				isValid &= isRadioSelected(form.Dsex1, "Dsex1");
+				isValid &= validateField(form.DfirstName2);
+				isValid &= validateField(form.DlastName2);
+				isValid &= validateEmail(form.Demail2,form.DreEmail2);
+				isValid &= isRadioSelected(form.Denglish2, "Denglish2");
+				isValid &= isRadioSelected(form.Dsex2, "Dsex2");
+				isValid &= validateField(form.DpastCollab);
+				isValid &= notEqualEmails(form.Demail1,form.Demail2,"","DduplicateEmail");
+				//isValid &= isCheckboxSelected(form.viewInstructionsCheckCollab, "viewInstructionsCheckCollab");
+			}
+			else
+				if (selectedStudy == 1)
+				{
+					form.action = "signupSingle.php";
+					isValid &= validateField(form.firstName);
+					isValid &= validateField(form.lastName);
+					isValid &= validateEmail(form.email,form.reEmail);
+					isValid &= isRadioSelected(form.english, "english");
+					isValid &= isRadioSelected(form.sex, "sex");
+					//isValid &= isCheckboxSelected(form.viewInstructionsCheckSingle, "viewInstructionsCheckSingle");
+				}
+				
+					
+		}
+		isValid &= isTimeSlotSelected(form.slot);	
+		
+		if (isValid==1)
+		{
+			document.getElementById("alertForm").style.display = "none";
+			return true;
+		}
+		else
+		{
+			document.getElementById("alertForm").style.display = "block";
+			return false;
+		}
+	}
+	
+	function notEqualEmails(obj1, obj2, obj3, id)
+	{
+		if (selectedStudy==3)
+		{
+			if ((obj1.value==obj2.value)||(obj1.value==obj3.value)||(obj2.value==obj3.value))
+			{
+				document.getElementById(id).style.display = "block";
+				return false;
+			}
+			else
+			{
+				document.getElementById(id).style.display = "none";
+				return true;
+			}
+		}
+		else
+		{
+			if (obj1.value==obj2.value)
+			{
+				document.getElementById(id).style.display = "block";
+				return false;
+			}
+			else
+			{
+				document.getElementById(id).style.display = "none";
+				return true;
+			}		
+		}
+	
+	}
+
+	function isCheckboxSelected(checkbox, obj) 
+	{
+		if (checkbox.checked)
+		{
+			document.getElementById(obj).style.backgroundColor = okColor;
+			return true;
+		}
+
+		document.getElementById(obj).style.backgroundColor = alertColor;
+
+		return false;
+	}
+	
+	function validateField(field)
+	{	
+		if (field.value == "") 
+		{
+			changeColor(field,alertColor);
+			return false;
+		}
+		else
+		{
+			changeColor(field,okColor);
+			return true;
+		}
+	}
+	
+	function isRadioSelected(radioButtons, obj) 
+	{
+		for (i=radioButtons.length-1; i > -1; i--) 
+			if (radioButtons[i].checked) 
+			{
+				document.getElementById(obj).style.backgroundColor = okColor;
+				return true;
+			}
+
+		document.getElementById(obj).style.backgroundColor = alertColor;
+
+		return false;
+	}
+	
+	function validateEmail(field1, field2)
+	{
+		if (field1.value != field2.value) 
+		{
+			changeColor(field1,alertColor);
+			changeColor(field2,alertColor);
+			return false;
+		}
+		else
+			if (!isValidadEmail(field1.value))
+			{
+				changeColor(field1,alertColor);
+				changeColor(field2,alertColor);
+				return false;
+			}
+			else
+			{
+				changeColor(field1,okColor);
+				changeColor(field2,okColor);
+				return true;
+			}
+	}
+	
+	function changeColor(field,color) 
+	{
+		field.style.background = color; 
+	}
+
+	function isValidadEmail(email) 
+	{ 
+		var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+		return re.test(email);
+	}
+	
+	function isTimeSlotSelected(radioButtons) 
+	{
+		if (radioButtons.checked) 
+		{
+			document.getElementById("alertSlot").style.display = "none";
+			return true;
+		}
+		
+		for (i=0; i < radioButtons.length; i++) 
+		{
+			if (radioButtons[i].checked) 
+			{
+				document.getElementById("alertSlot").style.display = "none";
+				return true;
+			}
+
+		}
+
+		document.getElementById("alertSlot").style.display = "block";
+		
+		return false;
+	}
+
+	function viewDetailsTriad(check)
+	{
+		if (check.checked)
+			document.getElementById("triadStudyDetails").style.display = "block";
+		else
+			document.getElementById("triadStudyDetails").style.display = "none";
+	}
+	
+	function viewDetailsDyad(check)
+	{
+		if (check.checked)
+			document.getElementById("dyadStudyDetails").style.display = "block";
+		else
+			document.getElementById("dyadStudyDetails").style.display = "none";
+	}
+
+	function viewDetailsSingle(check)
+	{
+		if (check.checked)
+			document.getElementById("singleStudyDetails").style.display = "block";
+		else
+			document.getElementById("singleStudyDetails").style.display = "none";
+	}
+
+</script>
+<style type="text/css">
+		.cursorType{
+		cursor:pointer;
+		cursor:hand;
+		}
+</style>
+</head>
+<body>
+<div id="signupForm" align="center">
+	<h3>Coagmento - Lab Search Study Signup</h3>
+	<form method="post" onsubmit="return validateForm(this)">
+		<table class="body" width=90%>
+			<tr>
+			  <td colspan=2>
+				<ul>
+				<li>This is a study signup form. <strong>All the fields are required (other than comments)</strong>.</li>
+				<li>The study will take place in <a href="http://rumaps.rutgers.edu/?id=C71833" target="_blank">CI</a>-222 (Access through Student Lounge), a computer lab in the School of Communication & Information on CAC.</li>
+				<li>During the study you will perform a search task, fill in some questionnaires, and be interviewed briefly.</li>
+				<li>The study comprises of <strong>two sessions</strong>.</li>
+				<li>No identifying information about you will be shared.</li>
+				<!--<li>You will receive cash compensation <strong>(Single study: $20, Pairs study:$25, Group-of-three: $30 per participant) </strong> for participating in two sessions.</li>-->
+				<li>You will receive cash compensation <strong>(Pairs study:$25/person, Group-of-three: $30/person) </strong> for participating in two sessions.</li>
+				<li>Note that you will be eligible for compensation <strong>only</strong> if you participate in both the sessions.</li>
+				<li>Each session will last approximately <strong>60 minutes</strong>.</li>
+				<li>You can participate only once in this study either you choose to sign up for group of two or three.</li>
+				<li>Please note that you <strong>cannot</strong> participate in this study, if you already participated in the <a href="http://coagmento.rutgers.edu/summer2012/studyInfo.php">Coagmento Lab Search Study in 2012. </a> </li>
+				<li><strong>Proficiency</strong> in English is required.</li>
+				<li><strong>Intermediate</strong> typing and online search skills are required.</li>
+				<li>You must be between <strong>18 and 24 years old</strong>.</li>
+				<li>To sign up, select one of the studies, and one time-slot. You can select the second time-slot when you come for the first session.</li>
+				<li>In addition to cash for participating, the best performing individual/team will <strong>win $25/person</strong>. </li>
+				<li>Once you complete this form, we will contact you if there is any issue with your requested participation. Otherwise, we will see you soon at the time and place you indicate below. </li>
+				<li>This study has <strong>IRB approval</strong> with date 07/31/2012</li>
+				<li><a href="mailto:chathra.hendahewa@gmail.com?subject=Study inquiry">Contact us</a> if you have any questions.</li>
+				</ul>
+				</td>
+			</tr>
+			<tr bgcolor="CDEB8B">				
+				<td colspan=2><strong>Step-1: Select the study</strong></td>
+			</tr>	
+			<tr>
+				<td colspan=2><div style="display: none; background: Red; text-align:center;" id="alertStudy"><strong>You Must Select One Study</strong></div></td>
+			</tr>
+			<tr>
+				<td>
+					<select id="selectStudyMenu" onchange="selectStudy(this);">
+						<option value="">Pick a Study</option>
+						<option value="3">Group-of-three Study ($30/person)</option>
+						<option value="2">Pairs Study ($25/person)</option>
+						<!--<option value="1">Individual Study ($20/person)</option>-->
+					</select>
+				</td>
+			</tr>
+			<tr>
+			<td width=50% valign="top">
+<!-- 
+	Triads registration
+-->	
+				<div id="triad" style="display: none;">
+					<table>
+						<tr>
+							<td>
+								<ul>						
+									<li>This study requires a <em>team of three</em>.</li>
+									<li>All three of you should have worked on some project before (e.g., a class assignment).</li>
+								</ul>
+							</td>
+						</tr>
+					</table>						
+								
+					<p><strong>Check here to read recruitment details </strong><input type="checkbox" name="viewInstructionsCheckTriad" id="viewInstructionsCheckTriad" onclick="viewDetailsTriad(this)" /></p>
+					<br />
+					<div id="TduplicateEmail" style="display: none; background: Red; text-align:center;">Emails for each participant must be distinct</div>					
+					<br />		
+					<div style="display: none; background: #F2F2F2; text-align:center; border-style:solid; width:70%; border-color:blue; padding:25px;" id="triadStudyDetails">
+	 					<table class="body" width="100%">
+							<tr>	
+								<td>
+									<p>Hello,</p>
+									<p>The purpose of this notice is to request your participation in a research study investigating collaborative search.</p>
+									<p>This study requires a team of three for two sessions. All three participants must be between 18 to 24 years old. You need to sign up in groups of three. All three participants in a team should have worked on some project before (e.g., a class assignment), it is also required having intermediate typing and search skills. You should be proficient in English language. The study will be conducted in a computer lab in School of Communication & Information (SC&I) on College Ave campus. Your participation will take about one hour for each session. Approximately 60 participants are being enrolled for this study.</p>
+									<p>The study will involve using an experimental system, called Coagmento, while surfing the Web for collecting information that will help you to accomplish a task. Coagmento is a plug-in for Firefox browser, which provides support for Web surfing in a team. Each participant in this study will receive $30 at the end of both sessions. In addition, you will participate for $25 in cash per participant if you become the best performing team at the end of the study.</p>
+									<p>To participate in this study, please visit http://tinyurl.com/cf3mvbh and submit your request. The approval of this request is subject to meeting all the criteria specified above.</p>
+									<br />
+									<p>Choosing or declining to participate in this study will not affect your class standing or grades at Rutgers.  You will not be offered or receive any special consideration if you take part in this research; it is purely voluntary. This study has been approved by the Rutgers Behavioral IRB (IRB Study  #E13-046), and will be supervised by Dr. Chirag Shah (chirags@rutgers.edu) at SC&I.</p>
+								</td>
+							</tr>	
+	  					</table>
+					</div>				
+					<table>
+							<tr><th colspan=2>Participant-1 details</th></tr>
+							<tr><td>First name</td><td> <input type="text" size=25 id="s1" name="TfirstName1" value="" /></td></tr>
+							<tr><td>Last name</td><td> <input type="text" size=25 id="s2" name="TlastName1" value="" /></td></tr>
+							<tr><td>Email</td><td> <input type="text" size=25 id="s3" name="Temail1" value="" /></td></tr>
+							<tr><td>Confirm Email:</td><td> <input type="text" size=25 id="s4" name="TreEmail1" value="" /></td></tr>
+							<tr><td>Is English your native language?</td><td><div id="Tenglish1"><input type="radio" id="s5" name="Tenglish1" value="0" />No  <input type="radio" id="s6" name="Tenglish1" value="1" />Yes</div></td></tr>
+							<tr><td>Sex</td><td><div id="Tsex1"><input type="radio" id="s7" name="Tsex1" value="F" />Female  <input type="radio" id="s8" name="Tsex1" value="M" />Male</div></td></tr>
+							<tr><td><br /></td></tr>
+							<tr><th colspan=2>Participant-2 details</th></tr>
+							<tr><td>First name</td><td> <input type="text" id="s9" size=25 name="TfirstName2" value="" /></td></tr>
+							<tr><td>Last name</td><td> <input type="text" id="s10" size=25 name="TlastName2" value="" /></td></tr>
+							<tr><td>Email</td><td> <input type="text" id="s11" size=25 name="Temail2" value="" /></td></tr>
+							<tr><td>Confirm Email:</td><td> <input type="text" size=25 id="s12" name="TreEmail2" value="" /></td></tr>
+							<tr><td>Is English your native language?</td><td><div id="Tenglish2"><input type="radio" id="s13" name="Tenglish2" value="0" />No  <input type="radio" id="s14" name="Tenglish2" value="1" />Yes</div></td></tr>
+							<tr><td>Sex</td><td><div id="Tsex2"><input type="radio" id="s15" name="Tsex2" value="F" />Female  <input type="radio" id="s16" name="Tsex2" value="M" />Male</div></td></tr>
+							<tr><th colspan=2>Participant-3 details</th></tr>
+							<tr><td>First name</td><td> <input type="text" id="s17" size=25 name="TfirstName3" value="" /></td></tr>
+							<tr><td>Last name</td><td> <input type="text" id="s18" size=25 name="TlastName3" value="" /></td></tr>
+							<tr><td>Email</td><td> <input type="text" id="s19" size=25 name="Temail3" value="" /></td></tr>
+							<tr><td>Confirm Email:</td><td> <input type="text" size=25 id="s20" name="TreEmail3" value="" /></td></tr>
+							<tr><td>Is English your native language?</td><td><div id="Tenglish3"><input type="radio" id="s21" name="Tenglish3" value="0" />No <input type="radio" id="s22" name="Tenglish3" value="1" />Yes</div></td></tr>
+							<tr><td>Sex</td><td><div id="Tsex3"><input type="radio" id="s23" name="Tsex3" value="F" />Female  <input type="radio" id="s24" name="Tsex3" value="M" />Male</div></td></tr>
+						</table>
+						<p>Briefly, describe a project that you three have worked together in the past, or are working on now.</p>
+						<textarea name="TpastCollab" id="s50" cols=40 rows=3></textarea>						
+			</div>
+			</td>
+		</tr>
+
+<!-- 
+	Dyads registration
+-->	
+	<tr>
+			<td width=50% valign="top">	
+				<div id="dyad" style="display: none;">
+					<table>
+						<tr>
+							<td>
+								<ul>						
+									<li>This study requires a <em>team of two</em>.</li>
+									<li>Both of you should have worked on some project before (e.g., a class assignment).</li>
+								</ul>
+							</td>
+						</tr>
+					</table>						
+								
+					<p><strong>Check here to read recruitment details </strong><input type="checkbox" name="viewInstructionsCheckDyad" id="viewInstructionsCheckDyad" onclick="viewDetailsDyad(this)" /></p>
+					<br />
+					<div id="DduplicateEmail" style="display: none; background: Red; text-align:center;">Emails for each participant must be distinct</div>	
+					<br />
+					<div style="display: none; background: #F2F2F2; text-align:center; border-style:solid; width:70%; border-color:blue; padding:25px;" id="dyadStudyDetails">
+	 					<table class="body" width="100%">
+							<tr>	
+								<td>
+									<p>Hello,</p>
+									<p>The purpose of this notice is to request your participation in a research study investigating collaborative search.</p>
+									<p>This study requires a team of two for two sessions. Both participants must be between 18 to 24 years old. You need to sign up in pairs. Both participants in a team should have worked on some project before (e.g., a class assignment), it is also required having intermediate typing and search skills. You should be proficient in English language. The study will be conducted in a computer lab in School of Communication & Information (SC&I) on College Ave campus. Your participation will take about one hour for each session. Approximately 60 participants are being enrolled for this study.</p>
+									<p>The study will involve using an experimental system, called Coagmento, while surfing the Web for collecting information that will help you to accomplish a task. Coagmento is a plug-in for Firefox browser, which provides support for Web surfing in a team. Each participant in this study will receive $25 at the end of both sessions. In addition, you will participate for $25 in cash per participant if you become the best performing team at the end of the study.</p>
+									<p>To participate in this study, please visit http://tinyurl.com/cf3mvbh and submit your request. The approval of this request is subject to meeting all the criteria specified above.</p>
+									<br />
+									<p>Choosing or declining to participate in this study will not affect your class standing or grades at Rutgers.  You will not be offered or receive any special consideration if you take part in this research; it is purely voluntary. This study has been approved by the Rutgers Behavioral IRB (IRB Study  #E13-046), and will be supervised by Dr. Chirag Shah (chirags@rutgers.edu) at SC&I.</p>
+								</td>
+							</tr>	
+	  					</table>
+					</div>				
+					<table>
+							<tr><th colspan=2>Participant-1 details</th></tr>
+							<tr><td>First name</td><td> <input type="text" size=25 id="s1" name="DfirstName1" value="" /></td></tr>
+							<tr><td>Last name</td><td> <input type="text" size=25 id="s2" name="DlastName1" value="" /></td></tr>
+							<tr><td>Email</td><td> <input type="text" size=25 id="s3" name="Demail1" value="" /></td></tr>
+							<tr><td>Confirm Email:</td><td> <input type="text" size=25 id="s4" name="DreEmail1" value="" /></td></tr>
+							<tr><td>Is English your native language?</td><td><div id="Denglish1"><input type="radio" id="s5" name="Denglish1" value="0" />No  <input type="radio" id="s6" name="Denglish1" value="1" />Yes</div></td></tr>
+							<tr><td>Sex</td><td><div id="Dsex1"><input type="radio" id="s7" name="Dsex1" value="F" />Female  <input type="radio" id="s8" name="Dsex1" value="M" />Male</div></td></tr>
+							<tr><td><br /></td></tr>
+							<tr><th colspan=2>Participant-2 details</th></tr>
+							<tr><td>First name</td><td> <input type="text" id="s9" size=25 name="DfirstName2" value="" /></td></tr>
+							<tr><td>Last name</td><td> <input type="text" id="s10" size=25 name="DlastName2" value="" /></td></tr>
+							<tr><td>Email</td><td> <input type="text" id="s11" size=25 name="Demail2" value="" /></td></tr>
+							<tr><td>Confirm Email:</td><td> <input type="text" size=25 id="s12" name="DreEmail2" value="" /></td></tr>
+							<tr><td>Is English your native language?</td><td><div id="Denglish2"><input type="radio" id="s13" name="Denglish2" value="0" />No  <input type="radio" id="s14" name="Denglish2" value="1" />Yes</div></td></tr>
+							<tr><td>Sex</td><td><div id="Dsex2"><input type="radio" id="s15" name="Dsex2" value="F" />Female  <input type="radio" id="s16" name="Dsex2" value="M" />Male</div></td></tr>
+						</table>
+						<p>Briefly, describe a project that you two have worked together in the past, or are working on now.</p>
+						<textarea name="DpastCollab" id="s51" cols=40 rows=3></textarea>							
+			</div>
+			</td>
+		</tr>			
+<!-- 
+	Individual registration
+-->
+	<tr>
+		<td>
+				<div id="single" style="display: none;">
+					<table>
+						<tr>
+							<td>
+								<ul>						
+									<li>This study requires a <em>single participant</em>.</li>
+								</ul>
+							</td>
+						</tr>
+					</table>						
+								
+					<p><strong>Check here to read recruitment details </strong><input type="checkbox" name="viewInstructionsCheckSingle" id="viewInstructionsCheckSingle" onclick="viewDetailsSingle(this)" /></p>
+					<br />					
+					<div style="display: none; background: #F2F2F2; text-align:center; border-style:solid; width:70%; border-color:blue; padding:25px;" id="singleStudyDetails">
+	 					<table class="body" width="100%">
+							<tr>	
+								<td>
+									<p>Hello,</p>
+									<p>The purpose of this notice is to request your participation in a research study investigating collaborative search.</p>
+									<p>This study requires a single participant for two sessions. You must be between 18 to 24 years old. You are also required having intermediate typing and search skills. You should be proficient in English language. The study will be conducted in a computer lab in School of Communication & Information (SC&I) on College Ave campus. Your participation will take about one hour for each session. Approximately 60 participants are being enrolled for this study.</p>
+									<p>The study will involve using an experimental system, called Coagmento, while surfing the Web for collecting information that will help you to accomplish a task. Coagmento is a plug-in for Firefox browser, which provides support for Web surfing in a team. Each participant in this study will receive $20 at the end of both sessions. In addition, you will participate for $25 in cash if you become the best performing participant at the end of the study.</p>
+									<p>To participate in this study, please visit http://tinyurl.com/cf3mvbh and submit your request. The approval of this request is subject to meeting all the criteria specified above.</p>
+									<br />
+									<p>Choosing or declining to participate in this study will not affect your class standing or grades at Rutgers.  You will not be offered or receive any special consideration if you take part in this research; it is purely voluntary. This study has been approved by the Rutgers Behavioral IRB (IRB Study  #E13-046), and will be supervised by Dr. Chirag Shah (chirags@rutgers.edu) at SC&I.</p>
+								</td>
+							</tr>	
+	  					</table>
+					</div>				
+					<table>
+							<tr><th colspan=2>Participant details</th></tr>
+							<tr><td>First name</td><td> <input type="text" id="s18" size=25 name="firstName" value="" /></td></tr>
+							<tr><td>Last name</td><td> <input type="text" id="s19" size=25 name="lastName" value="" /></td></tr>
+							<tr><td>Email</td><td> <input type="text" id="s20" size=25 name="email" value="" /></td></tr>
+							<tr><td>Confirm Email:</td><td> <input type="text" size=25 id="s21" name="reEmail" value="" /></td></tr>
+							<tr><td>Is English your native language?</td><td><div id="english"><input type="radio" id="s22" name="english" value="0" />No  <input type="radio" id="s23" name="english" value="1" />Yes</div></td></tr>
+							<tr><td>Sex</td><td><div id="sex"><input type="radio" id="s24" name="sex" value="F" />Female  <input type="radio" id="s25" name="sex" value="M" />Male</div></td></tr>
+						</table>
+			</div>
+			</td>
+		</tr>			
+		
+<!-- Calendar -->
+			<tr bgcolor="CDEB8B">
+				<td colspan=2><strong>Step-2: Select your first time slot</strong></td>
+			</tr>
+			<tr bgcolor="CDEB8B">
+				<td colspan=2><div style="display: none; background: Red; text-align:center;" id="alertSlot"><strong>You Must Select One Slot. Click in the Weeks Below to Find Available Slots</strong></div></td>
+			</tr>
+			<tr>
+			  <td>
+			  
+				<?php 
+				$query = "SELECT distinct(week), sum(available) av FROM slots group by week having av > 0 order by slotID";
+				$connection = Connection::getInstance();
+				$results = $connection->commit($query);
+				$previousWeek = "";
+				$open = 0;
+
+				$days = array("Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday");
+				$starts = array("9","11","13","15","17","19","21");
+				$month = array(1=>"Jan",2=>"Feb",3=>"Mar",4=>"Apr",5=>"May",6=>"Jun",7=>"Jul",8=>"Aug",9=>"Sep",10=>"Oct",11=>"Nov",12=>"Dec");
+				
+				while ($line = mysql_fetch_array($results, MYSQL_ASSOC))
+				{
+					/*$slotID = $line['slotID'];
+					$date = strtotime($line['date']);
+					$day = $line['day'];
+					$time = $line['time'];*/
+					$week = $line['week'];
+					$weekID = str_replace(" ","",$week);					
+				?>
+					<br />
+					<div class="cursorType" onclick="switchMenu('<?php echo $weekID; ?>');"><strong>- Week of <?php echo $week;?></strong> - Click here to expand or collapse the time slots</div>
+					<div style="display: none" id="<?php echo $weekID; ?>" style="text-align:left;">				
+					<table border="1">
+						<tr>
+							<th>date/time</th>
+							<th> 9:00 AM </th>
+							<th> 11:00 AM </th>
+							<th> 13:00 PM </th>
+							<th> 15:00 PM </th>
+							<th> 17:00 PM </th>
+							<th> 19:00 PM </th>
+							<th> 21:00 PM </th>				
+						</tr>
+						
+						<?php 
+							foreach ($days as &$day)
+							{
+								echo "<tr>";							
+								echo "<td><strong> $day ";
+								
+								$wquery = "SELECT slotID, day(date) dd, month(date) mm, date, day, time, start, week FROM slots where available = 1 and  day = '$day' and week='$week' order by start";
+								
+								$wresults = $connection->commit($wquery);
+								$i=-1;
+								$flagHour = 1;
+								$wline = NULL;
+																
+								while (1)
+								{																					
+									if ($flagHour)
+									{
+										$flagHour = 0;
+										$wline = mysql_fetch_array($wresults, MYSQL_ASSOC);
+									}
+									
+									if ($wline)
+									{
+										$slotID = $wline['slotID'];
+										$dd = $wline['dd'];
+										$mm = $wline['mm'];									
+										$start = $wline['start'];
+										$date = $wline['date']; 
+										$todaysDate = date("Y-m-d");
+										
+										if(strtotime($date) >= strtotime($todaysDate)) //DISPLAY ONLY DATES GREATER THAN CURRENT DATE
+										{
+											if ($i==-1)
+											{
+												//echo "<td align=\"right\"><strong> $mm/$dd </strong></td>\n";
+												echo "($month[$mm] $dd)</strong></td>";
+											}
+
+											if ($start==$starts[$i+1])
+											{
+												echo "<td align=\"center\"><input type=\"radio\" name=\"slot\" value=\"$slotID\" /></td>\n";
+												$flagHour = 1;
+											}
+											else 
+												echo "<td bgcolor=\"LightGray\"></td>";
+											$i++;												
+										}
+										else
+										{
+											if ($start==$starts[$i+1])
+											{
+												echo "<td bgcolor=\"LightGray\"></td>";
+												$i++;
+											}							
+											$flagHour = 1;
+										}									
+									}
+									else
+										break;
+								}
+								
+								if ($i>-1)
+									$i++;
+								else
+									$i=0;
+									
+								while ($i<7)
+								{
+									echo "<td bgcolor=\"LightGray\"></td>";
+									$i++;
+								}
+								
+								echo "</tr>";								
+							}
+						?>
+					</table>				 					
+					</div>
+					<hr />
+				<?php 
+					}
+				?>		
+			  </td>
+			</tr>
+			<tr>
+				<td colspan=2 bgcolor="CDEB8B"><strong>Step-3: Leave any comments you have (optional)</strong></td>
+			</tr>
+			<tr>
+				<td colspan=2 align=center>
+					<br/>
+					Comments (optional): (e.g., if you're going to be a few minutes late or if you have any other requests you want us to consider)
+					<br/>
+					<textarea name="comments" cols=80 rows=3></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td align="center" colspan=2>
+					<div style="display: none; background: Red; text-align:center;" id="alertForm"><strong>Please Complete the Fields in Red and Try Again</strong></div>
+				</td>
+			</tr>
+			<tr>
+				<td align="center" colspan=2>
+					<input type="submit" value="Submit" />
+				</td>
+			</tr>
+		</table>
+    </form>
+</div>
+</body>
+</html>
+
+
+
