@@ -11,16 +11,16 @@ class Project
 	protected $projectID;
   	protected $title;
 	protected $description;
-	protected $status
+	protected $status;
 	
 	
 	//Check user credentials.
-	public function static retrieve($projectID)
+	public static function retrieve($projectID)
 	{
 		try
 		{
 			$connection=Connection::getInstance();
-			$query = "SELECT * FROM users WHERE projectID=:projectID";
+			$query = "SELECT * FROM projects WHERE projectID=:projectID";
 			$params = array(':projectID' => $projectID);
 			$results = $connection->execute($query,$params);		
 			$record = $results->fetch(PDO::FETCH_ASSOC);
@@ -37,7 +37,7 @@ class Project
 			else
 				return null;
 		}
-		catch(Exception e)
+		catch(Exception $e)
 		{
 			throw($e);
 		}
@@ -47,12 +47,13 @@ class Project
 	{
 		try
 		{
-			$query = "INSERT INTO projects (projectName, status) VALUES (:username,1)";
-			$params = array(':projectName'=>$this->projectName);
+			$connection=Connection::getInstance();
+			$query = "INSERT INTO projects (title, description, status) VALUES (:title, :description, 1)";
+			$params = array(':title'=>$this->title, ':description' => $this->description);
 			$results = $connection->execute($query,$params);
 			$this->projectID = $connection->getLastID();
 		}
-		catch(Exception e)
+		catch(Exception $e)
 		{
 			throw($e);
 		}

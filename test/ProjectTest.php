@@ -8,7 +8,7 @@
 	
 	echo "Inserting a new project into the database <br/>";
 	$resultingID = $newProject->save();
-	echo "ProjectID: ".$result."<br/><br/>";
+	echo "ProjectID: ".$resultingID."<br/><br/>";
 	
 	echo "Retrieving same project from database using project id </br>";
 	$retrievedProject = Project::retrieve($resultingID);

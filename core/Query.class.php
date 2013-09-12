@@ -35,7 +35,7 @@ class Query{
 			else
 				return null;
 		}
-		catch(Exception e)
+		catch(Exception $e)
 		{
 			throw($e);
 		}
@@ -46,15 +46,17 @@ class Query{
 	{
 		try
 		{
+			$connection = Connection::getInstance();
 			$query = "INSERT INTO queries (query, source, url, title, topResults) VALUES (:query, :source, :url, :title, :topResults)";
 			$params = array(':query' => $this->query, ':source' => $this->source, ':url' => $this->url, ':title' => $this->title, ':topResults' => $this->topResults);
 			$results = $connection->execute($query,$params);
 			$this->queryID = $connection->getLastID();
 		}
-		catch(Exception e)
+		catch(Exception $e)
 		{
 			throw($e);
 		}
+		return $this->queryID;
 	}
 
 	//Getters
