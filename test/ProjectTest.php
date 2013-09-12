@@ -10,7 +10,7 @@
 	$resultingID = $newProject->save();
 	echo "ProjectID: ".$resultingID."<br/><br/>";
 	
-	echo "Retrieving same project from database using project id </br>";
+	echo "Retrieving same project from database using projectID </br>";
 	$retrievedProject = Project::retrieve($resultingID);
 	
 	if ($retrievedProject!=NULL)

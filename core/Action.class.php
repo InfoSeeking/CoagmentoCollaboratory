@@ -43,7 +43,7 @@ class Action
 		//VALUES('".$this->getUserID()."','".$this->getProjectID()."','".$this->getStageID()."','".$this->getQuestionID()."','".$this->getTimestamp()."','".$this->getDate()."','".$this->getTime()."','".$this->getLocalTimestamp()."','".$this->getLocalDate()."','".$this->getLocalTime()."','".$this->getIP()."','$this->actionName','$this->value')";
 
 		//echo "query: ".$query;
-		$params = array(':userID' => $userID, ':projectID'=>$projectID, ':stageID'=>$stageID, ':timestamp'=>$timestamp, ':date'=>$date, ':time'=>$time, ':clientTimestamp'=>$clientTimestamp, ':clientDate'=>$clientDate, ':clientTime'=>$clientTime, ':ip'=>$ip, ':actionName'=>$actionName, ':value'=>$value);
+		$params = array(':userID' => $userID, ':projectID'=>$projectID, ':stageID'=>$stageID, ':timestamp'=>$timestamp, ':date'=>$date, ':time'=>$time, ':clientTimestamp'=>$clientTimestamp, ':clientDate'=>$clientDate, ':clientTime'=>$clientTime, ':ip'=>$ip, ':actionName'=>$actionName, ':value'=>$this->value);
 		$connection = Connection::getInstance();
 		$connection->execute($query,$params);
 		$this->actionID = $connection->getLastID();
@@ -51,7 +51,35 @@ class Action
 	
 	public static function retrieve($actionID)
 	{
-		//Implement retrieve
+		try{
+			$connection = Connection::getInstance();
+			$query = "SELECT * FROM actions WHERE actionID=:actionID";
+			$params = array('actionID' => $this->actionID);
+			$results = $connection->execute($query, $params);
+			$record = $results->fetch(PDO::FETCH_ASSOC);
+
+				if ($record) {
+					$action = new Action();
+					$action->date = $record['date'];
+					$action->time = $record['time'];
+					$action->timestamp = $record['timestamp'];
+					$action->userID = $record['userID'];
+					$action->projectID = $record['projectID'];
+					$action->ip = $record['ip'];
+					$action->taskID = $record['taskID'];
+					$action->localDate = $record['localDate'];
+					$action->localTime = $record['localTime'];
+					$action->localTimestamp = $record['localTimestamp'];
+					$action->stageID = $record['stageID'];
+					$action->value = $record['value'];
+					return $action;
+				}
+				else
+					return null;
+			}
+			catch(Exception $e){
+				throw($e);
+			}
 	}
 	
 	//GETTERS
