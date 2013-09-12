@@ -57,4 +57,23 @@ class Query{
 		}
 	}
 
+	//Getters
+	public function getQueryID(){return $this->queryID;}
+	public function getQuery(){return $this->query;}
+	public function getSource(){return $this->source;}
+	public function getUrl(){return $this->url;}
+	public function getTitle(){return $this->title;}
+	public function getTopResults(){return $this->topResults;}
+
+
+	//setters
+	public function setQuery($val){$this->query = $val;}
+	public function setSource($val){$this->source = $val;}
+	public function setUrl($val){$this->url = $val;}
+	public function setTitle($val){$this->title = $val;}
+	public function setTopResults($val){$this->topResults = $val;}
+
+	public function __toString(){
+		return "QueryID: ".$this->queryID." | Query: ".$this->query." | Source: ".$this->source." | Url: ".$this->url . " | Title: " . $this->title . " | Top Results: " . $this->topResults;
+	}
 }

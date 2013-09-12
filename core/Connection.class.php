@@ -15,9 +15,9 @@ class Connection
 	private $db;
 		
 	public function __construct() {
-		$host = "server";
-		$username = "userName";
-		$password = "password";
+		$host = "localhost";
+		$username = "root";
+		$password = "102533";
 		$database = "coagmento_spring2013_study"; //Or other DB instance
 				
 		try

@@ -56,6 +56,7 @@ class Project
 		{
 			throw($e);
 		}
+		return $this->projectID;
 	}
 	
 	//GETTERS	
