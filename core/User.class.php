@@ -14,8 +14,6 @@ class User
 	protected $password;
 	protected $status;
 
-	protected $fields;
-
 	// //Constructor
 	// public function __User() {
 		// parent::__construct();
@@ -48,9 +46,11 @@ class User
 			return NULL;
 		}
 	}
+	
 	public static function logout(){
 		Session:getInstance()->setUserID(NULL);
 	}
+
 	public static function retrieve(){
 		$connection=Connection::getInstance();
 		$userID = Session::getInstance()->getUserID();

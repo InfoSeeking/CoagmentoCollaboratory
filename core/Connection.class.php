@@ -64,6 +64,7 @@ class Connection
 			$statement = $this->db->prepare($query);
 			$statement->execute($params);
 			$this->lastID = $this->db->lastInsertId(); //Only useful when using INSERT statements
+
 			return $statement;
 		}
 		catch(PDOException $e){

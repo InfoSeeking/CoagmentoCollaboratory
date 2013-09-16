@@ -5,7 +5,7 @@ require_once('Base.class.php');
 /*
 	Action Class
 	
-	It keeps login of user actions
+	It keeps log of user actions
 */
 
 class Action extends Base
@@ -51,6 +51,7 @@ class Action extends Base
 		$connection = Connection::getInstance();
 		$connection->execute($query,$params);
 		$this->actionID = $connection->getLastID();
+		return $this->actionID;
 	}
 	
 	public static function retrieve($actionID)
@@ -58,12 +59,12 @@ class Action extends Base
 		try{
 			$connection = Connection::getInstance();
 			$query = "SELECT * FROM actions WHERE actionID=:actionID";
-			$params = array('actionID' => $this->actionID);
+			$params = array('actionID' => $actionID);
 			$results = $connection->execute($query, $params);
 			$record = $results->fetch(PDO::FETCH_ASSOC);
 
 				if ($record) {
-					$action = new Action();
+					$action = new Action($record['actionName'], $record['value']);
 					$action->date = $record['date'];
 					$action->time = $record['time'];
 					$action->timestamp = $record['timestamp'];
@@ -71,11 +72,11 @@ class Action extends Base
 					$action->projectID = $record['projectID'];
 					$action->ip = $record['ip'];
 					$action->taskID = $record['taskID'];
-					$action->localDate = $record['localDate'];
-					$action->localTime = $record['localTime'];
-					$action->localTimestamp = $record['localTimestamp'];
+					$action->localDate = $record['clientDate'];
+					$action->localTime = $record['clientTime'];
+					$action->localTimestamp = $record['clientTimestamp'];
 					$action->stageID = $record['stageID'];
-					$action->value = $record['value'];
+					$action->actionID = $record['actionID'];
 					return $action;
 				}
 				else

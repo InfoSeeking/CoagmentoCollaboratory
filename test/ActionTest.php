@@ -8,7 +8,7 @@
 	$resultingID = $newAction->save();
 	echo "ActionID: ".$resultingID."<br/><br/>";
 	
-	echo "Retrieving same query from database using actionID</br>";
+	echo "Retrieving same snippet from database using actionID</br>";
 	$retrievedAction = Action::retrieve($resultingID);
 	
 	if ($retrievedAction!=NULL)

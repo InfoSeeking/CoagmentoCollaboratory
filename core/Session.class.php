@@ -9,11 +9,6 @@ class Session
 {	
 	private static $instance;
 	
-	public function __construct(){
-		$this->projectID = NULL;
-		$this->userID = NULL;
-
-	}
 	public function isSessionActive()
 	{
 		return (count($_SESSION)>0);	
