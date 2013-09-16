@@ -23,7 +23,7 @@ class Action extends Base
   
 	public function save()
 	{
-		
+
 		$session = Session::getInstance();
 		$userID = $session->getUserID();
 		if($userID == null){
@@ -41,8 +41,8 @@ class Action extends Base
 		$this->clientTimestamp = $session->getLocalTimestamp();		
 		$this->stageID = $session->getStageID();
 		
-		$query = "INSERT INTO actions (userID, projectID, stageID, timestamp, date, time, `clientTimestamp`, `clientDate`, `clientTime`, ip, action, value) 
-				  VALUES(:userID,:projectID,:stageID,:timestamp,:date,:time,:clientTimestamp,:clientDate,:clientTime,:ip,:actionName,:value')";
+		$query = "INSERT INTO actions (userID, projectID, stageID, `timestamp`, `date`, `time`, `clientTimestamp`, `clientDate`, `clientTime`, `ip`, `action`, `value`) 
+				  VALUES(:userID,:projectID,:stageID,:timestamp,:date,:time,:clientTimestamp,:clientDate,:clientTime,:ip,:actionName,:value)";
 
 		//VALUES('".$this->getUserID()."','".$this->getProjectID()."','".$this->getStageID()."','".$this->getQuestionID()."','".$this->getTimestamp()."','".$this->getDate()."','".$this->getTime()."','".$this->getLocalTimestamp()."','".$this->getLocalDate()."','".$this->getLocalTime()."','".$this->getIP()."','$this->actionName','$this->value')";
 

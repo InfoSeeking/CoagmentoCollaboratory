@@ -48,7 +48,9 @@ class User
 			return NULL;
 		}
 	}
-
+	public static function logout(){
+		Session:getInstance()->setUserID(NULL);
+	}
 	public static function retrieve(){
 		$connection=Connection::getInstance();
 		$userID = Session::getInstance()->getUserID();

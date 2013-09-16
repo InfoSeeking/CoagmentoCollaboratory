@@ -11,6 +11,7 @@ class Session
 	
 	public function __construct(){
 		$this->projectID = NULL;
+		$this->userID = NULL;
 
 	}
 	public function isSessionActive()
