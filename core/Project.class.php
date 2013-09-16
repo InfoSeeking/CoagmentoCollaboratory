@@ -2,10 +2,6 @@
 require_once('Connection.class.php');
 //require_once('Action.class.php');
 
-/*
-	User Class
-	Note: Class contain basic methods to login
-*/
 class Project 
 {
 	protected $projectID;

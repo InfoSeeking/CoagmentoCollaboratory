@@ -1,9 +1,10 @@
 <?php
 require_once('Connection.class.php');
+require_once('Base.class.php');
 /*
 	Query Class
 */
-class Query{
+class Query extends Base{
 	protected $queryID;
 	protected $query; //actual query text
 	protected $source;

@@ -1,7 +1,7 @@
 <?php
 	require_once('../core/Action.class.php');
 	
-	$newAction = new Action();
+	$newAction = new Action("Test Action", "Test Action Value");
 
 	
 	echo "Inserting a new action into the database <br/>";

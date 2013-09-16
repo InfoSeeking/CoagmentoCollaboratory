@@ -1,14 +1,14 @@
 <?php
 require_once('Connection.class.php');
 require_once('Session.class.php');
-//require_once('Base.class.php');
+require_once('Base.class.php');
 /*
 	Action Class
 	
 	It keeps login of user actions
 */
 
-class Action
+class Action extends Base
 {
 	protected $actionID;
 	protected $actionName;
@@ -23,18 +23,22 @@ class Action
   
 	public function save()
 	{
-		$user = Session::getInstance()->user;
-		$userID = $user->getUserID();
+		
+		$session = Session::getInstance();
+		$userID = $session->getUserID();
+		if($userID == null){
+			throw new Exception("User is not logged in");
+		}
 		$this->date = $session->getDate();
 		$this->time = $session->getTime();
 		$this->timestamp = $session->getTimestamp();
-		$this->userID = $session->getUserID();
+		$this->userID = $userID;
 		$this->projectID = $session->getProjectID();
 		$this->ip = $session->getIP();
 		$this->taskID = $session->getQTaskID();
-		$this->localDate = $session->getLocalDate();
-		$this->localTime = $session->getLocalTime();
-		$this->localTimestamp = $session->getLocalTimestamp();		
+		$this->clientDate = $session->getLocalDate();
+		$this->clientTime = $session->getLocalTime();
+		$this->clientTimestamp = $session->getLocalTimestamp();		
 		$this->stageID = $session->getStageID();
 		
 		$query = "INSERT INTO actions (userID, projectID, stageID, timestamp, date, time, `clientTimestamp`, `clientDate`, `clientTime`, ip, action, value) 
@@ -43,7 +47,7 @@ class Action
 		//VALUES('".$this->getUserID()."','".$this->getProjectID()."','".$this->getStageID()."','".$this->getQuestionID()."','".$this->getTimestamp()."','".$this->getDate()."','".$this->getTime()."','".$this->getLocalTimestamp()."','".$this->getLocalDate()."','".$this->getLocalTime()."','".$this->getIP()."','$this->actionName','$this->value')";
 
 		//echo "query: ".$query;
-		$params = array(':userID' => $userID, ':projectID'=>$projectID, ':stageID'=>$stageID, ':timestamp'=>$timestamp, ':date'=>$date, ':time'=>$time, ':clientTimestamp'=>$clientTimestamp, ':clientDate'=>$clientDate, ':clientTime'=>$clientTime, ':ip'=>$ip, ':actionName'=>$actionName, ':value'=>$this->value);
+		$params = array(':userID' => $userID, ':projectID'=>$this->projectID, ':stageID'=>$this->stageID, ':timestamp'=>$this->timestamp, ':date'=>$this->date, ':time'=>$this->time, ':clientTimestamp'=>$this->clientTimestamp, ':clientDate'=>$this->clientDate, ':clientTime'=>$this->clientTime, ':ip'=>$this->ip, ':actionName'=>$this->actionName, ':value'=>$this->value);
 		$connection = Connection::getInstance();
 		$connection->execute($query,$params);
 		$this->actionID = $connection->getLastID();
