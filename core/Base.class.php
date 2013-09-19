@@ -74,31 +74,39 @@ class Base
 	
 	public function getTimestamp()
 	{
+		$this->timestamp = time();
 		return $this->timestamp;
 	}
   
 	public function getDate()
 	{
+		$this->date = date("Y-m-d");
 		return $this->date;
 	}
   
 	public function getTime()
 	{
+		$this->time = date("H:i:s");
 		return $this->time;
 	}
-  
+  	
+
+  	//TODO: figure out how to get local time
 	public function getLocalTimestamp()
 	{
+		$this->localTimestamp = time();
 		return $this->localTimestamp;
 	}
   
 	public function getLocalDate()
 	{
+		$this->localDate = date("Y-m-d");
 		return $this->localDate;
 	}
   
 	public function getLocalTime()
 	{
+		$this->localTime = date("H:i:s");
 		return $this->localTime;
 	}
 		

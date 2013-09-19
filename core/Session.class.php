@@ -50,47 +50,5 @@ class Session
         return self::$instance;
     }
 	
-	public function setUserID($val){
-		$this->userID = $val;
-	}
-	public function setProjectID($val){
-		$this->projectID = $val;
-	}
-
-    public function getDate(){
-    	return date("Y-m-d");
-    }
-	public function getTime(){
-		return date("H:i:s");
-	}
-	public function getTimestamp(){
-		return time();
-	}
-	//TODO: figure out local time
-	public function getLocalDate(){
-		return date("Y-m-d");
-	}
-	public function getLocalTime(){
-		return date("H:i:s");
-	}
-	public function getLocalTimestamp(){
-		return time();
-	}
-	public function getUserID(){
-		return $this->userID;
-	}
-	public function getProjectID(){
-		return $this->projectID;
-	}
-	public function getIP(){
-		return $_SERVER['REMOTE_ADDR'];
-	}
-	//TODO: implement these
-	public function getStageID(){
-		return 0;
-	}
-	public function getQTaskID(){
-		return 0;
-	}
 }
 ?>

@@ -1,6 +1,5 @@
 <?php
 require_once('Connection.class.php');
-require_once('Session.class.php');
 require_once('Base.class.php');
 /*
 	Action Class
@@ -13,33 +12,24 @@ class Action extends Base
 	protected $actionID;
 	protected $actionName;
 	protected $value;
+	protected $ip;
 	
 	public function __construct($actionName, $value) {
 		//parent::__construct();
 		$this->actionName = $actionName;
 		$this->value = $value;
-		//$this->session = Session::getInstance();
 	}
   
 	public function save()
 	{
 
-		$session = Session::getInstance();
-		$userID = $session->getUserID();
-		if($userID == null){
-			throw new Exception("User is not logged in");
-		}
-		$this->date = $session->getDate();
-		$this->time = $session->getTime();
-		$this->timestamp = $session->getTimestamp();
-		$this->userID = $userID;
-		$this->projectID = $session->getProjectID();
-		$this->ip = $session->getIP();
-		$this->taskID = $session->getQTaskID();
-		$this->clientDate = $session->getLocalDate();
-		$this->clientTime = $session->getLocalTime();
-		$this->clientTimestamp = $session->getLocalTimestamp();		
-		$this->stageID = $session->getStageID();
+		//set time and date to present
+		$this->date = $this->getDate();
+		$this->time = $this->getTime();
+		$this->timestamp = $this->getTimestamp();
+		$this->clientDate = $this->getLocalDate();
+		$this->clientTime = $this->getLocalTime();
+		$this->clientTimestamp = $this->getLocalTimestamp();
 		
 		$query = "INSERT INTO actions (userID, projectID, stageID, `timestamp`, `date`, `time`, `clientTimestamp`, `clientDate`, `clientTime`, `ip`, `action`, `value`) 
 				  VALUES(:userID,:projectID,:stageID,:timestamp,:date,:time,:clientTimestamp,:clientDate,:clientTime,:ip,:actionName,:value)";
@@ -102,6 +92,9 @@ class Action extends Base
 	{
 		return $this->value;
 	}
+	public function getIP(){
+		return $this->ip;
+	}
 			
 	//SETTERS
 	public function setActionID($actionID)
@@ -117,6 +110,10 @@ class Action extends Base
 	public function setValue($value)
 	{
 		$this->value = $value;
+	}
+
+	public function setIP($val){
+		$this->ip = $val;
 	}
 	
 	//TO STRING
