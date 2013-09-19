@@ -74,19 +74,16 @@ class Base
 	
 	public function getTimestamp()
 	{
-		$this->timestamp = time();
 		return $this->timestamp;
 	}
   
 	public function getDate()
 	{
-		$this->date = date("Y-m-d");
 		return $this->date;
 	}
   
 	public function getTime()
 	{
-		$this->time = date("H:i:s");
 		return $this->time;
 	}
   	
@@ -94,19 +91,16 @@ class Base
   	//TODO: figure out how to get local time
 	public function getLocalTimestamp()
 	{
-		$this->localTimestamp = time();
 		return $this->localTimestamp;
 	}
   
 	public function getLocalDate()
 	{
-		$this->localDate = date("Y-m-d");
 		return $this->localDate;
 	}
   
 	public function getLocalTime()
 	{
-		$this->localTime = date("H:i:s");
 		return $this->localTime;
 	}
 		
@@ -131,34 +125,64 @@ class Base
 		 $this->taskID = $taskID;
 	}
 		
-	public function setTimestamp($timestamp)
+	public function setTimestamp($val)
 	{
-		$this->timestamp = $timestamp;
+		if($val == NULL){
+			$this->timestamp = time();
+		}
+		else{
+			$this->timestamp = $val;
+		}
 	}
   
-	public function setDate($date)
+	public function setDate($val)
 	{
-		$this->date = $date;
+		if($val == NULL){
+			$this->date = date("Y-m-d");
+		}
+		else{
+			$this->date = $val;
+		}
 	}
   
-	public function setTime($time)
+	public function setTime($val)
 	{
-		$this->time = $time;
+		if($val == NULL){
+			$this->time = date("H:i:s");
+		}
+		else{
+			$this->time = $val;
+		}
 	}
   
-	public function setLocalTimestamp($localTimestamp)
+	public function setLocalTimestamp($val)
 	{
-		$this->localTimestamp = $localTimestamp;
+		if($val == NULL){
+			$this->localTimestamp = time();
+		}
+		else{
+			$this->localTimestamp = $valstamp;
+		}
 	}
   
-	public function setLocalDate($localDate)
+	public function setLocalDate($val)
 	{
-		$this->localDate = $localDate;
+		if($val == NULL){
+			$this->localDate = date("Y-m-d");
+		}
+		else{
+			$this->localDate = $val;
+		}
 	}
   
-	public function setLocalTime($localTime)
+	public function setLocalTime($val)
 	{
-		$this->localTime = $localTime;
+		if($val == NULL){
+			$this->localTime = date("H:i:s");
+		}
+		else{
+			$this->localTime = $val;
+		}
 	}
 }
 ?>

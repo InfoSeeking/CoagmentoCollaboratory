@@ -1,7 +1,6 @@
 <?php
 require_once('Connection.class.php');
 require_once('Base.class.php');
-require_once('Session.class.php');
 //require_once('Action.class.php');
 
 class Page extends Base
@@ -83,10 +82,6 @@ class Page extends Base
 	{
 		try
 		{
-			$session = Session::getInstance();
-			$this->userID = $session->getUserID();
-			$this->projectID = $session->getProjectID();
-			
 			$connection=Connection::getInstance();
 			$query = "INSERT INTO pages (`userID`,`projectID`,`stageID`,`questionID`,`url`,`title`,`source`,`query`,`startTimestamp`,`startDate`,`startTime`,`clientStartTimestamp`,`clientStartDate`,`clientStartTime`,`bookmark`,`snippet`,`status`,`valid`,`endTimestamp`,`endDate`,`endTime`,`clientEndTimestamp`,`clientEndDate`,`clientEndTime`) VALUES (:userID,:projectID,:stageID,:questionID,:url,:title,:source,:query,:startTimestamp,:startDate,:startTime,:clientStartTimestamp,:clientStartDate,:clientStartTime,:bookmark,:snippet,:status,:valid,:endTimestamp,:endDate,:endTime,:clientEndTimestamp,:clientEndDate,:clientEndTime)";
 			$params = array(':userID' => $this->userID,':projectID' => $this->projectID,':stageID' => $this->stageID,':questionID' => $this->questionID,':url' => $this->url,':title' => $this->title,':source' => $this->source,':query' => $this->query,':startTimestamp' => $this->startTimestamp,':startDate' => $this->startDate,':startTime' => $this->startTime,':clientStartTimestamp' => $this->clientStartTimestamp,':clientStartDate' => $this->clientStartDate,':clientStartTime' => $this->clientStartTime,':bookmark' => $this->bookmark,':snippet' => $this->snippet,':status' => $this->status,':valid' => $this->valid,':endTimestamp' => $this->endTimestamp,':endDate' => $this->endDate,':endTime' => $this->endTime,':clientEndTimestamp' => $this->clientEndTimestamp,':clientEndDate' => $this->clientEndDate,':clientEndTime' => $this->clientEndTime);
@@ -101,9 +96,6 @@ class Page extends Base
 	}
 
 	public function getPageID(){return $this->pageID;}
-	public function getUserID(){return $this->userID;}
-	public function getProjectID(){return $this->projectID;}
-	public function getStageID(){return $this->stageID;}
 	public function getQuestionID(){return $this->questionID;}
 	public function getUrl(){return $this->url;}
 	public function getTitle(){return $this->title;}
@@ -126,9 +118,6 @@ class Page extends Base
 	public function getClientEndDate(){return $this->clientEndDate;}
 	public function getClientEndTime(){return $this->clientEndTime;}
 
-	public function setUserID($val){$this->userID = $val;}
-	public function setProjectID($val){$this->projectID = $val;}
-	public function setStageID($val){$this->stageID = $val;}
 	public function setQuestionID($val){$this->questionID = $val;}
 	public function setUrl($val){$this->url = $val;}
 	public function setTitle($val){$this->title = $val;}

@@ -1,6 +1,5 @@
 <?php
 require_once('Connection.class.php');
-require_once('Session.class.php');
 require_once('Action.class.php');
 
 /*
@@ -35,7 +34,6 @@ class User
 			$user->status = $record['status'];
 			
 			
-			Session::getInstance()->setUserID($user->userID);
 
 			$action = new Action('user_state', 'login');
 			$action->save();
@@ -47,13 +45,9 @@ class User
 		}
 	}
 	
-	public static function logout(){
-		Session:getInstance()->setUserID(NULL);
-	}
 
-	public static function retrieve(){
+	public static function retrieve($userID){
 		$connection=Connection::getInstance();
-		$userID = Session::getInstance()->getUserID();
 		$query = "SELECT * FROM users WHERE userID=:userID";
 		$params = array(':userID' => $userID);
 		$results = $connection->execute($query,$params);		

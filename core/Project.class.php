@@ -1,16 +1,15 @@
 <?php
 require_once('Connection.class.php');
-//require_once('Action.class.php');
+require_once('Base.class.php');
 
-class Project 
+
+class Project extends Base
 {
-	protected $projectID;
   	protected $title;
 	protected $description;
 	protected $status;
 	
-	
-	//Check user credentials.
+	//check user credentials
 	public static function retrieve($projectID)
 	{
 		try
@@ -57,10 +56,6 @@ class Project
 	}
 	
 	//GETTERS	
-	public function getProjectID()
-	{
-		return $this->projectID;
-	}
 	
 	public function getTitle()
 	{

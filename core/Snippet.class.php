@@ -1,7 +1,6 @@
 <?php
 require_once('Connection.class.php');
 require_once('Base.class.php');
-require_once('Session.class.php');
 //require_once('Action.class.php');
 
 class Snippet extends Base
@@ -61,15 +60,14 @@ class Snippet extends Base
 	{
 		try
 		{
-			$session = Session::getInstance();
-			$this->userID = $session->getUserID();
-			$this->projectID = $session->getProjectID();
-			$this->localTimestamp = $session->getLocalTimestamp();
-			$this->localDate = $session->getLocalDate();
-			$this->localTime = $session->getLocalTime();
-			$this->Timestamp = $session->getTimestamp();
-			$this->Date = $session->getDate();
-			$this->Time = $session->getTime();
+			
+			$this->projectID = $this->getProjectID();
+			$this->setLocalTimestamp(NULL);
+			$this->setLocalDate(NULL);
+			$this->setLocalTime(NULL);
+			$this->setTimestamp(NULL);
+			$this->setDate(NULL);
+			$this->setTime(NULL);
 			
 			$connection=Connection::getInstance();
 			$query = "INSERT INTO snippets (`title`,`status`,`projectID`,`userID`,`stageID`,`questionID`,`url`,`snippet`,`note`,`type`,`date`,`time`,`timestamp`,`clientDate`,`clientTime`,`clientTimestamp`) VALUES (:title,:status,:projectID,:userID,:stageID,:questionID,:url,:snippet,:note,:type,:date,:time,:timestamp,:clientDate,:clientTime,:clientTimestamp)";
@@ -88,39 +86,21 @@ class Snippet extends Base
 	public function getSnippetID(){return $this->snippetID;}
 	public function getTitle(){return $this->title;}
 	public function getStatus(){return $this->status;}
-	public function getProjectID(){return $this->projectID;}
-	public function getUserID(){return $this->userID;}
-	public function getStageID(){return $this->stageID;}
 	public function getQuestionID(){return $this->questionID;}
 	public function getUrl(){return $this->url;}
 	public function getSnippet(){return $this->snippet;}
 	public function getNote(){return $this->note;}
 	public function getType(){return $this->type;}
-	public function getDate(){return $this->date;}
-	public function getTime(){return $this->time;}
-	public function getTimestamp(){return $this->timestamp;}
-	public function getClientDate(){return $this->localDate;}
-	public function getClientTime(){return $this->localTime;}
-	public function getClientTimestamp(){return $this->localTimestamp;}
 
 	//SETTERS
 	public function setSnippetID($val){$this->snippetID = $val;}
 	public function setTitle($val){$this->title = $val;}
 	public function setStatus($val){$this->status = $val;}
-	public function setProjectID($val){$this->projectID = $val;}
-	public function setUserID($val){$this->userID = $val;}
-	public function setStageID($val){$this->stageID = $val;}
 	public function setQuestionID($val){$this->questionID = $val;}
 	public function setUrl($val){$this->url = $val;}
 	public function setSnippet($val){$this->snippet = $val;}
 	public function setNote($val){$this->note = $val;}
 	public function setType($val){$this->type = $val;}
-	public function setDate($val){$this->date = $val;}
-	public function setTime($val){$this->time = $val;}
-	public function setTimestamp($val){$this->timestamp = $val;}
-	public function setClientDate($val){$this->localDate = $val;}
-	public function setClientTime($val){$this->localTime = $val;}
-	public function setClientTimestamp($val){$this->localTimestamp = $val;}
 		
 	public function __toString()
     {

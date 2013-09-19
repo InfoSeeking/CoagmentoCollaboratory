@@ -24,12 +24,12 @@ class Action extends Base
 	{
 
 		//set time and date to present
-		$this->date = $this->getDate();
-		$this->time = $this->getTime();
-		$this->timestamp = $this->getTimestamp();
-		$this->clientDate = $this->getLocalDate();
-		$this->clientTime = $this->getLocalTime();
-		$this->clientTimestamp = $this->getLocalTimestamp();
+		$this->setDate(NULL);
+		$this->setTime(NULL);
+		$this->setTimestamp(NULL);
+		$this->setLocalDate(NULL);
+		$this->setLocalTime(NULL);
+		$this->setLocalTimestamp(NULL);
 		
 		$query = "INSERT INTO actions (userID, projectID, stageID, `timestamp`, `date`, `time`, `clientTimestamp`, `clientDate`, `clientTime`, `ip`, `action`, `value`) 
 				  VALUES(:userID,:projectID,:stageID,:timestamp,:date,:time,:clientTimestamp,:clientDate,:clientTime,:ip,:actionName,:value)";
