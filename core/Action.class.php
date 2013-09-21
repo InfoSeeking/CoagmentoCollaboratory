@@ -37,7 +37,7 @@ class Action extends Base
 		//VALUES('".$this->getUserID()."','".$this->getProjectID()."','".$this->getStageID()."','".$this->getQuestionID()."','".$this->getTimestamp()."','".$this->getDate()."','".$this->getTime()."','".$this->getLocalTimestamp()."','".$this->getLocalDate()."','".$this->getLocalTime()."','".$this->getIP()."','$this->actionName','$this->value')";
 
 		//echo "query: ".$query;
-		$params = array(':userID' => $userID, ':projectID'=>$this->projectID, ':stageID'=>$this->stageID, ':timestamp'=>$this->timestamp, ':date'=>$this->date, ':time'=>$this->time, ':clientTimestamp'=>$this->clientTimestamp, ':clientDate'=>$this->clientDate, ':clientTime'=>$this->clientTime, ':ip'=>$this->ip, ':actionName'=>$this->actionName, ':value'=>$this->value);
+		$params = array(':userID' => $userID, ':projectID'=>$this->projectID, ':stageID'=>$this->stageID, ':timestamp'=>$this->timestamp, ':date'=>$this->date, ':time'=>$this->time, ':clientTimestamp'=>$this->localTimestamp, ':clientDate'=>$this->localDate, ':clientTime'=>$this->localTime, ':ip'=>$this->ip, ':actionName'=>$this->actionName, ':value'=>$this->value);
 		$connection = Connection::getInstance();
 		$connection->execute($query,$params);
 		$this->actionID = $connection->getLastID();
