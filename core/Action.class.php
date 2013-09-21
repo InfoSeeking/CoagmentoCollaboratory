@@ -54,7 +54,7 @@ class Action extends Base
 			$record = $results->fetch(PDO::FETCH_ASSOC);
 
 				if ($record) {
-					$action = new Action($record['actionName'], $record['value']);
+					$action = new Action($record['action'], $record['value']);
 					$action->date = $record['date'];
 					$action->time = $record['time'];
 					$action->timestamp = $record['timestamp'];
