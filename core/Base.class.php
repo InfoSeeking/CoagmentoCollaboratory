@@ -5,6 +5,9 @@
 class Base 
 {	
 	protected $data = array(); // Location for overloaded data.
+
+	//maybe userID, projectID, stageID, taskID should be static....
+
 	protected $userID;
 	protected $projectID;
 	protected $stageID;
@@ -184,5 +187,8 @@ class Base
 			$this->localTime = $val;
 		}
 	}
+
+	//returns XML representation of this class
+	public function toXML(){}
 }
 ?>

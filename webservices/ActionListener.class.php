@@ -5,7 +5,7 @@ class ActionListener{
 	public function get(){
 		$id = fetchID();
 		$obj = Action::retrieve($id);
-		echo (string)$obj;
+		echo $obj->toXML();
 	}
 	public function post(){
 
@@ -34,10 +34,17 @@ class ActionListener{
 		
 		$obj->save();
 		//return the new object
-		echo (string)$obj;
+		echo $obj->toXML();
 	}
 	public function delete(){
-		//todo
+		$id = fetchID();
+		$result = Action::delete($id);
+		if($result == 0){
+			err("Nothing was deleted");
+		}
+		else{
+			echo "Deleted";
+		}
 	}
 	public function put(){
 		//todo

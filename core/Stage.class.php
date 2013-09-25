@@ -3,7 +3,7 @@ require_once('Connection.class.php');
 require_once('Base.class.php');
 require_once('Action.class.php');
 
-class Stage 
+class Stage extends Base
 {
 	protected $stageID;
 	protected $currentPage;
@@ -15,13 +15,12 @@ class Stage
 	protected $previousStartTimestamp;
 	protected $previousMaxTime;
 					
-	public function __construct() 
+	public function __construct($projectID, $userID) 
 	{
-		//$base = new Base();
-		//$this->stageID = $base->getStageID(); //$_SESSION['CSpace_stageID'];
+		$this->projectID = $projectID;
+		$this->userID = $userID;
 		$connection = Connection::getInstance();
-		$base = Base::getInstance();
-		
+		//populate settings
 		//THIS ONE WORKS IN TERMS OF MAX STAGE ID FOR USER; THIS GENERATE PROBLEMS FOR LOOP IN TASK -> SAM
 /*		$query = "SELECT stageID, page, maxTime
 				  FROM session_stages 
@@ -30,21 +29,22 @@ class Stage
 				  				   WHERE projectID = '".$base->getProjectID()."' and userID = '".$base->getUserID()."')";
 */
 		//THIS ONE WORKS IN TERMS OF PROGRESS ID; THIS TO SOLVE PROBLEM WITH LOOP TASK -> SAM
-		$query = "SELECT stageID, page, maxTime, maxTimeQuestion, maxLoops, allowBrowsing, (SELECT count(*) FROM session_progress a WHERE a.stageID = b.stageID and projectID = '".$base->getProjectID()."' and userID = '".$base->getUserID()."' ) currentLoops
+		$query = "SELECT stageID, page, maxTime, maxTimeQuestion, maxLoops, allowBrowsing, (SELECT count(*) FROM session_progress a WHERE a.stageID = b.stageID and projectID = '".$this->getProjectID()."' and userID = '".$this->getUserID()."' ) currentLoops
 				  FROM session_stages b
 				  WHERE status = '1'
 				    AND stageID = (SELECT stageID
 				  				   FROM session_progress a 
-				  				   WHERE projectID = '".$base->getProjectID()."' 
-				  				   	 AND userID = '".$base->getUserID()."'
+				  				   WHERE projectID = '".$this->getProjectID()."' 
+				  				   	 AND userID = '".$this->getUserID()."'
 				  				   	 AND progressID = (SELECT max(progressID)
                                                          FROM session_progress a 
-                                                        WHERE projectID = '".$base->getProjectID()."' 
-                                                          AND userID = '".$base->getUserID()."'
+                                                        WHERE projectID = '".$this->getProjectID()."' 
+                                                          AND userID = '".$this->getUserID()."'
                                                        )   			  				   
 				  				   )";
-
-		$results = $connection->commit($query);
+		
+		echo $query;
+		$results = $connection->execute($query, NULL);
 		$line = mysql_fetch_array($results, MYSQL_ASSOC);
 		
 		if ($line['stageID']<>'')
@@ -72,15 +72,15 @@ class Stage
 			$this->previousMaxTime = 0;		
 		}
 		
-		$base->setStageID($this->stageID);	
-		$base->setPage($this->currentPage);
-		$base->setMaxTime($this->maxTime);
-		$base->setMaxTimeQuestion($this->maxTimeQuestion);
-		$base->setMaxLoops($this->maxLoops);
-		$base->setCurrentLoops($this->currentLoops);
-		$base->setAllowBrowsing($this->allowBrowsing);		
-		$base->setPreviousStartTimestamp($this->previousStartTimestamp);
-		$base->setPreviousMaxTime($this->previousMaxTime);
+		$this->setStageID($this->stageID);	
+		$this->setPage($this->currentPage);
+		$this->setMaxTime($this->maxTime);
+		$this->setMaxTimeQuestion($this->maxTimeQuestion);
+		$this->setMaxLoops($this->maxLoops);
+		$this->setCurrentLoops($this->currentLoops);
+		$this->setAllowBrowsing($this->allowBrowsing);		
+		$this->setPreviousStartTimestamp($this->previousStartTimestamp);
+		$this->setPreviousMaxTime($this->previousMaxTime);
 	}
   	
 	public function moveToNextStage()
@@ -102,16 +102,15 @@ class Stage
 			$action = new Action('Next Stage: '.$this->currentPage,$this->stageID);
 			
 			//SAVING THE NEW STAGE IN SESSION VARIABLE
-			$base = Base::getInstance();
-			$base->setStageID($this->stageID);	
-			$base->setPage($this->currentPage);
-			$base->setMaxTime($this->maxTime);	
-			$base->setMaxTimeQuestion($this->maxTimeQuestion);
-			$base->setMaxLoops($this->maxLoops);
-			$base->setCurrentLoops($this->currentLoops);
-			$base->setAllowBrowsing($this->allowBrowsing);
-			$base->setPreviousStartTimestamp($this->previousStartTimestamp);
-			$base->setPreviousMaxTime($this->previousMaxTime);
+			$this->setStageID($this->stageID);	
+			$this->setPage($this->currentPage);
+			$this->setMaxTime($this->maxTime);	
+			$this->setMaxTimeQuestion($this->maxTimeQuestion);
+			$this->setMaxLoops($this->maxLoops);
+			$this->setCurrentLoops($this->currentLoops);
+			$this->setAllowBrowsing($this->allowBrowsing);
+			$this->setPreviousStartTimestamp($this->previousStartTimestamp);
+			$this->setPreviousMaxTime($this->previousMaxTime);
 			
 			$projectID = $action->getProjectID();
 			$userID = $action->getUserID();
@@ -149,13 +148,12 @@ class Stage
 			$action = new Action('Previous Stage: '.$this->currentPage,$this->stageID);
 			
 			//SAVING THE NEW STAGE IN SESSION VARIABLE
-			$base = Base::getInstance();
-			$base->setStageID($this->stageID);	
-			$base->setPage($this->currentPage);
-			$base->setMaxTime($this->maxTime);	
-			$base->setMaxTimeQuestion($this->maxTimeQuestion);
-			$base->setMaxLoops($this->maxLoops);
-			$base->setAllowBrowsing($this->allowBrowsing);
+			$this->setStageID($this->stageID);	
+			$this->setPage($this->currentPage);
+			$this->setMaxTime($this->maxTime);	
+			$this->setMaxTimeQuestion($this->maxTimeQuestion);
+			$this->setMaxLoops($this->maxLoops);
+			$this->setAllowBrowsing($this->allowBrowsing);
 							
 			$projectID = $action->getProjectID();
 			$userID = $action->getUserID();
@@ -178,11 +176,9 @@ class Stage
 	
 	//GETTERS NEXT STAGE
 	public function getNextStageData()
-	{
-		$base = Base::getInstance();
-				
+	{			
 		$connection = Connection::getInstance();
-		$query = "SELECT stageID, page, maxTime, maxTimeQuestion, maxLoops, allowBrowsing, (SELECT count(*) FROM session_progress a WHERE a.stageID = b.stageID  AND userID = '".$base->getUserID()."' AND projectID = '".$base->getProjectID()."') currentLoops 
+		$query = "SELECT stageID, page, maxTime, maxTimeQuestion, maxLoops, allowBrowsing, (SELECT count(*) FROM session_progress a WHERE a.stageID = b.stageID  AND userID = '".$this->getUserID()."' AND projectID = '".$this->getProjectID()."') currentLoops 
 				    FROM session_stages b
 				    WHERE stageID>$this->stageID AND status = '1' order by stageID LIMIT 1";
 		$results = $connection->commit($query);
@@ -234,12 +230,10 @@ class Stage
 	
 	//GETTERS PREVIOUS STAGE
 	public function getPreviousStageData()
-	{
-		$base = Base::getInstance();
-		
+	{	
 		$connection = Connection::getInstance();
-		$query = "SELECT stageID, page, maxTime, maxTimeQuestion, maxLoops, allowBrowsing, (SELECT count(*) FROM session_progress a WHERE a.stageID = b.stageID AND userID = '".$base->getUserID()."' AND projectID = '".$base->getProjectID()."') currentLoops,
-																			(SELECT min(timestamp) FROM session_progress c WHERE c.stageID = b.stageID AND userID = '".$base->getUserID()."' AND projectID = '".$base->getProjectID()."') timestamp 
+		$query = "SELECT stageID, page, maxTime, maxTimeQuestion, maxLoops, allowBrowsing, (SELECT count(*) FROM session_progress a WHERE a.stageID = b.stageID AND userID = '".$this->getUserID()."' AND projectID = '".$this->getProjectID()."') currentLoops,
+																			(SELECT min(timestamp) FROM session_progress c WHERE c.stageID = b.stageID AND userID = '".$this->getUserID()."' AND projectID = '".$this->getProjectID()."') timestamp 
 					FROM (SELECT * FROM session_stages WHERE stageID<$this->stageID AND status = '1' order by stageID DESC) b 
 					LIMIT 1";
 		//echo $query;
@@ -322,5 +316,15 @@ class Stage
 	{	
 		return $this->allowBrowsing;
 	}
+
+	//SETTERS
+	public function setPage($val){$this->page = $val;}
+	public function setMaxTime($val){$this->maxTime = $val;}
+	public function setMaxTimeQuestion($val){$this->maxTimeQuestion = $val;}
+	public function setMaxLoops($val){$this->maxLoops = $val;}
+	public function setCurrentLoops($val){$this->currentLoops = $val;}
+	public function setAllowBrowsing($val){$this->allowBrowsing = $val;}
+	public function setPreviousStartTimestamp($val){$this->previousStartTimestamp = $val;}
+	public function setPreviousMaxTime($val){$this->previousMaxTime = $val;}
 }
 ?>

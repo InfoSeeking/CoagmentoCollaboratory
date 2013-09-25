@@ -1,6 +1,5 @@
 #Questions
-- Webservices should be stateless, but how do we implement things using session?
-- would it make sense to have the tostring methods of classes output their XML?
+- what are the following: loopStage, synchStage, and allowBrowsing?
 
 #Some Considerations
 - The User/Project class does not have methods for updating/deleting current records, do we want that?

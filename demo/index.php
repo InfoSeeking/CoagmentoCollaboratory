@@ -2,9 +2,9 @@
 	 session_start();
 	 require_once('../core/User.class.php');
 	 require_once('../core/Session.class.php');
+	 require_once("../core/Stage.class.php");
 	 
-	if (($_POST['userName'])&&(!Session::getInstance()->isSessionActive()))
-	{
+	if (($_POST['userName'])&&(!Session::getInstance()->isSessionActive())):
 		$userName = $_POST['userName'];
 		$password = sha1($_POST['password']); //Try to use sha1, MD5 or other in the client side with javascript so that password does not come.
 		try
@@ -24,16 +24,14 @@
 		{
 			echo "An unexcepted error has occurred Code".$e->getCode();
 		}
-	}
-	else 
-	{
-		if (!Session::isSessionActive())
-		{
+	else:
+		if (!Session::isSessionActive()):
 ?>
 	<html>
-		<head>
-			<title>Login</title>
-		<head>
+	<head>
+		<title>Login</title>
+	<head>	
+	<body>
 		<script type="text/javascript">
 			function validate(form)
 			{
@@ -56,25 +54,25 @@
 
 		          return true;
 			} 	 
-		</script>		
-<?php 
-			echo "<body>\n<center>\n<br/><br/>\n";
-			echo "<form action=\"index.php\" method=\"post\" onsubmit=\"return validate(this)\">\n";
-			echo "<br/><br/>\n<table class=body>\n";
-			echo "<tr><td>Username</td><td>&nbsp;&nbsp; <input type=\"text\" name=\"userName\" size=20 /></td></tr>\n";
-			echo "<tr><td>Password</td><td>&nbsp;&nbsp; <input type=\"password\" name=\"password\" size=20 /></td></tr>\n";
-			echo "<tr><td colspan=\"2\"><br/></td></tr>\n";
-			echo "<tr><td colspan=\"2\" align=center><input type=\"hidden\" id=\"clientTimestamp\" name=\"clientTimestamp\" value=\"\"/><input type=\"hidden\" id=\"clientTime\" name=\"clientTime\" value=\"\"/><input type=\"hidden\" id=\"clientDate\" name=\"clientDate\" value=\"\"/><input type=\"submit\" value=\"Submit\"/></td></tr>\n";
-			echo "</table>\n";
-			echo "</form>\n";				
-			echo "</body></html>";
-		}
-		else
-		{
-			//$stage = new Stage();
-			//$page = $stage->getCurrentPage();			
+		</script>
+		<form action="index.php" method="post" onsubmit="return validate(this)">
+		<br/><br/><table class=body>
+		<tr><td>Username</td><td>&nbsp;&nbsp; <input type="text" name="userName" size=20 /></td></tr>
+		<tr><td>Password</td><td>&nbsp;&nbsp; <input type="password" name="password" size=20 /></td></tr>
+		<tr><td colspan="2"><br/></td></tr>
+		<tr><td colspan="2" align=center><input type="hidden" id="clientTimestamp" name="clientTimestamp" value=""/><input type="hidden" id="clientTime" name="clientTime" value=""/><input type="hidden" id="clientDate" name="clientDate" value=""/><input type="submit" value="Submit"/></td></tr>
+		</table>
+		</form>	
+	</body></html>
+<?php
+		
+		else:
+		
+			$stage = new Stage();
+			$page = $stage->getCurrentPage();	
+			echo "Stage page: " . $page;		
 			echo "A session is currently active";
 			//header("Location: http://www.google.com");
-		}
-	}
+		endif;
+	endif;
 ?>

@@ -76,6 +76,14 @@ class Action extends Base
 				throw($e);
 			}
 	}
+
+	public static function delete($actionID){
+		$connection = Connection::getInstance();
+		$query = "DELETE FROM actions WHERE actionID=:actionID";
+		$params = array('actionID' => $actionID);
+		$statement = $connection->execute($query, $params);
+		return $statement->rowCount();
+	}
 	
 	//GETTERS
 	public function getActionID()
@@ -120,6 +128,9 @@ class Action extends Base
 	public function __toString()
 	{		
 		return $this->actionID.",".$this->userID.",".$this->projectID.",".$this->timestamp.",".$this->date.",".$this->time.",".$this->ip.",".$this->actionName.",".$this->value;
+	}
+	public function toXML(){
+		return "<resource><type>action</type><actionID>" . $this->actionID . "</actionID><userID>" . $this->userID . "</userID><projectID>" . $this->projectID . "</projectID><timestamp>". $this->timestamp."</timestamp><date>".$this->date."</date><time>".$this->time."</time><ip>".$this->ip."</ip><actionName>".$this->actionName."</actionName><actionValue>".$this->value . "</actionValue></resource>";
 	}
 }
 ?>
