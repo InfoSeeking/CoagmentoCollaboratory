@@ -43,23 +43,28 @@ class ActionListener{
 			err("Nothing was deleted");
 		}
 		else{
-			echo "Deleted";
+			feedback("Deleted");
 		}
 	}
 	//NOT WORKING TODO
 	public function put(){
-		//todo
+		//get PUT data
+		$PUT = [];
+		parse_str(file_get_contents("php://input"),$PUT);
+		var_dump($PUT);
 		$id = fetchID();
 		$result = Action::retrieve($id);
-		if(isset($_PUT['action'])){
-			$result->setAction($_PUT['action']);
-			echo "ation set";
+		if($result == null){
+			die(err("No action found with id " . $id));
 		}
-		if(isset($_PUT['value']))
-			$result->setValue($_POST['value']);
+		if(isset($PUT['action'])){
+			$result->setAction($PUT['action']);
+		}
+		if(isset($PUT['value']))
+			$result->setValue($PUT['value']);
 		if(isset($_PUT['ip']))
-			$result->setIP($_POST['ip']);
+			$result->setIP($PUT['ip']);
 		$result->save();
-		echo "Action updated";
+		feedback("Action updated");
 	}
 }

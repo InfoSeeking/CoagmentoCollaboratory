@@ -35,9 +35,9 @@ class Action extends Base
 		
 		$params = array(':userID' => $userID, ':projectID'=>$this->projectID, ':stageID'=>$this->stageID, ':timestamp'=>$this->timestamp, ':date'=>$this->date, ':time'=>$this->time, ':clientTimestamp'=>$this->localTimestamp, ':clientDate'=>$this->localDate, ':clientTime'=>$this->localTime, ':ip'=>$this->ip, ':actionName'=>$this->actionName, ':value'=>$this->value);
 		if($this->inDatabase){
-			$query = "UPDATE actions SET `userID` = :userID,`projectID` = :projectID,`stageID` = :stageID,`timestamp` = :timestamp,`date` = :date,`time` = :time,`clientTimestamp` = :clientTimestamp,`clientDate` = :clientDate,`clientTime` = :clientTime,`ip` = :ip,`actionName` = :actionName,`value` = :value WHERE `actionID`=:actionID";
+			$query = "UPDATE actions SET `userID` = :userID,`projectID` = :projectID,`stageID` = :stageID,`timestamp` = :timestamp,`date` = :date,`time` = :time,`clientTimestamp` = :clientTimestamp,`clientDate` = :clientDate,`clientTime` = :clientTime,`ip` = :ip,`action` = :actionName,`value` = :value WHERE `actionID`=:actionID";
 			$params[":actionID"] = $this->actionID;
-			//echo $query;
+			echo $query;
 		}
 		else{
 			$query = "INSERT INTO actions (userID, projectID, stageID, `timestamp`, `date`, `time`, `clientTimestamp`, `clientDate`, `clientTime`, `ip`, `action`, `value`) 

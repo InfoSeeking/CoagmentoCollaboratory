@@ -4,6 +4,9 @@
 function err($msg){
 	echo "<response><error>" . $msg . "</error></response>";
 }
+function feedback($msg){
+	echo "<response><feedback>" . $msg . "</feedback></response>";
+}
 
 function fetchID(){
 	global $URL_PARTS;
