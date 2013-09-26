@@ -46,7 +46,20 @@ class ActionListener{
 			echo "Deleted";
 		}
 	}
+	//NOT WORKING TODO
 	public function put(){
 		//todo
+		$id = fetchID();
+		$result = Action::retrieve($id);
+		if(isset($_PUT['action'])){
+			$result->setAction($_PUT['action']);
+			echo "ation set";
+		}
+		if(isset($_PUT['value']))
+			$result->setValue($_POST['value']);
+		if(isset($_PUT['ip']))
+			$result->setIP($_POST['ip']);
+		$result->save();
+		echo "Action updated";
 	}
 }

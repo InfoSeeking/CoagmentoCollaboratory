@@ -18,6 +18,7 @@ class Action extends Base
 		//parent::__construct();
 		$this->actionName = $actionName;
 		$this->value = $value;
+		$this->inDatabase = false;
 	}
   
 	public function save()
@@ -31,13 +32,22 @@ class Action extends Base
 		$this->setLocalTime(NULL);
 		$this->setLocalTimestamp(NULL);
 		
-		$query = "INSERT INTO actions (userID, projectID, stageID, `timestamp`, `date`, `time`, `clientTimestamp`, `clientDate`, `clientTime`, `ip`, `action`, `value`) 
+		
+		$params = array(':userID' => $userID, ':projectID'=>$this->projectID, ':stageID'=>$this->stageID, ':timestamp'=>$this->timestamp, ':date'=>$this->date, ':time'=>$this->time, ':clientTimestamp'=>$this->localTimestamp, ':clientDate'=>$this->localDate, ':clientTime'=>$this->localTime, ':ip'=>$this->ip, ':actionName'=>$this->actionName, ':value'=>$this->value);
+		if($this->inDatabase){
+			$query = "UPDATE actions SET `userID` = :userID,`projectID` = :projectID,`stageID` = :stageID,`timestamp` = :timestamp,`date` = :date,`time` = :time,`clientTimestamp` = :clientTimestamp,`clientDate` = :clientDate,`clientTime` = :clientTime,`ip` = :ip,`actionName` = :actionName,`value` = :value WHERE `actionID`=:actionID";
+			$params[":actionID"] = $this->actionID;
+			//echo $query;
+		}
+		else{
+			$query = "INSERT INTO actions (userID, projectID, stageID, `timestamp`, `date`, `time`, `clientTimestamp`, `clientDate`, `clientTime`, `ip`, `action`, `value`) 
 				  VALUES(:userID,:projectID,:stageID,:timestamp,:date,:time,:clientTimestamp,:clientDate,:clientTime,:ip,:actionName,:value)";
+		}
 
 		//VALUES('".$this->getUserID()."','".$this->getProjectID()."','".$this->getStageID()."','".$this->getQuestionID()."','".$this->getTimestamp()."','".$this->getDate()."','".$this->getTime()."','".$this->getLocalTimestamp()."','".$this->getLocalDate()."','".$this->getLocalTime()."','".$this->getIP()."','$this->actionName','$this->value')";
 
 		//echo "query: ".$query;
-		$params = array(':userID' => $userID, ':projectID'=>$this->projectID, ':stageID'=>$this->stageID, ':timestamp'=>$this->timestamp, ':date'=>$this->date, ':time'=>$this->time, ':clientTimestamp'=>$this->localTimestamp, ':clientDate'=>$this->localDate, ':clientTime'=>$this->localTime, ':ip'=>$this->ip, ':actionName'=>$this->actionName, ':value'=>$this->value);
+		
 		$connection = Connection::getInstance();
 		$connection->execute($query,$params);
 		$this->actionID = $connection->getLastID();
@@ -55,6 +65,7 @@ class Action extends Base
 
 				if ($record) {
 					$action = new Action($record['action'], $record['value']);
+					$action->inDatabase = true;
 					$action->date = $record['date'];
 					$action->time = $record['time'];
 					$action->timestamp = $record['timestamp'];

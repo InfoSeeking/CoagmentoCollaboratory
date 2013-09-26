@@ -18,6 +18,7 @@ class Base
 	protected $localTimestamp = null;
 	protected $localDate = null;
 	protected $localTime = null;
+	protected $inDatabase = false;//whether or not already saved in database
 	
 	public function __construct() {
 		date_default_timezone_set('America/New_York');
