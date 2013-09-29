@@ -15,6 +15,13 @@ class Snippet extends Base
   	protected $status;
 	
 	//Check user credentials.
+	public static function retrieveUserSnippets($userID){
+		$connection=Connection::getInstance();
+		$query = "SELECT * FROM snippets WHERE snippetID=:snippetID";
+		$params = array(':snippetID' => $snippetID);
+		$results = $connection->execute($query,$params);		
+		$record = $results->fetch(PDO::FETCH_ASSOC);
+	}
 	public static function retrieve($snippetID)
 	{
 		try
@@ -69,12 +76,6 @@ class Snippet extends Base
 		try
 		{
 			$this->projectID = $this->getProjectID();
-			$this->setLocalTimestamp(NULL);
-			$this->setLocalDate(NULL);
-			$this->setLocalTime(NULL);
-			$this->setTimestamp(NULL);
-			$this->setDate(NULL);
-			$this->setTime(NULL);
 			
 			$connection=Connection::getInstance();
 			$query = "INSERT INTO snippets (`title`,`status`,`projectID`,`userID`,`stageID`,`questionID`,`url`,`snippet`,`note`,`type`,`date`,`time`,`timestamp`,`clientDate`,`clientTime`,`clientTimestamp`) VALUES (:title,:status,:projectID,:userID,:stageID,:questionID,:url,:snippet,:note,:type,:date,:time,:timestamp,:clientDate,:clientTime,:clientTimestamp)";
@@ -100,7 +101,6 @@ class Snippet extends Base
 	public function getType(){return $this->type;}
 
 	//SETTERS
-	public function setSnippetID($val){$this->snippetID = $val;}
 	public function setTitle($val){$this->title = $val;}
 	public function setStatus($val){$this->status = $val;}
 	public function setQuestionID($val){$this->questionID = $val;}

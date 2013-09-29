@@ -47,8 +47,8 @@
 		<script type="text/javascript" src="jquery-1.10.2.min.js"></script>
 		<script type="text/javascript" src="main.js"></script>
 		<form action="index.php" method="post" class="addTimestamps">	
-			<label>Username</label><input type="text" name="userName" size=20 /><br/>
-			<label>Password</label><input type="password" name="password" size=20 /><br/>
+			<label>Username</label><input type="text" name="userName" size="20" /><br/>
+			<label>Password</label><input type="password" name="password" size="20" /><br/>
 			<input type="submit" value="Submit"/>
 		</form>	
 	</body>
@@ -64,11 +64,18 @@
 		<script type="text/javascript" src="jquery-1.10.2.min.js"></script>
 		<script type="text/javascript" src="main.js"></script>
 		<p>Welcome <?php echo Session::getInstance()->userName; ?></p>
-		<form class="addTimestamps" action="logout.php">
+		<form class="addTimestamps" action="logout.php" method="post">
 			<input type="submit" value="Logout"/>
 		</form>
 		<h1>Manage Data</h1>
 		<h2>Snippets</h2>
+			<h3>Create a new snippet</h3>
+			<form action="snippet.php" method="post">
+				<label>Snippet Content:</label><br/>
+				<textarea name="content"></textarea><br/>
+				<input type="submit" value="Save"/>
+				<input type="hidden" name="action" value="save" />
+			</form>
 		<h2>Bookmarks</h2>
 	</body>
 </html>
