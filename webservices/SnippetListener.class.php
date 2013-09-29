@@ -1,41 +1,19 @@
 <?php
-require_once("../core/Action.class.php");
-class ActionListener{
+require_once("../core/Snippet.class.php");
+class SnippetListener{
 	//fetch action from database
 	public function get(){
 		$id = fetchID();
-		$obj = Action::retrieve($id);
+		$obj = Snippet::retrieve($id);
 		if($obj != null){
 			echo $obj->toXML();
 		}
 		else{
-			die(err("No action found"));
+			die(err("No snippet found"));
 		}
 	}
 	public function post(){
-
-		//todo
-		$action = "";
-		$value = "";
-		//check for all possible passed values and set the new object
-		if(isset($_POST['action'])){
-			$action = $_POST['action'];
-		}
-		else{
-			err("Action not set");
-		}
-		if(isset($_POST['value'])){
-			$value = $_POST['value'];
-		}
-		else{
-			err("Value not set");
-		}
-
-		$obj = new Action($action, $value);
-
-		if(isset($_POST['ip'])){
-			$obj->setIP($_POST['ip']);
-		}
+		$obj = new Snippet();
 		
 		$obj->save();
 		//return the new object
@@ -43,7 +21,7 @@ class ActionListener{
 	}
 	public function delete(){
 		$id = fetchID();
-		$result = Action::delete($id);
+		$result = Snippet::delete($id);
 		if($result == 0){
 			err("Nothing was deleted");
 		}
@@ -54,6 +32,7 @@ class ActionListener{
 	//NOT WORKING TODO
 	public function put(){
 		//get PUT data
+		/*
 		$PUT = [];
 		parse_str(file_get_contents("php://input"),$PUT);
 		var_dump($PUT);
@@ -71,5 +50,14 @@ class ActionListener{
 			$result->setIP($PUT['ip']);
 		$result->save();
 		feedback("Action updated");
+		*/
+	}
+	//This function can be used to set values in the Snippet object $obj using the key/value pairs in the associative array $ARR
+	//This is so the post and put methods are not redundant
+	public function setValues($obj, $ARR){
+		if(isset($ARR["title"]))
+			$obj->setTitle($ARR["title"]);
+		
+		
 	}
 }

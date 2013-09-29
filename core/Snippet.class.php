@@ -55,12 +55,19 @@ class Snippet extends Base
 			throw($e);
 		}
 	}
+
+	public static function delete($snippetID){
+		$connection = Connection::getInstance();
+		$query = "DELETE FROM snippets WHERE snippetID=:snippetID";
+		$params = array('snippetID' => $snippetID);
+		$statement = $connection->execute($query, $params);
+		return $statement->rowCount();
+	}
 		
 	public function save()
 	{
 		try
 		{
-			
 			$this->projectID = $this->getProjectID();
 			$this->setLocalTimestamp(NULL);
 			$this->setLocalDate(NULL);
@@ -105,6 +112,10 @@ class Snippet extends Base
 	public function __toString()
     {
         return "SnippetID: " . $this->snippetID  . "," . $this->snippetID . "," . $this->title . "," . $this->status . "," . $this->projectID . "," . $this->userID . "," . $this->stageID . "," . $this->questionID . "," . $this->url . "," . $this->snippet . "," . $this->note . "," . $this->type . "," . $this->date . "," . $this->time . "," . $this->timestamp . "," . $this->localDate . "," . $this->localTime . "," . $this->localTimestamp;
+    }
+
+    public function toXML(){
+    	return "<resource><snippetID>" . $this->snippetID  . "</snippetID><title>" . $this->title . "</title><status>" . $this->status . "</status><projectID>" . $this->projectID . "</projectID><userID>" . $this->userID . "</userID><stageID>" . $this->stageID . "</stageID><questionID>" . $this->questionID . "</questionID><url>" . $this->url . "</url><snippet>" . $this->snippet . "</snippet><note>" . $this->note . "</note><type>" . $this->type . "</type><date>" . $this->date . "</date><time>" . $this->time . "</time><timestamp>" . $this->timestamp . "</timestamp><localDate>" . $this->localDate . "</localDate><localTime>" . $this->localTime . "</localTime><localTimestamp>" . $this->localTimestamp . "</localTimestamp></resource>";
     }
 }
 ?>

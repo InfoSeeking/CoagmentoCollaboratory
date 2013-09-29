@@ -37,6 +37,7 @@ else{
 
 switch($path){
 	case "action":
+	case "snippet":
 	$class = ucfirst($path) . "Listener";
 	$file = $class . ".class.php";
 	require_once($file);
