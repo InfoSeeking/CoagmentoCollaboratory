@@ -4,6 +4,7 @@
 	 require_once('../core/Session.class.php');
 	 require_once("../core/Stage.class.php");
 	 require_once("../core/Action.class.php");
+	 require_once("../core/Snippet.class.php");
 	 
 	if (($_POST['userName'])&&(!Session::getInstance()->isSessionActive())){
 		//user is trying to log in
@@ -76,6 +77,27 @@
 				<input type="submit" value="Save"/>
 				<input type="hidden" name="action" value="save" />
 			</form>
+			<h3>Manage Exisiting Snippets</h3>
+			<?php
+			$snippets = Snippet::retrieveFromUser(Session::getInstance()->userID);
+			foreach($snippets as $s):
+			?>
+			<div class="row">
+				<form action="snippet.php" method="post">
+					<textarea name="content"><?php echo $s['snippet']; ?></textarea>
+					<input type="hidden" name="action" value="update" />
+					<input type="hidden" name="snippetID" value="<?php echo $s['snippetID']; ?>" />
+					<input type="submit" value="Update" />
+				</form>
+				<form action="snippet.php" method="post">
+					<input type="hidden" name="snippetID" value="<?php echo $s['snippetID']; ?>" />
+					<input type="hidden" name="action" value="delete" />
+					<input type="submit" value="Delete" />
+				</form>
+			</div>
+			<?php
+			endforeach;
+			?>
 		<h2>Bookmarks</h2>
 	</body>
 </html>

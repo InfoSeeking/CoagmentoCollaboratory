@@ -25,9 +25,13 @@
 			header("Location: index.php");
 		break;
 		case "update":
-
+			$snippet = Snippet::retrieve($_POST['snippetID']);
+			$snippet->setSnippet($_POST['content']);
+			$snippet->save();
+			header("Location: index.php");
 		break;
 		case "delete":
+			$snippet = Snippet::retrieve($_POST['snippetID']);
 
 		break;
 	}

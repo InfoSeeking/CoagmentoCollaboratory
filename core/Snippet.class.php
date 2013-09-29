@@ -13,14 +13,19 @@ class Snippet extends Base
   	protected $note;
   	protected $type;
   	protected $status;
-	
+	protected $inDatabase;
+
+	public function __construct(){
+		$this->inDatabase = false;
+	}
 	//Check user credentials.
-	public static function retrieveUserSnippets($userID){
+	public static function retrieveFromUser($userID){
 		$connection=Connection::getInstance();
-		$query = "SELECT * FROM snippets WHERE snippetID=:snippetID";
-		$params = array(':snippetID' => $snippetID);
+		$query = "SELECT * FROM snippets WHERE userID=:userID";
+		$params = array(':userID' => $userID);
 		$results = $connection->execute($query,$params);		
-		$record = $results->fetch(PDO::FETCH_ASSOC);
+		$records = $results->fetchAll(PDO::FETCH_ASSOC);
+		return $records;
 	}
 	public static function retrieve($snippetID)
 	{
@@ -52,6 +57,7 @@ class Snippet extends Base
 				$snippet->localDate = $record['clientDate'];
 				$snippet->localTime = $record['clientTime'];
 				$snippet->localTimestamp = $record['clientTimestamp'];
+				$snippet->inDatabase = true;
 				return $snippet;
 			}
 			else
@@ -76,12 +82,19 @@ class Snippet extends Base
 		try
 		{
 			$this->projectID = $this->getProjectID();
-			
 			$connection=Connection::getInstance();
-			$query = "INSERT INTO snippets (`title`,`status`,`projectID`,`userID`,`stageID`,`questionID`,`url`,`snippet`,`note`,`type`,`date`,`time`,`timestamp`,`clientDate`,`clientTime`,`clientTimestamp`) VALUES (:title,:status,:projectID,:userID,:stageID,:questionID,:url,:snippet,:note,:type,:date,:time,:timestamp,:clientDate,:clientTime,:clientTimestamp)";
 			$params = array(':title' => $this->title,':status' => $this->status,':projectID' => $this->projectID,':userID' => $this->userID,':stageID' => $this->stageID,':questionID' => $this->questionID,':url' => $this->url,':snippet' => $this->snippet,':note' => $this->note,':type' => $this->type,':date' => $this->date,':time' => $this->time,':timestamp' => $this->timestamp,':clientDate' => $this->localDate,':clientTime' => $this->localTime,':clientTimestamp' => $this->localTimestamp);
+			if(!$this->inDatabase){
+				$query = "INSERT INTO snippets (`title`,`status`,`projectID`,`userID`,`stageID`,`questionID`,`url`,`snippet`,`note`,`type`,`date`,`time`,`timestamp`,`clientDate`,`clientTime`,`clientTimestamp`) VALUES (:title,:status,:projectID,:userID,:stageID,:questionID,:url,:snippet,:note,:type,:date,:time,:timestamp,:clientDate,:clientTime,:clientTimestamp)";
+			}
+			else{
+				$query = "UPDATE snippets SET  `title` = :title, `status` = :status, `projectID` = :projectID, `userID` = :userID, `stageID` = :stageID, `questionID` = :questionID, `url` = :url, `snippet` = :snippet, `note` = :note, `type` = :type, `date` = :date, `time` = :time, `timestamp` = :timestamp, `clientDate` = :clientDate, `clientTime` = :clientTime, `clientTimestamp` = :clientTimestamp WHERE `snippetID`=:snippetID";
+				$params['snippetID'] = $this->snippetID;
+			}
+			
 			$results = $connection->execute($query,$params);
 			$this->snippetID = $connection->getLastID();
+			$this->inDatabase = true;
 		}
 		catch(Exception $e)
 		{
