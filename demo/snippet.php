@@ -31,8 +31,8 @@
 			header("Location: index.php");
 		break;
 		case "delete":
-			$snippet = Snippet::retrieve($_POST['snippetID']);
-
+			Snippet::delete($_POST['snippetID']);
+			header("Location: index.php");
 		break;
 	}
 ?>
