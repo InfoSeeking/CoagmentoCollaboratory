@@ -21,9 +21,7 @@ function addTimestamps(e)
 	form.append("<input type='hidden' name='clientDate' value='" + clientDate + "'/>");
 	form.append("<input type='hidden' name='clientTime' value='" + clientTime + "'/>");
 
-	e.preventDefault();
-	e.stopPropagation();
-	return false;
+	return true;
 }
 function init(){
 	var forms = $("form.addTimestamps");

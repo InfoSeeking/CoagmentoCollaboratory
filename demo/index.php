@@ -4,7 +4,7 @@
 	 require_once('../core/Session.class.php');
 	 require_once("../core/Stage.class.php");
 	 
-	if (($_POST['userName'])&&(!Session::getInstance()->isSessionActive())):
+	if (($_POST['userName'])&&(!Session::getInstance()->isSessionActive())){
 		$userName = $_POST['userName'];
 		$password = sha1($_POST['password']);
 		try
@@ -12,7 +12,10 @@
 			$user = User::login($userName,$password);
 			if ($user!=null)
 			{
-				Session::getInstance()->user = $user;
+				$s = Session::getInstance();
+				$s->userName = $user->getUserName();
+				$s->userID = $user->getUserID();
+
 				echo "A session has been created";
 			}
 			else
@@ -22,10 +25,11 @@
 		{
 			echo "An unexcepted error has occurred Code".$e->getCode();
 		}
-	else:
-		if (!Session::isSessionActive()):
+	}
+
+	if (!Session::isSessionActive()):
 ?>
-	<html>
+<html>
 	<head>
 		<title>Login</title>
 	<head>	
@@ -37,16 +41,23 @@
 			<label>Password</label><input type="password" name="password" size=20 /><br/>
 			<input type="submit" value="Submit"/>
 		</form>	
-	</body></html>
+	</body>
+</html>
 <?php
-		
-		else:
-		
-			$stage = new Stage();
-			$page = $stage->getCurrentPage();	
-			echo "Stage page: " . $page;		
-			echo "A session is currently active";
-			//header("Location: http://www.google.com");
-		endif;
+	else:
+?>
+<html>
+	<head>
+		<title>Manage</title>
+	<head>	
+	<body>
+		<script type="text/javascript" src="jquery-1.10.2.min.js"></script>
+		<script type="text/javascript" src="main.js"></script>
+		<h1>Manage</h1>
+		<a href="logout.php">Logout</a>
+		<p>Welcome <?php echo Session::getInstance()->userName; ?> </p>
+	</body>
+</html>
+<?php
 	endif;
 ?>
