@@ -1,8 +1,8 @@
 <?php
 	require_once('../core/User.class.php');
 	
-	$userName = "user12";
-	$password = "passUser1";
+	$userName = "test";
+	$password = "123";
 	$password = sha1($password);
 	$status = 1;
 	

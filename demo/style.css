@@ -1,0 +1,44 @@
+*{
+	margin:0;
+	padding:0;
+	font-family: 'Arial', 'Helvetica', 'sans-serif';
+}
+
+#container{
+	width: 600px;
+	margin: 50px auto;
+}
+
+#login label{
+	width: 120px;
+	display: inline-block;
+}
+#login input[type=submit]{
+	margin-top: 10px;
+}
+#manage textarea{
+	height: 75px;
+	width: 200px;
+}
+#manage .row{
+	padding: 10px;
+	background: #FFF;
+	clear: left;
+}
+#manage .row:nth-child(odd){
+	background:#C4F0FF;
+}
+#manage h3{
+	margin-top: 20px;
+}
+#manage .logout p{
+	float: left;
+}
+#manage .logout input{
+	float: left;
+	margin-left: 20px;
+}
+#manage h1{
+	clear: left;
+	padding-top: 10px;
+}

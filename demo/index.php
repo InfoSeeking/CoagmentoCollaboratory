@@ -43,15 +43,18 @@
 <html>
 	<head>
 		<title>Login</title>
+		<link rel="stylesheet" href="style.css" type="text/css"/>
 	<head>	
-	<body>
+	<body id="login">
 		<script type="text/javascript" src="jquery-1.10.2.min.js"></script>
 		<script type="text/javascript" src="main.js"></script>
-		<form action="index.php" method="post" class="addTimestamps">	
-			<label>Username</label><input type="text" name="userName" size="20" /><br/>
-			<label>Password</label><input type="password" name="password" size="20" /><br/>
-			<input type="submit" value="Submit"/>
-		</form>	
+		<div id="container">
+			<form action="index.php" method="post" class="addTimestamps">	
+				<label>Username</label><input type="text" name="userName" size="20" /><br/>
+				<label>Password</label><input type="password" name="password" size="20" /><br/>
+				<input type="submit" value="Submit"/>
+			</form>
+		</div>
 	</body>
 </html>
 <?php
@@ -60,45 +63,48 @@
 <html>
 	<head>
 		<title>Manage</title>
+		<link rel="stylesheet" href="style.css" type="text/css"/>
 	<head>	
-	<body>
+	<body id="manage">
 		<script type="text/javascript" src="jquery-1.10.2.min.js"></script>
 		<script type="text/javascript" src="main.js"></script>
-		<p>Welcome <?php echo Session::getInstance()->userName; ?></p>
-		<form class="addTimestamps" action="logout.php" method="post">
-			<input type="submit" value="Logout"/>
-		</form>
-		<h1>Manage Data</h1>
-		<h2>Snippets</h2>
-			<h3>Create a new snippet</h3>
-			<form action="snippet.php" method="post">
-				<label>Snippet Content:</label><br/>
-				<textarea name="content"></textarea><br/>
-				<input type="submit" value="Save"/>
-				<input type="hidden" name="action" value="save" />
+		<div id="container">
+			<form class="addTimestamps logout" action="logout.php" method="post">
+				<p>Welcome <b><?php echo Session::getInstance()->userName; ?></b></p>
+				<input type="submit" value="Logout"/>
 			</form>
-			<h3>Manage Exisiting Snippets</h3>
-			<?php
-			$snippets = Snippet::retrieveFromUser(Session::getInstance()->userID);
-			foreach($snippets as $s):
-			?>
-			<div class="row">
+			<h1>Manage Data</h1>
+			<h2>Snippets</h2>
+				<h3>Create a new snippet</h3>
 				<form action="snippet.php" method="post">
-					<textarea name="content"><?php echo $s['snippet']; ?></textarea>
-					<input type="hidden" name="action" value="update" />
-					<input type="hidden" name="snippetID" value="<?php echo $s['snippetID']; ?>" />
-					<input type="submit" value="Update" />
+					<label>Snippet Content:</label><br/>
+					<textarea name="content"></textarea><br/>
+					<input type="submit" value="Save"/>
+					<input type="hidden" name="action" value="save" />
 				</form>
-				<form action="snippet.php" method="post">
-					<input type="hidden" name="snippetID" value="<?php echo $s['snippetID']; ?>" />
-					<input type="hidden" name="action" value="delete" />
-					<input type="submit" value="Delete" />
-				</form>
+				<h3>Manage Exisiting Snippets</h3>
+				<?php
+				$snippets = Snippet::retrieveFromUser(Session::getInstance()->userID);
+				foreach($snippets as $s):
+				?>
+				<div class="row">
+					<form action="snippet.php" method="post">
+						<textarea name="content"><?php echo $s['snippet']; ?></textarea>
+						<input type="hidden" name="action" value="update" />
+						<input type="hidden" name="snippetID" value="<?php echo $s['snippetID']; ?>" />
+						<br/>
+						<input type="submit" value="Update" />
+					</form>
+					<form action="snippet.php" method="post">
+						<input type="hidden" name="snippetID" value="<?php echo $s['snippetID']; ?>" />
+						<input type="hidden" name="action" value="delete" />
+						<input type="submit" value="Delete" />
+					</form>
+				</div>
+				<?php
+				endforeach;
+				?>
 			</div>
-			<?php
-			endforeach;
-			?>
-		<h2>Bookmarks</h2>
 	</body>
 </html>
 <?php
