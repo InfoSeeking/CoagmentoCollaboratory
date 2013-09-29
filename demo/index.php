@@ -3,10 +3,15 @@
 	 require_once('../core/User.class.php');
 	 require_once('../core/Session.class.php');
 	 require_once("../core/Stage.class.php");
+	 require_once("../core/Action.class.php");
 	 
 	if (($_POST['userName'])&&(!Session::getInstance()->isSessionActive())){
+		//user is trying to log in
 		$userName = $_POST['userName'];
 		$password = sha1($_POST['password']);
+		$localDate = $_POST['clientDate'];
+		$localTime = $_POST['clientTime'];
+		$localTimeStamp = $_POST['clientTimestamp'];
 		try
 		{
 			$user = User::login($userName,$password);
@@ -15,7 +20,12 @@
 				$s = Session::getInstance();
 				$s->userName = $user->getUserName();
 				$s->userID = $user->getUserID();
-
+				//save login action
+				$a = new Action("login", $userName);
+				$a->setLocalDate($localDate);
+				$a->setLocalTime($localTime);
+				$a->setLocalTimestamp($localTimeStamp);
+				$a->save();
 				echo "A session has been created";
 			}
 			else
@@ -53,9 +63,13 @@
 	<body>
 		<script type="text/javascript" src="jquery-1.10.2.min.js"></script>
 		<script type="text/javascript" src="main.js"></script>
-		<h1>Manage</h1>
-		<a href="logout.php">Logout</a>
-		<p>Welcome <?php echo Session::getInstance()->userName; ?> </p>
+		<p>Welcome <?php echo Session::getInstance()->userName; ?></p>
+		<form class="addTimestamps" action="logout.php">
+			<input type="submit" value="Logout"/>
+		</form>
+		<h1>Manage Data</h1>
+		<h2>Snippets</h2>
+		<h2>Bookmarks</h2>
 	</body>
 </html>
 <?php

@@ -12,10 +12,8 @@ function addTimestamps(e)
 	var minutes = currentTime.getMinutes();
 	var seconds = currentTime.getSeconds();
 	var clientTime = hours + ":" + minutes + ":" + seconds;
-	var clientTimestamp = currentTime.getTime();
-
+	var clientTimestamp = Math.floor(currentTime.getTime()/1000);
 	var form = $(e.currentTarget);
-	console.log(form);
 
 	form.append("<input type='hidden' name='clientTimestamp' value='" + clientTimestamp + "'/>");
 	form.append("<input type='hidden' name='clientDate' value='" + clientDate + "'/>");

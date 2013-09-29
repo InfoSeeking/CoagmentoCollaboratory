@@ -32,12 +32,6 @@ class User
 			$user->userID = $record['userID'];
 			$user->userName = $record['username'];
 			$user->status = $record['status'];
-			
-			
-
-			$action = new Action('user_state', 'login');
-			$action->save();
-
 			return $user;
 		}
 		else{

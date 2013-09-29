@@ -165,7 +165,7 @@ class Base
 			$this->localTimestamp = time();
 		}
 		else{
-			$this->localTimestamp = $valstamp;
+			$this->localTimestamp = $val;
 		}
 	}
   
@@ -189,6 +189,12 @@ class Base
 		}
 	}
 
+	public function updateTimes(){
+		//set all times and dates to present
+		$this->setDate(NULL);
+		$this->setTime(NULL);
+		$this->setTimestamp(NULL);
+	}
 	//returns XML representation of this class
 	public function toXML(){}
 }

@@ -19,20 +19,11 @@ class Action extends Base
 		$this->actionName = $actionName;
 		$this->value = $value;
 		$this->inDatabase = false;
+		$this->updateTimes();//sets server times to present
 	}
   
 	public function save()
 	{
-
-		//set time and date to present
-		$this->setDate(NULL);
-		$this->setTime(NULL);
-		$this->setTimestamp(NULL);
-		$this->setLocalDate(NULL);
-		$this->setLocalTime(NULL);
-		$this->setLocalTimestamp(NULL);
-		
-		
 		$params = array(':userID' => $userID, ':projectID'=>$this->projectID, ':stageID'=>$this->stageID, ':timestamp'=>$this->timestamp, ':date'=>$this->date, ':time'=>$this->time, ':clientTimestamp'=>$this->localTimestamp, ':clientDate'=>$this->localDate, ':clientTime'=>$this->localTime, ':ip'=>$this->ip, ':actionName'=>$this->actionName, ':value'=>$this->value);
 		if($this->inDatabase){
 			$query = "UPDATE actions SET `userID` = :userID,`projectID` = :projectID,`stageID` = :stageID,`timestamp` = :timestamp,`date` = :date,`time` = :time,`clientTimestamp` = :clientTimestamp,`clientDate` = :clientDate,`clientTime` = :clientTime,`ip` = :ip,`action` = :actionName,`value` = :value WHERE `actionID`=:actionID";
