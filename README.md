@@ -11,6 +11,8 @@ Coagmento Collaboratory is a modularized and public use version of the [Coagment
 	<dd>Contains runnable examples of how you can implement Coagmento</dd>
 	<dt>model</dt>
 	<dd>Contains UML diagrams of the database</dd>
+	<dt>test</dt>
+	<dd>Contains simple tests of each core class</dd>
 	<dt>sidebar</dt>
 	<dd>Contains the Firefox sidebar plugin</dd>
 	<dt>toolbar</dt>
@@ -28,4 +30,7 @@ The database schema for MySQL can be found in the db folder. This can be importe
 cat db/*.sql | mysql -u <user> -h <host> -p
 ```
 ###Environment
-This was developed on Apache 2.2.22 with PHP version 5.4.6. At the moment, it has not been tested with other versions of PHP but should at least work with PHP 5.4 and above. To test if your environment is working, try going to demo/index.php.
+This was developed on Apache 2.2.22 with PHP version 5.4.6. At the moment, it has not been tested with other versions of PHP but should at least work with PHP 5.4 and above.
+
+###Testing
+Included in this repo is the <b>test</b> folder containing a number of simple tests using the core classes. If you are setting up your environment, try running these first. If these work, you can see examples of what is possible by navigating to the <b>demo</b> folder.
