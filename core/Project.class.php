@@ -9,6 +9,9 @@ class Project extends Base
 	protected $description;
 	protected $status;
 	
+	public function __construct(){
+		$this->inDatabase = false;
+	}
 	//check user credentials
 	public static function retrieve($projectID)
 	{
@@ -42,9 +45,17 @@ class Project extends Base
 	{
 		try
 		{
-			$connection=Connection::getInstance();
-			$query = "INSERT INTO projects (title, description, status) VALUES (:title, :description, 1)";
 			$params = array(':title'=>$this->title, ':description' => $this->description);
+			if($this->inDatabase){
+				$query = "UPDATE projects SET `title`=:title, `description`=:description, `status`=1 WHERE `projectID`=:projectID";
+				$params[':projectID'] = $this->projectID;
+			}
+			else{
+				$query = "INSERT INTO projects (title, description, status) VALUES (:title, :description, 1)";
+			}
+			
+			
+			$connection=Connection::getInstance();
 			$results = $connection->execute($query,$params);
 			$this->projectID = $connection->getLastID();
 		}
@@ -54,7 +65,14 @@ class Project extends Base
 		}
 		return $this->projectID;
 	}
-	
+
+	public static function delete($projectID){
+		$connection = Connection::getInstance();
+		$query = "DELETE FROM projects WHERE projectID=:projectID";
+		$params = array('projectID' => $projectID);
+		$statement = $connection->execute($query, $params);
+		return $statement->rowCount();
+	}
 	//GETTERS	
 	
 	public function getTitle()

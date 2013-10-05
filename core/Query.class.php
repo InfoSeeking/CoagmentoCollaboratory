@@ -13,6 +13,9 @@ class Query extends Base{
 	protected $timestamp;
 	protected $topResults;
 
+	public function __construct(){
+		$this->inDatabase = false;
+	}
 	public static function retrieve($queryID){
 		try
 		{
@@ -31,6 +34,7 @@ class Query extends Base{
 				$query->title = $record['title'];
 				$query->timestamp = $record['timestamp'];
 				$query->topResults = $record['topResults'];
+				$query->inDatabase = true;
 				return $query;
 			}
 			else
@@ -47,9 +51,16 @@ class Query extends Base{
 	{
 		try
 		{
-			$connection = Connection::getInstance();
-			$query = "INSERT INTO queries (query, source, url, title, topResults) VALUES (:query, :source, :url, :title, :topResults)";
 			$params = array(':query' => $this->query, ':source' => $this->source, ':url' => $this->url, ':title' => $this->title, ':topResults' => $this->topResults);
+			if($this->inDatabase){
+				$query = "UPDATE queries SET `query`=:query, `source`=:source, `url`=:url, `title`=:title, `topResults`=topResults WHERE `queryID`=:queryID";
+				$params['queryID'] = $this->queryID;
+			}
+			else{
+				$query = "INSERT INTO queries (query, source, url, title, topResults) VALUES (:query, :source, :url, :title, :topResults)";
+			}
+			
+			$connection = Connection::getInstance();
 			$results = $connection->execute($query,$params);
 			$this->queryID = $connection->getLastID();
 		}
@@ -58,6 +69,14 @@ class Query extends Base{
 			throw($e);
 		}
 		return $this->queryID;
+	}
+
+	public static function delete($queryID){
+		$connection = Connection::getInstance();
+		$query = "DELETE FROM queries WHERE queryID=:queryID";
+		$params = array('queryID' => $queryID);
+		$statement = $connection->execute($query, $params);
+		return $statement->rowCount();
 	}
 
 	//Getters
