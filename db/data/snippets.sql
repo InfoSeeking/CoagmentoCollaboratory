@@ -1,0 +1,23 @@
+CREATE TABLE IF NOT EXISTS `snippets` (
+  `snippetID` int(11) NOT NULL AUTO_INCREMENT,
+  `userID` int(11) DEFAULT NULL,
+  `projectID` int(11) DEFAULT NULL,
+  `stageID` varchar(45) DEFAULT NULL,
+  `questionID` int(11) DEFAULT NULL,
+  `url` text,
+  `title` text,
+  `snippet` text,
+  `timestamp` int(11) DEFAULT NULL,
+  `date` date DEFAULT NULL,
+  `time` time DEFAULT NULL,
+  `clientTimestamp` bigint(20) DEFAULT NULL,
+  `clientDate` date DEFAULT NULL,
+  `clientTime` time DEFAULT NULL,
+  `note` text,
+  `type` varchar(100) DEFAULT NULL,
+  `status` tinyint(1) DEFAULT '1',
+  PRIMARY KEY (`snippetID`),
+  KEY `userID` (`userID`),
+  KEY `projectID` (`projectID`),
+  FULLTEXT KEY `snippet` (`snippet`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;

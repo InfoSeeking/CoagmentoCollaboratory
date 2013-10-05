@@ -1,5 +1,6 @@
 <?php
 require_once('CoagmentoException.class.php');
+require_once("config.php");
 /*
 	Connection Class
 	
@@ -12,13 +13,13 @@ class Connection
 	private static $db_selected;
 	private $link;
 	private $lastID;
-	private $db;
+	public $db;
 		
 	public function __construct() {
-		$host = "localhost";
-		$username = "root";
-		$password = "102533";
-		$database = "coagmento_spring2013_study"; //Or other DB instance
+		$host = $DB_SETTINGS['host'];
+		$username = $DB_SETTINGS['user'];
+		$password = $DB_SETTINGS['password'];
+		$database = $DB_SETTINGS['database'];
 				
 		try
 		{
