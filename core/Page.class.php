@@ -28,7 +28,9 @@ class Page extends Base
 	protected $clientEndDate;
 	protected $clientEndTime;
 	  	
-	
+	public function __construct(){
+		$this->inDatabase = false;
+	}
 	//Check user credentials.
 	public static function retrieve($pageID)
 	{
@@ -67,6 +69,7 @@ class Page extends Base
 				$page->clientEndTimestamp = $record['clientEndTimestamp'];
 				$page->clientEndDate = $record['clientEndDate'];
 				$page->clientEndTime = $record['clientEndTime'];
+				$page->inDatabase = true;
 				return $page;
 			}
 			else
@@ -82,9 +85,17 @@ class Page extends Base
 	{
 		try
 		{
-			$connection=Connection::getInstance();
-			$query = "INSERT INTO pages (`userID`,`projectID`,`stageID`,`questionID`,`url`,`title`,`source`,`query`,`startTimestamp`,`startDate`,`startTime`,`clientStartTimestamp`,`clientStartDate`,`clientStartTime`,`bookmark`,`snippet`,`status`,`valid`,`endTimestamp`,`endDate`,`endTime`,`clientEndTimestamp`,`clientEndDate`,`clientEndTime`) VALUES (:userID,:projectID,:stageID,:questionID,:url,:title,:source,:query,:startTimestamp,:startDate,:startTime,:clientStartTimestamp,:clientStartDate,:clientStartTime,:bookmark,:snippet,:status,:valid,:endTimestamp,:endDate,:endTime,:clientEndTimestamp,:clientEndDate,:clientEndTime)";
+			
 			$params = array(':userID' => $this->userID,':projectID' => $this->projectID,':stageID' => $this->stageID,':questionID' => $this->questionID,':url' => $this->url,':title' => $this->title,':source' => $this->source,':query' => $this->query,':startTimestamp' => $this->startTimestamp,':startDate' => $this->startDate,':startTime' => $this->startTime,':clientStartTimestamp' => $this->clientStartTimestamp,':clientStartDate' => $this->clientStartDate,':clientStartTime' => $this->clientStartTime,':bookmark' => $this->bookmark,':snippet' => $this->snippet,':status' => $this->status,':valid' => $this->valid,':endTimestamp' => $this->endTimestamp,':endDate' => $this->endDate,':endTime' => $this->endTime,':clientEndTimestamp' => $this->clientEndTimestamp,':clientEndDate' => $this->clientEndDate,':clientEndTime' => $this->clientEndTime);
+			if($this->inDatabase){
+				//update
+				$query = "UPDATE pages SET `userID`=:userID,`projectID`=:projectID,`stageID`=:stageID,`questionID`=:questionID,`url`=:url,`title`=:title,`source`=:source,`query`=:query,`startTimestamp`=:startTimestamp,`startDate`=:startDate,`startTime`=:startTime,`clientStartTimestamp`=:clientStartTimestamp,`clientStartDate`=:clientStartDate,`clientStartTime`=:clientStartTime,`bookmark`=:bookmark,`snippet`=:snippet,`status`=:status,`valid`=:valid,`endTimestamp`=:endTimestamp,`endDate`=:endDate,`endTime`=:endTime,`clientEndTimestamp`=:clientEndTimestamp,`clientEndDate`=:clientEndDate,`clientEndTime`=:clientEndTime WHERE `pageID`=:pageID";
+				$params[':pageID'] = $this->pageID;
+			}
+			else{
+				$query = "INSERT INTO pages (`userID`,`projectID`,`stageID`,`questionID`,`url`,`title`,`source`,`query`,`startTimestamp`,`startDate`,`startTime`,`clientStartTimestamp`,`clientStartDate`,`clientStartTime`,`bookmark`,`snippet`,`status`,`valid`,`endTimestamp`,`endDate`,`endTime`,`clientEndTimestamp`,`clientEndDate`,`clientEndTime`) VALUES (:userID,:projectID,:stageID,:questionID,:url,:title,:source,:query,:startTimestamp,:startDate,:startTime,:clientStartTimestamp,:clientStartDate,:clientStartTime,:bookmark,:snippet,:status,:valid,:endTimestamp,:endDate,:endTime,:clientEndTimestamp,:clientEndDate,:clientEndTime)";
+			}
+			$connection=Connection::getInstance();
 			$results = $connection->execute($query,$params);
 			$this->pageID = $connection->getLastID();
 		}
@@ -93,6 +104,14 @@ class Page extends Base
 			throw($e);
 		}
 		return $this->pageID;
+	}
+
+	public static function delete($pageID){
+		$connection = Connection::getInstance();
+		$query = "DELETE FROM pages WHERE pageID=:pageID";
+		$params = array('pageID' => $pageID);
+		$statement = $connection->execute($query, $params);
+		return $statement->rowCount();
 	}
 
 	public function getPageID(){return $this->pageID;}

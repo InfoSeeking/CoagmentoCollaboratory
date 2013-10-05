@@ -13,7 +13,12 @@
 	
 	if ($retrievedPage!=NULL)
 	{
-		echo $retrievedPage;
+		echo $retrievedPage . "<br/>";
+		$retrievedPage->setQuery("This is an updated query");
+		$retrievedPage->save();
+		echo "Retrieved page changed and saved<br/>";
+		Page::delete($resultingID);
+		echo "Page deleted<br/>";
 	}
 	else
 		echo "Could not find page";	
