@@ -4,9 +4,9 @@ Coagmento Collaboratory is a modularized and public use version of the [Coagment
 ##Directories
 <dl>
 	<dt>core</dt>
-	<dd>Contains the core classes for accessing the different components (user, snippet, query, etc.) and useful wrapper classes (session)</dd>
+	<dd>Contains the core classes for accessing the different components (user, snippet, query, etc.) and useful wrapper classes (session). Also contains the config.php file</dd>
 	<dt>db</dt>
-	<dd>Contains database schema for MySQL</dd>
+	<dd>Contains files for importing database. The raw schema files are in db/data</dd>
 	<dt>demo</dt>
 	<dd>Contains runnable examples of how you can implement Coagmento</dd>
 	<dt>model</dt>
@@ -25,9 +25,11 @@ Coagmento Collaboratory is a modularized and public use version of the [Coagment
 <hr/>
 ##Setup
 ###Database
-The database schema for MySQL can be found in the db folder. This can be imported into your own database with this command:
+The database schema for MySQL can be found in the db/data folder. We have made a simple database import script which you can easily run to create all of the necessary tables. Firstly, edit the core/config.php file to add your database credentials. Then navigate to the db/index.php in your browser. This will show you a list of the tables which you can import, and click "Create Tables" to import them.
+
+Alternatively, you can import this yourself using this command (or similar):
 ```
-cat db/*.sql | mysql -u <user> -h <host> -p
+cat db/data/*.sql | mysql -u <user> -h <host> -p
 ```
 ###Environment
 This was developed on Apache 2.2.22 with PHP version 5.4.6. At the moment, it has not been tested with other versions of PHP but should at least work with PHP 5.4 and above.
