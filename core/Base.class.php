@@ -1,13 +1,12 @@
 <?php
 
-//This class contains common attributes.
-//Getters and Setters can be updated using php magic methods __get and __set.
+/**
+* This class contains common properties of many of the interactive classes.
+*
+*/
 class Base 
 {	
 	protected $data = array(); // Location for overloaded data.
-
-	//maybe userID, projectID, stageID, taskID should be static....
-
 	protected $userID;
 	protected $projectID;
 	protected $stageID;

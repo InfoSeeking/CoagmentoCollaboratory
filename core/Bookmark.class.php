@@ -1,8 +1,10 @@
 <?php
 require_once('Connection.class.php');
 require_once('Base.class.php');
-//require_once('Action.class.php');
 
+/**
+* Bookmark creating/deleting/updating
+*/
 class Bookmark extends Base
 {
 	protected $bookmarkID;
@@ -15,7 +17,11 @@ class Bookmark extends Base
 	public function __construct(){
 		$this->inDatabase = false;
 	}
-	//Check user credentials.
+	/**
+	* Returns an array of all of the bookmarks belonging to the specified user.
+	* @param int $userID
+	* @return array Returns an array of associative arrays for the bookmarks
+	*/
 	public static function retrieveFromUser($userID){
 		$connection=Connection::getInstance();
 		$query = "SELECT * FROM bookmarks WHERE userID=:userID";
@@ -24,6 +30,11 @@ class Bookmark extends Base
 		$records = $results->fetchAll(PDO::FETCH_ASSOC);
 		return $records;
 	}
+	/**
+	* Retrieves a bookmark given an ID.
+	* @param int $bookmarkID
+	* @return Bookmark
+	*/
 	public static function retrieve($bookmarkID)
 	{
 		try
@@ -63,6 +74,10 @@ class Bookmark extends Base
 		}
 	}
 
+	/**
+	* Deletes bookmark from database.
+	* @param int $bookmarkID
+	*/
 	public static function delete($bookmarkID){
 		$connection = Connection::getInstance();
 		$query = "DELETE FROM bookmarks WHERE bookmarkID=:bookmarkID";
@@ -70,7 +85,9 @@ class Bookmark extends Base
 		$statement = $connection->execute($query, $params);
 		return $statement->rowCount();
 	}
-		
+	/**
+	* Saves or updates bookmark.
+	*/
 	public function save()
 	{
 		try

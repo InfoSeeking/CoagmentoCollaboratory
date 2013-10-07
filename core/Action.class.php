@@ -1,10 +1,8 @@
 <?php
 require_once('Connection.class.php');
 require_once('Base.class.php');
-/*
-	Action Class
-	
-	It keeps log of user actions
+/**
+* Defines different actions from users
 */
 
 class Action extends Base
@@ -21,7 +19,10 @@ class Action extends Base
 		$this->inDatabase = false;
 		$this->updateTimes();//sets server times to present
 	}
-  
+  	/**
+  	* Adds action to database.
+  	* The save method will either insert the action into the database if it is new, or update it if it is already in the database.
+  	*/
 	public function save()
 	{
 		$params = array(':userID' => $userID, ':projectID'=>$this->projectID, ':stageID'=>$this->stageID, ':timestamp'=>$this->timestamp, ':date'=>$this->date, ':time'=>$this->time, ':clientTimestamp'=>$this->localTimestamp, ':clientDate'=>$this->localDate, ':clientTime'=>$this->localTime, ':ip'=>$this->ip, ':actionName'=>$this->actionName, ':value'=>$this->value);
@@ -45,6 +46,11 @@ class Action extends Base
 		return $this->actionID;
 	}
 	
+	/**
+	* Retrieves an action object given it's id
+	* @param int $actionID
+	* @return Action
+	*/
 	public static function retrieve($actionID)
 	{
 		try{
@@ -78,7 +84,9 @@ class Action extends Base
 				throw($e);
 			}
 	}
-
+	/**
+	* Deletes an action from the database
+	*/
 	public static function delete($actionID){
 		$connection = Connection::getInstance();
 		$query = "DELETE FROM actions WHERE actionID=:actionID";
