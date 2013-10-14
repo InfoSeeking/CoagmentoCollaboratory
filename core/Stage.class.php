@@ -12,7 +12,7 @@ class Stage extends Base
 	protected $maxLoops;
 	protected $currentLoops;
 	protected $allowBrowsing;
-	protected $previoiusStage; //Stage object
+	protected $previousStage; //Stage object
 	protected $nextStage; //Stage object
 	protected $previousStartTimestamp;
 	protected $previousMaxTime;
@@ -42,7 +42,6 @@ class Stage extends Base
                                                           AND userID = :userID
                                                        )   			  				   
 				  				   )";
-
 		$connection = Connection::getInstance();
 		$results = $connection->execute($query, $params);
 		$record = $results->fetch(PDO::FETCH_ASSOC);
@@ -59,9 +58,12 @@ class Stage extends Base
 			$stage->allowBrowsing = $record['allowBrowsing'];
 			$stage->populatePreviousStage();
 			$stage->populateNextStage();
+			$stage->projectID = $projectID;
+			$stage->userID = $userID;
 			//$stage->previousStartTimestamp = $stage->getPreviousStartTimestamp();
 			//$stage->previousMaxTime = $stage->getPreviousMaxTime();
 			$stage->inDatabase = true;
+			return $stage;
 		}
 		else 
 		{
@@ -69,17 +71,50 @@ class Stage extends Base
 		}
 	}
   	
-  	//changes session_progress, returns a new Stage object
-	public function moveToNextStage()
+  	/**
+  	* Returns the nextStage variable, but initializes the nextStage with it's own nextStage and previousStage properties (in a linked list fashion).
+  	* Note that this function does not change the current object, but instead readies the next stage object and returns that.
+  	* @param boolean $logAction if this is true, it will log an action saying the user moved to the next stage
+  	* @return Stage this is next stage which the nextStage property points
+  	*/
+	public function moveToNextStage($logAction=FALSE)
 	{
-		$data = $this->getNextStageData();
-		$this->currentPage = $data['page'];	//First get Page, then stageID
-		$this->stageID = $data['stageID'];	  //Then get ID next page
-		$this->maxTime = $data['maxTime']; //Get Max Time
-		$this->maxTimeQuestion = $data['maxTimeQuestion']; //Get Max Time Question
-		$this->maxLoops = $data['maxLoops']; //Get Max Loops
-		$this->currentLoops = $data['currentLoops']; //Get Current Loops
-		$this->allowBrowsing = $data['allowBrowsing'];		
+		if($this->nextStage == null){
+			return null;
+		}
+		$this->nextStage->previousStage = $this;
+		$this->nextStage->populateNextStage();
+		//Create action before setting the session variable to preserve the previous stage in the log
+		if($logAction){
+			$action = new Action('Next Stage: '.$this->currentPage . " to " . $this->nextStage->currentPage,$this->nextStage->stageID);
+			$action->setUserID($this->userID);
+			$action->setProjectID($this->projectID);
+			$action->setStageID($this->stageID);
+			$action->save();
+		}
+
+		$this->updateTimes();
+		echo "HERE: " . $this->userID;
+		$params = array(
+			":projectID" => $this->projectID,
+			":userID" => $this->userID,
+			":date" => $this->date,
+			":time" => $this->time,
+			":stageID" => $this->nextStage->stageID
+			);
+		$connection = Connection::getInstance();
+		$query = "INSERT INTO session_progress(`projectID`, `userID`, `stageID`, `date`, `time`) VALUES (:projectID,:userID, :stageID,:date,:time)";	
+		$results = $connection->execute($query, $params);	
+		return $this->nextStage;
+
+		/*
+		$this->currentPage = $this->nextStage->page;	//First get Page, then stageID
+		$this->stageID = $this->nextStage->stageID;	  //Then get ID next page
+		$this->maxTime = $this->nextStage->maxTime; //Get Max Time
+		$this->maxTimeQuestion = $this->nextStage->maxTimeQuestion; //Get Max Time Question
+		$this->maxLoops = $this->nextStage->maxLoops; //Get Max Loops
+		$this->currentLoops = $this->nextStage->currentLoops; //Get Current Loops
+		$this->allowBrowsing = $this->nextStage->allowBrowsing;		
 		$this->previousStartTimestamp = $this->getPreviousStartTimestamp();
 		$this->previousMaxTime = $this->getPreviousMaxTime();
 											
@@ -116,6 +151,7 @@ class Stage extends Base
 		}
 		
 		return false;
+		*/
 	}
 	
 	public function moveToPreviousStage()
