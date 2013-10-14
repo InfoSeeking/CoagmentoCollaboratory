@@ -56,12 +56,10 @@ class Stage extends Base
 			$stage->maxLoops = $record['maxLoops'];
 			$stage->currentLoops = $record['currentLoops'];
 			$stage->allowBrowsing = $record['allowBrowsing'];
-			$stage->populatePreviousStage();
-			$stage->populateNextStage();
 			$stage->projectID = $projectID;
 			$stage->userID = $userID;
-			//$stage->previousStartTimestamp = $stage->getPreviousStartTimestamp();
-			//$stage->previousMaxTime = $stage->getPreviousMaxTime();
+			$stage->populatePreviousStage();
+			$stage->populateNextStage();
 			$stage->inDatabase = true;
 			return $stage;
 		}
@@ -94,7 +92,6 @@ class Stage extends Base
 		}
 
 		$this->updateTimes();
-		echo "HERE: " . $this->userID;
 		$params = array(
 			":projectID" => $this->projectID,
 			":userID" => $this->userID,
@@ -106,105 +103,52 @@ class Stage extends Base
 		$query = "INSERT INTO session_progress(`projectID`, `userID`, `stageID`, `date`, `time`) VALUES (:projectID,:userID, :stageID,:date,:time)";	
 		$results = $connection->execute($query, $params);	
 		return $this->nextStage;
-
-		/*
-		$this->currentPage = $this->nextStage->page;	//First get Page, then stageID
-		$this->stageID = $this->nextStage->stageID;	  //Then get ID next page
-		$this->maxTime = $this->nextStage->maxTime; //Get Max Time
-		$this->maxTimeQuestion = $this->nextStage->maxTimeQuestion; //Get Max Time Question
-		$this->maxLoops = $this->nextStage->maxLoops; //Get Max Loops
-		$this->currentLoops = $this->nextStage->currentLoops; //Get Current Loops
-		$this->allowBrowsing = $this->nextStage->allowBrowsing;		
-		$this->previousStartTimestamp = $this->getPreviousStartTimestamp();
-		$this->previousMaxTime = $this->getPreviousMaxTime();
-											
-		if ($this->currentPage<>'')
-		{
-			//Create action before setting the session variable to preserve the previous stage in the log
-			$action = new Action('Next Stage: '.$this->currentPage,$this->stageID);
-			
-			//SAVING THE NEW STAGE IN SESSION VARIABLE
-			$this->setStageID($this->stageID);	
-			$this->setPage($this->currentPage);
-			$this->setMaxTime($this->maxTime);	
-			$this->setMaxTimeQuestion($this->maxTimeQuestion);
-			$this->setMaxLoops($this->maxLoops);
-			$this->setCurrentLoops($this->currentLoops);
-			$this->setAllowBrowsing($this->allowBrowsing);
-			$this->setPreviousStartTimestamp($this->previousStartTimestamp);
-			$this->setPreviousMaxTime($this->previousMaxTime);
-			
-			$projectID = $action->getProjectID();
-			$userID = $action->getUserID();
-			$time = $action->getTime();
-			$date = $action->getDate();
-			$timestamp = $action->getTimestamp();
-			$stageID = $action->getStageID();	//It keeps the previous stage ID		
-			$connection = Connection::getInstance();
-			$query = "INSERT INTO session_progress(projectID, userID, stageID, date, time, timestamp) 
-			                               VALUES ('$projectID','$userID','$this->stageID','$date','$time','$timestamp')";	
-		
-			$results = $connection->commit($query);	
-			$action->save();
-			
-			return true;
-		}
-		
-		return false;
-		*/
 	}
-	
-	public function moveToPreviousStage()
+	/**
+  	* Similar to moveToNextStage, returns the previous stage with it's next and previous stage pointers initialized
+  	* @param boolean $logAction if this is true, it will log an action saying the user moved to the previous stage
+  	* @return Stage this is previous stage which the previousStage property points
+  	*/
+	public function moveToPreviousStage($logAction=FALSE)
 	{
-		$data = $this->getPreviousStageData();
-		$this->currentPage = $data['page'];	//First get Page, then stageID
-		$this->stageID = $data['stageID'];	  //Then get ID next page
-		$this->maxTime = $data['maxTime']; //Get Max Time
-		$this->maxTimeQuestion = $data['maxTimeQuestion']; //Get Max Time Question
-		$this->maxLoops = $data['maxLoops']; //Get Max Loops
-		$this->currentLoops = $data['currentLoops']; //Get Current Loops
-		$this->allowBrowsing = $data['allowBrowsing'];
-										
-		if ($this->currentPage<>'')
-		{
-			//Create action before setting the session variable to preserve the previous stage in the log
-			$action = new Action('Previous Stage: '.$this->currentPage,$this->stageID);
-			
-			//SAVING THE NEW STAGE IN SESSION VARIABLE
-			$this->setStageID($this->stageID);	
-			$this->setPage($this->currentPage);
-			$this->setMaxTime($this->maxTime);	
-			$this->setMaxTimeQuestion($this->maxTimeQuestion);
-			$this->setMaxLoops($this->maxLoops);
-			$this->setAllowBrowsing($this->allowBrowsing);
-							
-			$projectID = $action->getProjectID();
-			$userID = $action->getUserID();
-			$time = $action->getTime();
-			$date = $action->getDate();
-			$timestamp = $action->getTimestamp();
-			$stageID = $action->getStageID();	//It keeps the previous stage ID		
-			$connection = Connection::getInstance();
-			$query = "INSERT INTO session_progress(projectID, userID, stageID, date, time, timestamp) 
-			                               VALUES ('$projectID','$userID','$this->stageID','$date','$time','$timestamp')";	
-		
-			$results = $connection->commit($query);	
-			$action->save();
-			
-			return true;
+		if($this->previousStage == null){
+			return null;
 		}
+		$this->previousStage->nextStage = $this;
+		$this->previousStage->populatePreviousStage();
+		//Create action before setting the session variable to preserve the previous stage in the log
+		if($logAction){
+			$action = new Action('Previous Stage: '.$this->currentPage . " to " . $this->previousStage->currentPage,$this->previousStage->stageID);
+			$action->setUserID($this->userID);
+			$action->setProjectID($this->projectID);
+			$action->setStageID($this->stageID);
+			$action->save();
+		}
+
+		$this->updateTimes();
+		$params = array(
+			":projectID" => $this->projectID,
+			":userID" => $this->userID,
+			":date" => $this->date,
+			":time" => $this->time,
+			":stageID" => $this->previousStage->stageID
+			);
+		$connection = Connection::getInstance();
+		$query = "INSERT INTO session_progress(`projectID`, `userID`, `stageID`, `date`, `time`) VALUES (:projectID,:userID, :stageID,:date,:time)";	
+		$results = $connection->execute($query, $params);	
+		return $this->previousStage;
 		
-		return false;
 	}
 	
 	//sets the next stage to another Stage object
 	public function populateNextStage()
 	{			
 		$connection = Connection::getInstance();
-		$params = Array(":stageID" => $this->stageID, "userID" => $this->userID, "projectID" => $this->projectID);
+		$params = Array(":stageID" => $this->stageID, ":userID" => $this->userID, ":projectID" => $this->projectID);
+
 		$query = "SELECT stageID, page, maxTime, maxTimeQuestion, maxLoops, allowBrowsing, (SELECT count(*) FROM session_progress a WHERE a.stageID = b.stageID  AND userID = :userID AND projectID = :projectID) currentLoops 
 				    FROM session_stages b
-				    WHERE stageID>:stageID AND status = '1' order by stageID LIMIT 1";
+				    WHERE stageID>:stageID AND status = 1 order by stageID LIMIT 1";
 		$results = $connection->execute($query, $params);
 		$record = $results->fetch(PDO::FETCH_ASSOC);
 		if($record){
@@ -233,7 +177,7 @@ class Stage extends Base
 	public function populatePreviousStage()
 	{	
 		$connection = Connection::getInstance();
-		$params = Array(":stageID" => $this->stageID, "userID" => $this->userID, "projectID" => $this->projectID);
+		$params = array(":stageID" => $this->stageID, ":userID" => $this->userID, ":projectID" => $this->projectID);
 		$query = "SELECT stageID, page, maxTime, maxTimeQuestion, maxLoops, allowBrowsing, (SELECT count(*) FROM session_progress a WHERE a.stageID = b.stageID  AND userID = :userID AND projectID = :projectID) currentLoops 
 				    FROM session_stages b
 				    WHERE stageID<:stageID AND status = '1' order by stageID DESC LIMIT 1";
