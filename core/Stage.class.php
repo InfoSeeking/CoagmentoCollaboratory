@@ -20,7 +20,12 @@ class Stage extends Base
 	public function __construct(){
 		$this->inDatabase = false;
 	}
-
+	/**
+	* Returns the stage which the user is at in the specified project.
+	* @param int $projectID
+	* @param int $userID
+	* @return Stage
+	*/
 	public static function retrieve($projectID, $userID) 
 	{
 		$params = Array(":projectID" => $projectID, ":userID" => $userID);
@@ -215,7 +220,7 @@ class Stage extends Base
 	public function getPreviousPage(){return $this->previousStage->page;}
 	public function getPreviousMaxTime(){return $this->previousStage->maxTime;}
 	public function getPreviousMaxTimeQuestion(){return $this->previousStage->maxTimeQuestion;}
-	public function getPreviousMaxLoops(){return $this->previousStage->maxLoops;
+	public function getPreviousMaxLoops(){return $this->previousStage->maxLoops;}
 	public function getPreviousCurrentLoops(){return $this->previousStage->currentLoops;}
 	public function getPreviousAllowBrowsing(){return $this->previousStage->allowBrowsing;}	
 	public function getPreviousStartTimestamp(){return $this->previousStage->timestamp;}

@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS `session_stages` (
-  `stageID` smallint(4) NOT NULL,
+  `stageID` int(11) NOT NULL AUTO_INCREMENT,
   `description` varchar(45) NOT NULL,
   `page` varchar(45) DEFAULT NULL,
   `maxTime` int(11) DEFAULT NULL,

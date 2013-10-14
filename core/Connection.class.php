@@ -16,6 +16,7 @@ class Connection
 	public $db;
 		
 	public function __construct() {
+		global $DB_SETTINGS;
 		$host = $DB_SETTINGS['host'];
 		$username = $DB_SETTINGS['user'];
 		$password = $DB_SETTINGS['password'];
