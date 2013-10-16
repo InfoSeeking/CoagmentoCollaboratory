@@ -1,5 +1,7 @@
 <?php
-//I should make a standard XML format for this
+//I will make a standard XML format for this
+
+$PASSED_DATA = []; //data passed in the 'data' POST field
 
 function err($msg){
 	echo "<response><error>" . $msg . "</error></response>";
@@ -32,8 +34,17 @@ if(sizeof($URL_PARTS) > 1){
 	$path = $URL_PARTS[1];
 }
 else{
-	die("No path supplied");
+	die(err("No path supplied"));
 }
+
+if(!isset($_POST['type'])){
+	die(err("No type supplied"));
+}
+
+parse_str($_POST['data'], $PASSED_DATA);
+var_dump($PASSED_DATA);
+
+//TODO authenticate
 
 switch($path){
 	case "action":
@@ -43,7 +54,7 @@ switch($path){
 	require_once($file);
 	$obj = new $class();
 	
-	switch($_SERVER['REQUEST_METHOD']){
+	switch($_POST['type']){
 		case "GET":
 		$obj->get();
 		break;

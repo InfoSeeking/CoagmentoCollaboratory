@@ -36,3 +36,18 @@ This was developed on Apache 2.2.22 with PHP version 5.4.6. At the moment, it ha
 
 ###Testing
 Included in this repo is the <b>test</b> folder containing a number of simple tests using the core classes. If you are setting up your environment, try running these first. If these work, you can see examples of what is possible by navigating to the <b>demo</b> folder.
+
+##Webservices
+All webservices will be called using a POST request with the following parameters:
+<b>type</b> can take values 'POST', 'GET', 'PUT', 'DELETE'
+
+<b>data</b> is a string of all data relevant for the request. Making this parameter in PHP would easily be done with the [http_build_query](http://www.php.net/manual/en/function.http-build-query.php) function
+
+<b>hashed_data</b> is the same string of data hashed with the user's private API key. The private key should be appended to the data and then hashed using sha1.
+
+These post requests will go to different components based on the path this is sent to. For example, sending a request to do something with an action would go to:
+
+http://<base url>/webservices/index.php/action
+
+
+We will include helper functions for building a request to send to the webservice.
