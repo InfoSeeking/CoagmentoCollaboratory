@@ -2,7 +2,7 @@
 require_once("../core/User.class.php");
 //I will make a standard XML format for this
 
-$PASSED_DATA = []; //data passed in the 'data' POST field
+
 
 function err($msg){
 	echo "<response><error>" . $msg . "</error></response>";
@@ -28,67 +28,71 @@ function fetchID(){
 	}
 }
 
-$path = $_SERVER['PATH_INFO'];
-$URL_PARTS = explode("/", $path);
+/* called on startup */
+function init(){
+	$u = NULL;//user object
+	$uid = -1;//user id
+	$passed_data = []; //data passed in the 'data' POST field
+	$path = $_SERVER['PATH_INFO'];
+	$url_parts = explode("/", $path);
 
-if(sizeof($URL_PARTS) > 1){
-	$path = $URL_PARTS[1];
-}
-else{
-	die(err("No path supplied"));
-}
-
-if(!isset($_POST['action'])){
-	die(err("No action supplied"));
-}
-if(!isset($_POST['userID'])){
-	die(err("No userID supplied"));
-}
-if(!isset($_POST['data'])){
-	die(err("No data supplied"));
-}
-if(!isset($_POST['hashed_data'])){
-	die(err("No hashed_data supplied"));
-}
-
-parse_str($_POST['data'], $PASSED_DATA);
-var_dump($PASSED_DATA);
-
-$uid = intval($_POST['userID']);
-//authentication
-$u = User::retrieve($uid);
-$key = sha1($_POST['data'] . "|" .  $_POST['userID'] . "|" . $u->getKey());
-if($key != $_POST['hashed_data']){
-	die(err("User not authenticated, please follow the documentation on sending requests to the web services"));
-}
-
-exit("Authentic");
-
-switch($path){
-	case "action":
-	case "snippet":
-	$class = ucfirst($path) . "Listener";
-	$file = $class . ".class.php";
-	require_once($file);
-	$obj = new $class();
-	$obj->setData($_POST['data']);
-	$obj->setUserID($uid);
-
-	switch($_POST['action']){
-		case "retrieve":
-		$obj->retrieve();
-		break;
-		case "create":
-		$obj->create();
-		break;
-		case "delete":
-		$obj->delete();
-		break;
-		case "update":
-		$obj->update();
-		break;	
+	if(sizeof($url_parts) > 1){
+		$path = $url_parts[1];
 	}
-	break;
+	else{
+		die(err("No path supplied"));
+	}
+
+	if(!isset($_POST['action'])){
+		die(err("No action supplied"));
+	}
+	if(!isset($_POST['userID'])){
+		die(err("No userID supplied"));
+	}
+	if(!isset($_POST['data'])){
+		die(err("No data supplied"));
+	}
+	if(!isset($_POST['hashed_data'])){
+		die(err("No hashed_data supplied"));
+	}
+
+	$uid = intval($_POST['userID']);
+	//authentication
+	$u = User::retrieve($uid);
+	$key = sha1($_POST['data'] . "|" .  $uid . "|" . $u->getKey());
+	if($key != $_POST['hashed_data']){
+		die(err("User not authenticated, please follow the documentation on sending requests to the web services"));
+	}
+
+	parse_str($_POST['data'], $passed_data);
+
+	switch($path){
+		case "action":
+		case "snippet":
+		$class = ucfirst($path) . "Listener";
+		$file = $class . ".class.php";
+		require_once($file);
+		$obj = new $class();
+		$obj->setData($passed_data);
+		$obj->setUserID($uid);
+
+		switch($_POST['action']){
+			case "retrieve":
+			$obj->retrieve();
+			break;
+			case "create":
+			$obj->create();
+			break;
+			case "delete":
+			$obj->delete();
+			break;
+			case "update":
+			$obj->update();
+			break;	
+		}
+		break;
+	}
 }
 
+init();
 ?>

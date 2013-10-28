@@ -12,3 +12,5 @@ echo "<p>Sending authenticated request to webservice to create action</p>";
 $response = sendRequest("http://localhost/coagmentoCollaboratory/webservices/index.php", "action", $data, 1, "create", $key);
 
 echo $response;
+
+echo "<p>Action created</p>";

@@ -29,7 +29,6 @@ class Action extends Base
 		if($this->inDatabase){
 			$query = "UPDATE actions SET `userID` = :userID,`projectID` = :projectID,`stageID` = :stageID,`timestamp` = :timestamp,`date` = :date,`time` = :time,`clientTimestamp` = :clientTimestamp,`clientDate` = :clientDate,`clientTime` = :clientTime,`ip` = :ip,`action` = :actionName,`value` = :value WHERE `actionID`=:actionID";
 			$params[":actionID"] = $this->actionID;
-			echo $query;
 		}
 		else{
 			$query = "INSERT INTO actions (userID, projectID, stageID, `timestamp`, `date`, `time`, `clientTimestamp`, `clientDate`, `clientTime`, `ip`, `action`, `value`) 
