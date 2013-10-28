@@ -39,7 +39,10 @@ Included in this repo is the <b>test</b> folder containing a number of simple te
 
 ##Webservices
 All webservices will be called using a POST request with the following parameters:
-<b>type</b> can take values 'POST', 'GET', 'PUT', 'DELETE'
+
+<b>userID</b> your user id
+
+<b>action</b> can take values 'retrieve', 'delete', 'update', or 'create'
 
 <b>data</b> is a string of all data relevant for the request. Making this parameter in PHP would easily be done with the [http_build_query](http://www.php.net/manual/en/function.http-build-query.php) function
 
@@ -49,5 +52,6 @@ These post requests will go to different components based on the path this is se
 
 http://<base url>/webservices/index.php/action
 
+Currently, this authentication is based off of [this article](http://www.thebuzzmedia.com/designing-a-secure-rest-api-without-oauth-authentication/). It does not prevent someone from intercepting your request, and then resending it to have the action repeated. This may be dealt with by factoring in the time the request has been sent, but this is the present status.
 
 We will include helper functions for building a request to send to the webservice.

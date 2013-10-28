@@ -12,6 +12,7 @@ class User
   	protected $userName;
 	protected $password;
 	protected $status;
+	protected $key;
 
 	// //Constructor
 	// public function __User() {
@@ -32,6 +33,7 @@ class User
 			$user->userID = $record['userID'];
 			$user->userName = $record['username'];
 			$user->status = $record['status'];
+			$user->key = $record['api_key'];
 			return $user;
 		}
 		else{
@@ -52,6 +54,7 @@ class User
 			$user->userID = $record['userID'];
 			$user->userName = $record['username'];
 			$user->status = $record['status'];
+			$user->key = $record['api_key'];
 			return $user;
 		}
 		else{
@@ -98,6 +101,10 @@ class User
 	public function getStatus()
 	{
 		return $this->status;
+	}
+
+	public function getKey(){
+		return $this->key;
 	}
 	
 	

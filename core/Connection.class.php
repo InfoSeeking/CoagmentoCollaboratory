@@ -28,8 +28,7 @@ class Connection
 			$this->db = new PDO("mysql:host=$host;dbname=$database", $username, $password);
 		}
 		catch(PDOException $e){
-			
-			die($e->getCode());
+			die("Cannot connect to database");
 		}
 		//Uncomment if you don't want to use PDO
 		//$this->link = mysql_connect($host, $username, $password) or die("Cannot connect to the database: ". mysql_error());

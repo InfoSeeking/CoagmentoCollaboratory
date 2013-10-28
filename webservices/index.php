@@ -1,4 +1,5 @@
 <?php
+require_once("../core/User.class.php");
 //I will make a standard XML format for this
 
 $PASSED_DATA = []; //data passed in the 'data' POST field
@@ -37,14 +38,31 @@ else{
 	die(err("No path supplied"));
 }
 
-if(!isset($_POST['type'])){
-	die(err("No type supplied"));
+if(!isset($_POST['action'])){
+	die(err("No action supplied"));
+}
+if(!isset($_POST['userID'])){
+	die(err("No userID supplied"));
+}
+if(!isset($_POST['data'])){
+	die(err("No data supplied"));
+}
+if(!isset($_POST['hashed_data'])){
+	die(err("No hashed_data supplied"));
 }
 
 parse_str($_POST['data'], $PASSED_DATA);
 var_dump($PASSED_DATA);
 
-//TODO authenticate
+$uid = intval($_POST['userID']);
+//authentication
+$u = User::retrieve($uid);
+$key = sha1($_POST['data'] . "|" .  $_POST['userID'] . "|" . $u->getKey());
+if($key != $_POST['hashed_data']){
+	die(err("User not authenticated, please follow the documentation on sending requests to the web services"));
+}
+
+exit("Authentic");
 
 switch($path){
 	case "action":
@@ -53,19 +71,21 @@ switch($path){
 	$file = $class . ".class.php";
 	require_once($file);
 	$obj = new $class();
-	
-	switch($_POST['type']){
-		case "GET":
-		$obj->get();
+	$obj->setData($_POST['data']);
+	$obj->setUserID($uid);
+
+	switch($_POST['action']){
+		case "retrieve":
+		$obj->retrieve();
 		break;
-		case "POST":
-		$obj->post();
+		case "create":
+		$obj->create();
 		break;
-		case "DELETE":
+		case "delete":
 		$obj->delete();
 		break;
-		case "PUT":
-		$obj->put();
+		case "update":
+		$obj->update();
 		break;	
 	}
 	break;

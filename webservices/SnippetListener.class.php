@@ -2,7 +2,7 @@
 require_once("../core/Snippet.class.php");
 class SnippetListener{
 	//fetch action from database
-	public function get(){
+	public function retrieve(){
 		$id = fetchID();
 		$obj = Snippet::retrieve($id);
 		if($obj != null){
@@ -12,7 +12,7 @@ class SnippetListener{
 			die(err("No snippet found"));
 		}
 	}
-	public function post(){
+	public function create(){
 		$obj = new Snippet();
 		
 		$obj->save();
@@ -30,7 +30,7 @@ class SnippetListener{
 		}
 	}
 	//NOT WORKING TODO
-	public function put(){
+	public function update(){
 		//get PUT data
 		/*
 		$PUT = [];
