@@ -15,11 +15,11 @@
                 <toolbarbutton id="coagmentoSearchButton"
 					tooltiptext="Search" 
 					label="Search"
-                                        disabled="true"
-					hidden="true"
+                                        disabled="false"
+					hidden="false"
 					oncommand="search()"/>
                   
-				<toolbarseparator id="toolbarseparatorSearch" hidden="true"/>
+				<toolbarseparator id="toolbarseparatorSearch" hidden="false"/> 
 
 				<toolbarbutton id="coagmentoSnipButton"
 					tooltiptext="Snip highlighted text from the current page" 
@@ -64,5 +64,4 @@
                  sidebartitle="&sidebar.title;"
                  oncommand="toggleSidebar('viewSidebar');" />
 	</broadcasterset>
-	
 </overlay>
