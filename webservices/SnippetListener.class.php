@@ -14,8 +14,25 @@ class SnippetListener extends WebService{
 			die(err("No snippet found"));
 		}
 	}
+	/*
+	snippetID;
+  	questionID;
+  	url;
+  	title;
+  	snippet;
+  	note;
+  	type;
+  	*/
 	public function create(){
 		$obj = new Snippet();		
+		$url = $this->req("url");
+		$title = $this->req("title");
+		$snippet = $this->req("snippet");
+		$note = $this->req("note");
+		$obj->setUrl($url);
+		$obj->setTitle($title);
+		$obj->setSnippet($snippet);
+		$obj->setNote($note);
 		$obj->save();
 		//return the new object
 		echo $obj->toXML();
