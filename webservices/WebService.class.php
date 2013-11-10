@@ -23,7 +23,7 @@ class WebService{
 	}
 	/* Similar to req, but returns null if field not found. Means a field is optional */
 	public function opt($field){
-		if(isset($this->data) && isset($this->data[$field])){
+		if(isset($this->data) && isset($this->data[$field])) {
 			return $this->data[$field];
 		}
 		return NULL;

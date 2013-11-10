@@ -322,16 +322,34 @@ function savePQ()
 		flagSearchEngine = false;
 };
 
+//TODO check for blank snippets, maybe provide some better form of feedback
+function snip(){
+  var snippet = document.commandDispatcher.focusedWindow.getSelection().toString();
+  var url = gBrowser.selectedBrowser.currentURI.spec;
+  url = encodeURIComponent(url);
+  var title = document.title;
+  var key = "40bd001563085fc35165329ea1ff5c5ecbdbbeef";
+  var data = {
+    'snippet' : snippet,
+    'note' : "",
+    'url' : url,
+    'title' : title
+  };
+  var onComp = function(xhr,stat){
+    //alert(stat);
+    //alert(xhr.responseText);
+    alert("Snippet saved!");
+  };
+  sendRequest("http://localhost/coagmentoCollaboratory/webservices/index.php", "snippet", data, 1, "create", key, onComp);
+}
 //Function to collect highlighted passage from the page as a snippet.
+/*
 function snip() 
 {
 	checkConnectivity();
 	if (loggedIn) 
 	{
-		/*var snippet = document.commandDispatcher.focusedWindow.getSelection().toString();
-		var url = window.content.document.location;
-		url = encodeURIComponent(url);
-		var title = encodeURIComponent(document.title);*/
+		
 		
 		var snippet = document.commandDispatcher.focusedWindow.getSelection().toString();
         var url = gBrowser.selectedBrowser.currentURI.spec;
@@ -373,7 +391,7 @@ function snip()
         setTimeout('cleanAlert()', 3000);        
 	}
 };
-
+*/
 function cleanAlert()
 {
 	document.getElementById('msgs').textContent = "";
@@ -444,13 +462,17 @@ function serverDown()
 
 function disableButtons(value)
 {
+/*
 	document.getElementById('coagmentoSearchButton').disabled = value;
 	document.getElementById('coagmentoSnipButton').disabled = value;
 	document.getElementById('coagmentoEditorButton').disabled = value;
+*/
 }
 
 function intilizeToolbarSession()
 {
+  //TODO send an authenticated request to make sure user has permission.
+  return;
 	if (loggedIn)
 	{	
 		if (sessionNumber==1)

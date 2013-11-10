@@ -7,8 +7,7 @@ hbox#browser > vbox {
     }
 	
 toolbarbutton{
-	font-size: 12px; 
-  font-weight:bold;
+	style="font-size: 12px; font-weight:bold";
 }
 
 #coagmentoSearchButton {

@@ -1,0 +1,2 @@
+- will have to store the private key + user id locally so the user can authenticate every time
+- I need a better way to do this development instead of editing => packaging => removing => adding => restarting just to test

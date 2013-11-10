@@ -5,6 +5,9 @@
 ?>
 <!DOCTYPE overlay SYSTEM "chrome://coagmento/locale/sidebar.dtd">
 <overlay id="coagmento-Overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+<script type="application/x-javascript" src="chrome://coagmento/content/jquery.js" />
+<script type="application/x-javascript" src="chrome://coagmento/content/sha1.js" />
+<script type="application/x-javascript" src="chrome://coagmento/content/requestTools.js" />
 <script type="application/x-javascript" src="chrome://coagmento/content/coagmento.js" />
 
     <toolbox id="navigator-toolbox">
@@ -15,17 +18,17 @@
                 <toolbarbutton id="coagmentoSearchButton"
 					tooltiptext="Search" 
 					label="Search"
-                                        disabled="false"
-					hidden="false"
+                                        disabled="true"
+					hidden="true"
 					oncommand="search()"/>
                   
-				<toolbarseparator id="toolbarseparatorSearch" hidden="false"/> 
+				<toolbarseparator id="toolbarseparatorSearch" hidden="true"/>
 
 				<toolbarbutton id="coagmentoSnipButton"
 					tooltiptext="Snip highlighted text from the current page" 
 					label="Snip" 
-                                        disabled="true"
-										hidden="true"
+                                        disabled="false"
+										hidden="false"
 					oncommand="snip()" />
 
  				<toolbarseparator id="toolbarseparatorSnip" hidden="true"/>
@@ -64,4 +67,5 @@
                  sidebartitle="&sidebar.title;"
                  oncommand="toggleSidebar('viewSidebar');" />
 	</broadcasterset>
+	
 </overlay>
