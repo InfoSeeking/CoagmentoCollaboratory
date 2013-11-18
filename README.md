@@ -54,4 +54,7 @@ http://<base url>/webservices/index.php/action
 
 Currently, this authentication is based off of [this article](http://www.thebuzzmedia.com/designing-a-secure-rest-api-without-oauth-authentication/). It does not prevent someone from intercepting your request, and then resending it to have the action repeated. This may be dealt with by factoring in the time the request has been sent, but this is the present status.
 
-We will include helper functions for building a request to send to the webservice.
+We provide two helper methods for sending authenticated requests in the following files:
+
+<b>webservices/requestTools.php</b> - contains a PHP implementation of sending an authenticated request
+<b>webservices/requestTools.js</b> - contains a Javascript implementation (requires jQuery and CryptoJS)

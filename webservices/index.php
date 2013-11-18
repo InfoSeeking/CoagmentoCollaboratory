@@ -69,6 +69,7 @@ function init(){
 	switch($path){
 		case "action":
 		case "snippet":
+		case "bookmark":
 		$class = ucfirst($path) . "Listener";
 		$file = $class . ".class.php";
 		require_once($file);

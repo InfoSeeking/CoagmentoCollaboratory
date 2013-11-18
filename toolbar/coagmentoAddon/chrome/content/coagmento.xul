@@ -30,7 +30,13 @@
                                         disabled="false"
 										hidden="false"
 					oncommand="snip()" />
-
+                <toolbarbutton id="coagmentoBookmarkButton"
+                    tooltiptext="Bookmark this Page" 
+                    label="Bookmark" 
+                                        disabled="false"
+                                        hidden="false"
+                    oncommand="bookmark()" />
+                    
  				<toolbarseparator id="toolbarseparatorSnip" hidden="true"/>
 				
 				<toolbarbutton id="coagmentoEditorButton"

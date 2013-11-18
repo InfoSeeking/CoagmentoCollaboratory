@@ -8,6 +8,7 @@
 // Add a listener to the current window.
 window.addEventListener("load", function() { coagmentoToolbar.init(); }, false);
 var action = "";
+var msgTimer = null;
 //This should be in an external file containing all the settings
 //var globalUrl = "http://coagmento.rutgers.edu/pilot2/";
 var globalUrl = "http://coagmento.rutgers.edu/spring2013/pilot1/";
@@ -322,9 +323,14 @@ function savePQ()
 		flagSearchEngine = false;
 };
 
-//TODO check for blank snippets, maybe provide some better form of feedback
+//TODO add some way to store user id + key(possibly storage for extension, idk) maybe provide some better form of feedback
 function snip(){
   var snippet = document.commandDispatcher.focusedWindow.getSelection().toString();
+  snippet = snippet.trim();
+  if(snippet == ""){
+    message("Nothing selected! Snippet not saved.");
+    return;
+  }
   var url = gBrowser.selectedBrowser.currentURI.spec;
   url = encodeURIComponent(url);
   var title = document.title;
@@ -338,60 +344,32 @@ function snip(){
   var onComp = function(xhr,stat){
     //alert(stat);
     //alert(xhr.responseText);
-    alert("Snippet saved!");
+    message("Snippet saved!");
   };
   sendRequest("http://localhost/coagmentoCollaboratory/webservices/index.php", "snippet", data, 1, "create", key, onComp);
 }
-//Function to collect highlighted passage from the page as a snippet.
-/*
-function snip() 
-{
-	checkConnectivity();
-	if (loggedIn) 
-	{
-		
-		
-		var snippet = document.commandDispatcher.focusedWindow.getSelection().toString();
-        var url = gBrowser.selectedBrowser.currentURI.spec;
-        url = encodeURIComponent(url);
-        var title = document.title;
-        var xmlHttpTimeoutSaveSnippet;
-        var xmlHttpConnectionSaveSnippet = new XMLHttpRequest();
-        
-        //Capturing local time
-        var currentTime = new Date();
-        var month = currentTime.getMonth() + 1;
-        var day = currentTime.getDate();
-        var year = currentTime.getFullYear();
-        var localDate = year + "%2F" + month + "%2F" + day;
-        var hours = currentTime.getHours();
-        var minutes = currentTime.getMinutes();
-        var seconds = currentTime.getSeconds();
-        var localTime = hours + "%3A" + minutes + "%3A" + seconds;
-        var localTimestamp = currentTime.getTime();
- 
-        //Saving page
-        xmlHttpConnectionSaveSnippet.open('GET', globalUrl+'services/saveSnippet.php?'+'URL='+url+'&snippet='+snippet+'&title='+title+'&localTimestamp='+localTimestamp+'&localTime='+localTime+'&localDate='+localDate, true);
-        action = "";
-        
-        xmlHttpConnectionSaveSnippet.onreadystatechange=function(){
-            if (xmlHttpConnectionSaveSnippet.readyState == 4 && xmlHttpConnectionSaveSnippet.status == 200) {
-                    clearTimeout(xmlHttpTimeoutSaveSnippet);
-                  }
-            };
 
-        xmlHttpConnectionSaveSnippet.send(null);
-        xmlHttpTimeoutSaveSnippet = setTimeout(function(){
-                                            xmlHttpConnectionSaveSnippet.abort();
-                                            clearTimeout(xmlHttpTimeoutSaveSnippet);
-                                        }
-                                        ,3000);
-        
-        document.getElementById('msgs').textContent = " Snippet Saved!";
-        setTimeout('cleanAlert()', 3000);        
-	}
-};
-*/
+function bookmark(){
+  var url = gBrowser.selectedBrowser.currentURI.spec;
+  url = encodeURIComponent(url);
+  var title = document.title;
+  var key = "40bd001563085fc35165329ea1ff5c5ecbdbbeef";
+  var data = {
+    'url' : url,
+    'title' : title,
+    'projectID' : -1
+  };
+  var onComp = function(xhr, stat){
+    message("Bookmark saved!");
+  }
+  sendRequest("http://localhost/coagmentoCollaboratory/webservices/index.php", "bookmark", data, 1, "create", key, onComp);
+}
+
+function message(msg){
+  document.getElementById("msgs").textContent = msg;
+  msgTimer = window.clearTimeout(msgTimer);
+  msgTimer = window.setTimeout(cleanAlert, 5000);
+}
 function cleanAlert()
 {
 	document.getElementById('msgs').textContent = "";
