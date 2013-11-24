@@ -12,6 +12,13 @@ class Project extends Base
 	public function __construct(){
 		$this->inDatabase = false;
 	}
+
+	/* 
+		TODO: 
+		- add retrieval functions for pages,bookmarks,snippets collected from a project (or put them in respective classes) 
+		- add methods for modifying project memberships (if administrator)
+		- enforce that there should always be at least one administrator
+	*/
 	//check user credentials
 	public static function retrieve($projectID)
 	{
