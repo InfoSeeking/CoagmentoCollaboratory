@@ -23,3 +23,10 @@ $data = array(
 echo "<p> Logging in </p>";
 $response = sendRequest("http://localhost/coagmentoCollaboratory/webservices/index.php", "user", $data, 0, "retrieve", "", "json");
 echo $response;
+
+echo "<p>Getting projects for user</p>";
+$data = array(
+	"type" => "user"
+);
+$response = sendRequest("http://localhost/coagmentoCollaboratory/webservices/index.php", "project", $data, 10, "retrieve", "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3", "json");
+echo $response;

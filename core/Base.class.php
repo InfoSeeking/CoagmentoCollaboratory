@@ -196,5 +196,6 @@ class Base
 	}
 	//returns XML representation of this class
 	public function toXML(){}
+	public function toJSON(){}
 }
 ?>

@@ -19,7 +19,6 @@ class Project extends Base
 		- add methods for modifying project memberships (if administrator)
 		- enforce that there should always be at least one administrator
 	*/
-	//check user credentials
 	public static function retrieve($projectID)
 	{
 		try
@@ -47,7 +46,47 @@ class Project extends Base
 			throw($e);
 		}
 	}
-		
+
+	/**
+	* Retrieves all projects which a given user is a member of
+	* @param userID int the user's id
+	*/
+	public static function retrieveAllFromUser($userID){
+		try
+		{
+			$connection=Connection::getInstance();
+			$query = "SELECT p.* FROM projects p, project_membership pm WHERE pm.userID = :userID AND pm.projectID = p.projectID";
+			$params = array(':userID' => $userID);
+			$results = $connection->execute($query,$params);		
+			$projects = [];
+			while($record = $results->fetch(PDO::FETCH_ASSOC)){
+				$project = new Project();
+				$project->projectID = $record['projectID'];
+				$project->title = $record['title'];
+				$project->description = $record['description'];
+				$project->status = $record['status'];
+				array_push($projects, $project);
+			}
+			return $projects;
+		}
+		catch(Exception $e)
+		{
+			throw($e);
+		}
+	}
+	
+	/**
+	* Add a user to this project
+	*/
+	public function addUser($userID){
+		//TODO
+	}
+	/**
+	* Retrieve a list of the id's of the users who are members of this project
+	*/
+	public function getUsers(){
+		//TODO
+	}
 	public function save()
 	{
 		try
@@ -113,7 +152,12 @@ class Project extends Base
 	{
 		$this->status = $status;
 	}
-	
+	public function toXML(){
+		printf('<resource><projectID>%d</projectID><title>%s</title><description>%s</description>', $this->projectID, $this->title, $this->description);
+	}
+	public function toJSON(){
+		printf('{"projectID" : %d, "title": "%s", "description" : "%s"}', $this->projectID, $this->title, $this->description);
+	}
 	public function __toString()
     {
         return "ProjectID: ".$this->projectID." | Title: ".$this->title." | Description: ".$this->description." | Status: ".$this->status;

@@ -87,6 +87,7 @@ function init(){
 		case "snippet":
 		case "bookmark":
 		case "user":
+		case "project":
 		$class = ucfirst($path) . "Listener";
 		$file = $class . ".class.php";
 		require_once($file);

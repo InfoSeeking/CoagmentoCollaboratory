@@ -102,7 +102,7 @@
 					label=""
                                         disabled="true"
 					oncommand="showSnippets()" />
-                                <toolbarseparator />
+                <toolbarseparator />
 <!--
                                <button id="coagmento-Mood-Menupopup" type="menu" label="How do you feel now?" disabled="true" style="font-size: 11px; font-weight:bold">
                                   <menupopup>
@@ -114,6 +114,12 @@
                                   </menupopup>
                                 </button>  
 -->
+				<menulist id="projectList">
+				  <menupopup id="projectPopup">
+				    <menuitem label="Select Project" value="-1"/>
+				  </menupopup>
+				</menulist>
+				<toolbarseparator />
 				<description class="blue" id="msgs"/>
         </toolbar>
     </toolbox>

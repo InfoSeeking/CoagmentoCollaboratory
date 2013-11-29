@@ -181,13 +181,18 @@ function checkCurrentPage()
  /*************************************************************************************************************************************/
 
 function bookmark(){
+  var projID = getSelectedProject();
+  if(projID == -1){
+    message("No project selected");
+    return;
+  }
   var url = gBrowser.selectedBrowser.currentURI.spec;
   url = encodeURIComponent(url);
   var title = document.title;
   var data = {
     'url' : url,
     'title' : title,
-    'projectID' : -1
+    'projectID' : projID
   };
   var onComp = function(xhr, stat){
     message("Bookmark saved!");
@@ -328,6 +333,11 @@ if (isVersionCorrect)
 }
 */
 function snip(){
+  var projID = getSelectedProject();
+  if(projID == -1){
+    message("No project selected");
+    return;
+  }
   var snippet = document.commandDispatcher.focusedWindow.getSelection().toString();
   snippet = snippet.trim();
   if(snippet == ""){
@@ -341,7 +351,8 @@ function snip(){
     'snippet' : snippet,
     'note' : "",
     'url' : url,
-    'title' : title
+    'title' : title,
+    'projectID' : projID
   };
   var onComp = function(xhr,stat){
     //alert(stat);
@@ -699,6 +710,37 @@ function setMood(value, label)
     }
 }
 
+function getSelectedProject(){
+    var list = document.getElementById("projectList");
+    var sel = list.selectedItem;
+    if(sel){
+        return parseInt(sel.getAttribute("value"));
+    }
+    return -1;
+}
+
+function populateProjects(){
+    if(userID == -1){return;}
+    var data = { "type" : "user" };
+    function succ(xhr,stat){
+        var resp = $.parseJSON(xhr.responseText);
+        if(resp.hasOwnProperty("error")){
+            message(resp.error);
+        }
+        else{
+            var popup = document.getElementById("projectPopup");
+            for(var i = 0; i < resp.length; i++){
+                var p = resp[i];
+                var mi = document.createElement("menuitem");
+                mi.setAttribute("label", p.title);
+                mi.setAttribute("value", p.projectID);
+                popup.appendChild(mi);
+            }   
+        }
+    }
+    sendRequest("http://localhost/coagmentoCollaboratory/webservices/index.php", "project", data, userID, "retrieve", userKey, succ, "json");
+}
+
 function login(){
     var unamebox = document.getElementById("username");
     var passbox = document.getElementById("password");
@@ -706,7 +748,6 @@ function login(){
     var pass = passbox.value;
     //TODO: send a request to the webservice for logging in
     function succ(xhr,stat){
-        alert(xhr.responseText);
         var resp = $.parseJSON(xhr.responseText);
         if(resp.hasOwnProperty("error")){
             message(resp.error);
@@ -726,6 +767,7 @@ function login(){
             btn.parentNode.removeChild(btn);
             disableButtons(false);
             //get a list of user's projects, and add them to a drop down menu
+            populateProjects();
         }
     }
     var data = {
