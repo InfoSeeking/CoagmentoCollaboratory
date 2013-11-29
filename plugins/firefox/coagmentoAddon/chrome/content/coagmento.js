@@ -1,13 +1,6 @@
-// Coagmento Firefox extension
-// Beta 3.0.6
-// Author: Chirag Shah and Roberto Gonzalez-Ibanez
-// Last update: May 10, 2011
-
-// Toolbar related functions
-
 // Add a listener to the current window.
 var rootURL = "http://localhost/coagmentoCollaboratory/plugins/pages/";
-
+var msgTimer = null;
 window.addEventListener("load", function() { coagmentoToolbar.init(); }, false);
 
 //Return version
@@ -108,6 +101,7 @@ function savePQ()
 
 var isVersionCorrect = true;
 // CHECK IF THE STATUS OF THE CURRENT PAGE, IF BOOKMARKED OR NOT
+//TODO: rewrite when I can
 function checkCurrentPage()
 {
     if(isVersionCorrect)
@@ -184,6 +178,21 @@ function checkCurrentPage()
  /*************************************************************************************************************************************/
  /*************************************************************************************************************************************/
 
+function bookmark(){
+  var url = gBrowser.selectedBrowser.currentURI.spec;
+  url = encodeURIComponent(url);
+  var title = document.title;
+  var key = "40bd001563085fc35165329ea1ff5c5ecbdbbeef";
+  var data = {
+    'url' : url,
+    'title' : title,
+    'projectID' : -1
+  };
+  var onComp = function(xhr, stat){
+    message("Bookmark saved!");
+  }
+  sendRequest("http://localhost/coagmentoCollaboratory/webservices/index.php", "bookmark", data, 1, "create", key, onComp);
+}
 // Function to save or remove a page
 function save() {
 
@@ -281,7 +290,16 @@ if (isVersionCorrect)
 } // function annotate()
 
 // Function to collect highlighted passage from the page as a snippet.
-function snip() {
+function message(msg){
+  document.getElementById("msgs").textContent = msg;
+  msgTimer = window.clearTimeout(msgTimer);
+  msgTimer = window.setTimeout(cleanAlert, 5000);
+}
+function cleanAlert()
+{
+    document.getElementById('msgs').textContent = "";
+}
+/*function snip() {
 
         //var loggedIn = isLogedIn(); //Check on Server
 if (isVersionCorrect)
@@ -306,6 +324,31 @@ if (isVersionCorrect)
 	else
 		alert("Your session has expired. Please login again.");
     }
+}
+*/
+function snip(){
+  var snippet = document.commandDispatcher.focusedWindow.getSelection().toString();
+  snippet = snippet.trim();
+  if(snippet == ""){
+    message("Nothing selected! Snippet not saved.");
+    return;
+  }
+  var url = gBrowser.selectedBrowser.currentURI.spec;
+  url = encodeURIComponent(url);
+  var title = document.title;
+  var key = "40bd001563085fc35165329ea1ff5c5ecbdbbeef";
+  var data = {
+    'snippet' : snippet,
+    'note' : "",
+    'url' : url,
+    'title' : title
+  };
+  var onComp = function(xhr,stat){
+    //alert(stat);
+    //alert(xhr.responseText);
+    message("Snippet saved!");
+  };
+  sendRequest("http://localhost/coagmentoCollaboratory/webservices/index.php", "snippet", data, 1, "create", key, onComp);
 }
 
  // Function to load a URL in a popup window
@@ -657,8 +700,22 @@ function setMood(value, label)
 }
 
 function login(){
-    var uname = document.getElementById("username");
-    alert(uname.value);
-    uname.disabled = true;
-    uname.parentNode.removeChild(uname);
+    var unamebox = document.getElementById("username");
+    var passbox = document.getElementById("password");
+    var uname = unamebox.value;
+    var pass = passbox.value;
+    //TODO: send a request to the webservice for logging in
+    function succ(){
+        passbox.parentNode.removeChild(passbox);
+        unamebox.parentNode.removeChild(unamebox);
+        var lbluname = document.getElementById("lbluname");
+        lbluname.parentNode.removeChild(lbluname);
+        var lblpass = document.getElementById("lblpass");
+        lblpass.parentNode.removeChild(lblpass);
+        var btn = document.getElementById("login");
+        btn.parentNode.removeChild(btn);
+        disableButtons(false);
+        dump("Hello there");
+    }
+    succ();
 }
