@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<?xml-stylesheet 
+  href="chrome://coagmento/skin/overlay.css"
+  type="text/css" 
+?>
+<!DOCTYPE overlay SYSTEM "chrome://coagmento/locale/sidebar.dtd">
+<overlay id="coagmento-Overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+<script type="application/x-javascript" src="chrome://coagmento/content/coagmento.js" />
+
+    <toolbox id="navigator-toolbox">
+        <toolbar id="coagmento-Toolbar" toolbarname="Coagmento Toolbar" accesskey="C"
+                 class="chromeclass-toolbar" context="toolbar-context-menu"
+                 hidden="false" persist="hidden">
+
+				<toolbarbutton id="coagmento-Login-Button" style="font-size: 11px; font-weight:bold"
+					tooltiptext="Connect/Disconnect with Coagmento" 
+					label="Connect"
+                                        disabled="false"
+					oncommand="changeConnectionStatus()"/>
+       
+                                 <toolbarbutton id="coagmento-CSpaceLogin-Button" style="font-size: 11px; font-weight:bold"
+					tooltiptext="Coagmento home/CSpace" 
+					label="Home"
+                                        disabled="true"
+					oncommand="loadURL('http://www.coagmento.org/CSpace/')" />
+
+				<toolbarseparator />
+				
+				<toolbarbutton id="coagmento-Save-Button" style="font-size: 11px; font-weight:bold"
+					tooltiptext="Save/remove the current page" 
+					label="Bookmark" 
+                                        disabled="true"
+					oncommand="save()" />
+
+                                <toolbarbutton id="coagmento-Recommend-Button" style="font-size: 11px; font-weight:bold"
+					tooltiptext="Recommend this page to others" 
+					label="Recommend" 
+                                        disabled="true"
+					oncommand="recommend()" />
+
+				<toolbarbutton id="coagmento-Annotate-Button" style="font-size: 11px; font-weight:bold"
+					tooltiptext="Make notes on the current page" 
+					label="Annotate" 
+                                        disabled="true"
+					oncommand="annotate()" />
+					
+				<toolbarbutton id="coagmento-Snip-Button" style="font-size: 11px; font-weight:bold"
+					tooltiptext="Snip highlighted text from the current page" 
+					label="Snip" 
+                                        disabled="true"
+					oncommand="snip()" />
+
+ 				<toolbarseparator />
+
+                                <toolbarbutton id="coagmento-Sidebar-Button" style="font-size: 11px; font-weight:bold"
+					tooltiptext="Shared resources"
+					label="Resources"
+                                        disabled="true"
+					oncommand="toggleSidebar('viewSidebar')" />
+		
+				<toolbarbutton id="coagmento-Etherpad-Button" style="font-size: 11px; font-weight:bold"
+					tooltiptext="Collaborative editor" 
+					label="Editor" 
+                                        disabled="true"
+					oncommand="loadURL('http://www.coagmento.org/CSpace/etherpad.php')" />
+					
+				<toolbarseparator />
+
+				<toolbarbutton id="coagmento-Project-Status-Button" style="font-size: 11px"
+					tooltiptext="Active project"
+					label=""
+                                        disabled="true"
+					oncommand="loadURL('http://www.coagmento.org/CSpace/index.php?project')" />
+
+				<toolbarseparator />
+
+				<toolbarbutton id="coagmento-Views-Status-Button" style="font-size: 11px"
+					tooltiptext="Views status"
+					label=""
+                                        disabled="true"
+					oncommand="loadURLPopup('http://www.coagmento.org/CSpace/views.php', 'Views for the current page')" />
+
+				<toolbarbutton id="coagmento-Notes-Status-Button" style="font-size: 11px"
+					tooltiptext="Annotations status"
+					label=""
+                                        disabled="true"
+					oncommand="annotate()" />
+				<toolbarseparator />
+				<label value="Username" control="username"/>
+				<textbox id="username" value="Test"/>
+				<label value="Password" control="password"/>
+				<textbox id="password" value="" />
+				<toolbarbutton id="login" style="font-size: 11px"
+					label="Login"
+					oncommand="login()" />
+				<toolbarseparator />
+				<toolbarbutton id="coagmento-Snippets-Status-Button" style="font-size: 11px"
+					tooltiptext="Snippets status"
+					label=""
+                                        disabled="true"
+					oncommand="showSnippets()" />
+                                <toolbarseparator />
+<!--
+                               <button id="coagmento-Mood-Menupopup" type="menu" label="How do you feel now?" disabled="true" style="font-size: 11px; font-weight:bold">
+                                  <menupopup>
+                                    <menuitem label="Definitely my day" value="5" oncommand="setMood(5,'Definitely my day')"/>
+                                    <menuitem label="Good" value="4" oncommand="setMood(4,'Good')"/>
+                                    <menuitem label="So so" value="3" oncommand="setMood(3,'So so')"/>
+                                    <menuitem label="Not Good" value="2" oncommand="setMood(2,'Not Good')"/>
+                                    <menuitem label="Not my day" value="1" oncommand="setMood(1,'Not my day')"/>
+                                  </menupopup>
+                                </button>  
+-->
+        </toolbar>
+    </toolbox>
+
+	<menupopup id="viewSidebarMenu">
+    	<menuitem key="key_openSidebar" 
+			observes="viewSidebar"  />
+  	</menupopup>
+  
+	<keyset id="mainKeyset">
+    	<key id="key_openSidebar" command="viewSidebar"
+         	key="&openSidebar.commandkey;"
+         	modifiers="&openSidebar.modifierskey;" />
+  	</keyset>
+ 
+	<broadcasterset id="mainBroadcasterSet">
+    	<broadcaster id="viewSidebar"
+                 label="&sidebar.title;"
+                 autoCheck="false"
+                 type="checkbox"
+                 group="sidebar"
+                 sidebarurl="http://www.coagmento.org/loginOnSideBar.php"
+                 sidebartitle="&sidebar.title;"
+                 oncommand="toggleSidebar('viewSidebar');" />
+	</broadcasterset>
+	
+</overlay>
