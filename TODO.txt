@@ -1,0 +1,7 @@
+- Get the front-end page up
+- Get Firefox plugin to show sidebar
+- Add project membership to project class
+- Add retrievAll to page class to get user's history
+- Make other webservices for Query, Page, etc.
+- Make full-fledged example of how projects can be used to run single-user and multiple-user studies
+- Make all webservices offer JSON as well as XML (only user does this now)

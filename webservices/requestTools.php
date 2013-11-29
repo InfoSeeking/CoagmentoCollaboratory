@@ -8,11 +8,13 @@
 * @param array $data all of the data to be sent in the data field of the POST request
 * @return string the raw output of the API
 */
-function sendRequest($url, $path, $data, $userID, $action, $privateKey){
+function sendRequest($url, $path, $data, $userID, $action, $privateKey, $dtype="xml"){
 	$data_str = http_build_query($data);
 	$hashed_data = sha1($data_str . "|" . $userID . "|" . $privateKey);
 	$postData = array("data" => $data_str, "userID" => $userID, "action" => $action, "hashed_data" => $hashed_data);
-
+	if($dtype){
+		$postData['datatype'] = $dtype;
+	}
 	$endpoint = $url . "/" . $path;
 	$options = array(
 	    'http' => array(

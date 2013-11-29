@@ -29,6 +29,7 @@ class SnippetListener extends WebService{
 		$title = $this->req("title");
 		$snippet = $this->req("snippet");
 		$note = $this->req("note");
+		$obj->setUserID($this->userID);
 		$obj->setUrl($url);
 		$obj->setTitle($title);
 		$obj->setSnippet($snippet);

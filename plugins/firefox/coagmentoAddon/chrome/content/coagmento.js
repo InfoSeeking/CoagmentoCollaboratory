@@ -1,5 +1,7 @@
 // Add a listener to the current window.
 var rootURL = "http://localhost/coagmentoCollaboratory/plugins/pages/";
+var userID = -1;
+var userKey = null;
 var msgTimer = null;
 window.addEventListener("load", function() { coagmentoToolbar.init(); }, false);
 
@@ -182,7 +184,6 @@ function bookmark(){
   var url = gBrowser.selectedBrowser.currentURI.spec;
   url = encodeURIComponent(url);
   var title = document.title;
-  var key = "40bd001563085fc35165329ea1ff5c5ecbdbbeef";
   var data = {
     'url' : url,
     'title' : title,
@@ -191,7 +192,7 @@ function bookmark(){
   var onComp = function(xhr, stat){
     message("Bookmark saved!");
   }
-  sendRequest("http://localhost/coagmentoCollaboratory/webservices/index.php", "bookmark", data, 1, "create", key, onComp);
+  sendRequest("http://localhost/coagmentoCollaboratory/webservices/index.php", "bookmark", data, userID, "create", userKey, onComp);
 }
 // Function to save or remove a page
 function save() {
@@ -336,7 +337,6 @@ function snip(){
   var url = gBrowser.selectedBrowser.currentURI.spec;
   url = encodeURIComponent(url);
   var title = document.title;
-  var key = "40bd001563085fc35165329ea1ff5c5ecbdbbeef";
   var data = {
     'snippet' : snippet,
     'note' : "",
@@ -348,7 +348,7 @@ function snip(){
     //alert(xhr.responseText);
     message("Snippet saved!");
   };
-  sendRequest("http://localhost/coagmentoCollaboratory/webservices/index.php", "snippet", data, 1, "create", key, onComp);
+  sendRequest("http://localhost/coagmentoCollaboratory/webservices/index.php", "snippet", data, userID, "create", userKey, onComp);
 }
 
  // Function to load a URL in a popup window
@@ -705,17 +705,32 @@ function login(){
     var uname = unamebox.value;
     var pass = passbox.value;
     //TODO: send a request to the webservice for logging in
-    function succ(){
-        passbox.parentNode.removeChild(passbox);
-        unamebox.parentNode.removeChild(unamebox);
-        var lbluname = document.getElementById("lbluname");
-        lbluname.parentNode.removeChild(lbluname);
-        var lblpass = document.getElementById("lblpass");
-        lblpass.parentNode.removeChild(lblpass);
-        var btn = document.getElementById("login");
-        btn.parentNode.removeChild(btn);
-        disableButtons(false);
-        dump("Hello there");
+    function succ(xhr,stat){
+        alert(xhr.responseText);
+        var resp = $.parseJSON(xhr.responseText);
+        if(resp.hasOwnProperty("error")){
+            message(resp.error);
+        }
+        else{
+            //success
+            alert("Logged in!");
+            userID = resp.userID;
+            userKey = resp.key;
+            passbox.parentNode.removeChild(passbox);
+            unamebox.parentNode.removeChild(unamebox);
+            var lbluname = document.getElementById("lbluname");
+            lbluname.parentNode.removeChild(lbluname);
+            var lblpass = document.getElementById("lblpass");
+            lblpass.parentNode.removeChild(lblpass);
+            var btn = document.getElementById("login");
+            btn.parentNode.removeChild(btn);
+            disableButtons(false);
+            //get a list of user's projects, and add them to a drop down menu
+        }
     }
-    succ();
+    var data = {
+        "username" : uname,
+        "password" : pass
+    };
+    sendRequest("http://localhost/coagmentoCollaboratory/webservices/index.php", "user", data, -1, "retrieve", "nokey", succ, "json");
 }

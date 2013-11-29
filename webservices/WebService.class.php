@@ -3,11 +3,15 @@
 class WebService{
 	protected $userID = -1;
 	protected $data = NULL;
+	protected $datatype = "xml";
 	public function setData($val){
 		$this->data = $val;
 	}
 	public function setUserID($val){
 		$this->userID = $val;
+	}
+	public function setDataType($val){
+		$this->datatype = $val;
 	}
 	public function retrieve(){}
 	public function create(){}

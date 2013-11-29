@@ -1,4 +1,0 @@
-overlay	chrome://browser/content/browser.xul	chrome://coagmento/content/coagmento.xul
-content	coagmento chrome/content/
-skin	coagmento classic/1.0 chrome/skin/
-locale	coagmento en-US chrome/locale/en-US/

@@ -14,3 +14,12 @@ $response = sendRequest("http://localhost/coagmentoCollaboratory/webservices/ind
 echo $response;
 
 echo "<p>Action created</p>";
+
+$data = array(
+	"username" => "test",
+	"password" => "1234"
+);
+
+echo "<p> Logging in </p>";
+$response = sendRequest("http://localhost/coagmentoCollaboratory/webservices/index.php", "user", $data, 0, "retrieve", "", "json");
+echo $response;
