@@ -5,13 +5,32 @@ require_once("WebService.class.php");
 class BookmarkListener extends WebService{
 	//fetch bookmark from database
 	public function retrieve(){
-		$id = intval($this->req('id'));
-		$obj = Action::retrieve($id);
-		if($obj != null){
-			echo $obj->toXML();
+		$type = $this->opt("type");
+		if(!$type){
+			$type = "single";
 		}
-		else{
-			die(err("No bookmark found"));
+		switch($type){
+			case "single":
+			$id = intval($this->req('id'));
+			$obj = Bookmark::retrieve($id);
+			if($obj != null){
+				echo $obj->toXML();
+			}
+			else{
+				die(err("No bookmark found"));
+			}
+			break;
+			case "user_test":
+			//check if user has given bookmark
+			$url = $this->req("url");
+			$r = Bookmark::userHasBookmark($this->userID, $url);
+			if($this->datatype == "json"){
+				printf('{"userHasBookmark": %s, "id" : %d}', ($r != -1) ? "true" : "false", $r);
+			}
+			else if($this->datatype == "xml"){
+				printf('<userHasBookmark>%s</userHasBookmark><id>%d</id>', ($r != -1) ? "true" : "false", $r);
+			}
+			break;
 		}
 	}
 

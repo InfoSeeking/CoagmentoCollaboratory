@@ -30,6 +30,24 @@ class Bookmark extends Base
 		$records = $results->fetchAll(PDO::FETCH_ASSOC);
 		return $records;
 	}
+
+	/**
+	* Returns an integer if the passed user has bookmarked that url
+	* @param int $userID
+	* @param String $url
+	* @return int -1 if not found, otherwise returns id
+	*/
+	public static function userHasBookmark($userID, $url){
+		$connection=Connection::getInstance();
+		$query = "SELECT * FROM bookmarks WHERE userID=:userID and url=:url";
+		$params = array(':userID' => $userID, "url" => $url);
+		$results = $connection->execute($query,$params);
+		if($results->rowCount() == 0){
+			return -1;
+		}
+		$record = $results->fetch(PDO::FETCH_ASSOC);
+		return $record['bookmarkID'];
+	}
 	/**
 	* Retrieves a bookmark given an ID.
 	* @param int $bookmarkID

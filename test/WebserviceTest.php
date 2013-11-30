@@ -1,5 +1,7 @@
 <?php
 require_once("../webservices/requestTools.php");
+echo "<h1>A collection of tests using webservices</h1>";
+echo "<p>See code for more details</p>";
 
 $key = "40bd001563085fc35165329ea1ff5c5ecbdbbeef"; /* change the key, will no longer authenticate */
 $data = array(
@@ -29,4 +31,14 @@ $data = array(
 	"type" => "user"
 );
 $response = sendRequest("http://localhost/coagmentoCollaboratory/webservices/index.php", "project", $data, 10, "retrieve", "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3", "json");
+echo $response;
+
+
+//check if user has a bookmark
+echo "<p>Does the user have a bookmark</p>";
+$data = array(
+	"type" => "user_test",
+	"url" => "https://builder.addons.mozilla.org/user/signin/?next=/addon/new/"
+);
+$response = sendRequest("http://localhost/coagmentoCollaboratory/webservices/index.php", "bookmark", $data, 10, "retrieve", "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3", "json");
 echo $response;

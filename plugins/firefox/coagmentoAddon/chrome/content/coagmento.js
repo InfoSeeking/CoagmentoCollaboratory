@@ -3,6 +3,7 @@ var rootURL = "http://localhost/coagmentoCollaboratory/plugins/pages/";
 var userID = -1;
 var userKey = null;
 var msgTimer = null;
+var pageBookmarked = -1;//-1 if not, bookmark id if it is
 window.addEventListener("load", function() { coagmentoToolbar.init(); }, false);
 
 //Return version
@@ -102,74 +103,30 @@ function savePQ()
 }
 
 var isVersionCorrect = true;
+
 // CHECK IF THE STATUS OF THE CURRENT PAGE, IF BOOKMARKED OR NOT
-//TODO: rewrite when I can
 function checkCurrentPage()
 {
-    if(isVersionCorrect)
-    {
-        if (loggedIn)
-        {
-            var url = gBrowser.selectedBrowser.currentURI.spec;
-            url = encodeURIComponent(url);
-            var title = document.title;
-            var req = new phpRequest("http://www.coagmento.org/CSpace/pageStatus.php");
-            req.add('URL',url);
-            req.add('title', title);
-            req.add('version', getVersion());
-            var response = req.execute();
-                var button = document.getElementById("coagmento-Save-Button");
-                var res = response.split(";");
-                if (res[0]>0)
-                {
-                    if (res[1]==1)
-                        button.label = "Remove";
-                    else
-                        button.label = "Bookmark";
-                    setStatus(res);
-                }
-                else
-                    {
-                        if(isVersionCorrect)
-                        {
-                            isVersionCorrect = false;
-                            disableButtons(true);
-                            document.getElementById('coagmento-CSpaceLogin-Button').disabled = false;
-                            document.getElementById('coagmento-Login-Button').disabled = true;
-                            if(confirm("There is a new version available of Coagmento toolbar, do you want to Download it now?. If no, please visit your CSpace later to download it (Click the HOME button on the Coagmento Toolbar). Coagmento will not work until you get the latest version"))
-                            {
-                                window._content.document.location = res[6];
-                            }
-                        }
-                    }
-            /*var xmlHttpTimeoutCurrentPage;
-            var xmlHttpCurrentPage = new XMLHttpRequest();
-            xmlHttpCurrentPage.open('GET', 'http://www.coagmento.org/CSpace/pageStatus.php?'+'url='+url+'&title='+title, true);
-            xmlHttpCurrentPage.onreadystatechange=function()
-            {
-                if (xmlHttpCurrentPage.readyState == 4 && xmlHttpCurrentPage.status == 200)
-                {
-                        var serverResponse = xmlHttpCurrentPage.responseText;
-                        alert(serverResponse+":"+url);
-                        var button = document.getElementById("coagmento-Save-Button");
-                        var res = serverResponse.split(";");
-                        if (res[1]==1)
-                            button.label = "Remove";
-                        else
-                            button.label = "Bookmark";
-                        setStatus(res);
-                        xmlHttpCurrentPage.abort();
-                        clearTimeout(xmlHttpTimeoutCurrentPage);
-                }
+    if(userID != -1){
+        var data = {
+            "url" : gBrowser.selectedBrowser.currentURI.spec,
+            "type" : "user_test"
+        };
+        var onComp = function(xhr,stat){
+            //alert(stat);
+            var button = document.getElementById("coagmento-Save-Button");
+            //alert(xhr.responseText);
+            var resp = $.parseJSON(xhr.responseText);
+            if(resp.userHasBookmark){
+                pageBookmarked = resp.id;
+                button.label = "Remove";
             }
-
-            xmlHttpCurrentPage.send(null);
-            xmlHttpTimeoutCurrentPage = setTimeout(function(){
-                                                xmlHttpCurrentPage.abort();
-                                                clearTimeout(xmlHttpTimeoutCurrentPage);
-                                            }
-                                            ,7000);*/
-        }
+            else{
+                pageBookmarked = -1;
+                button.label = "Bookmark";
+            }
+        };
+        sendRequest("http://localhost/coagmentoCollaboratory/webservices/index.php", "bookmark", data, userID, "retrieve", userKey, onComp, "json");
     }
 }
 
@@ -186,18 +143,31 @@ function bookmark(){
     message("No project selected");
     return;
   }
-  var url = gBrowser.selectedBrowser.currentURI.spec;
-  url = encodeURIComponent(url);
-  var title = document.title;
-  var data = {
-    'url' : url,
-    'title' : title,
-    'projectID' : projID
-  };
-  var onComp = function(xhr, stat){
-    message("Bookmark saved!");
+  if(pageBookmarked == -1){
+      var url = gBrowser.selectedBrowser.currentURI.spec;
+      var title = document.title;
+      var data = {
+        'url' : url,
+        'title' : title,
+        'projectID' : projID
+      };
+      var onComp = function(xhr, stat){
+        message("Bookmark saved!");
+        checkCurrentPage();
+      }
+      sendRequest("http://localhost/coagmentoCollaboratory/webservices/index.php", "bookmark", data, userID, "create", userKey, onComp);
   }
-  sendRequest("http://localhost/coagmentoCollaboratory/webservices/index.php", "bookmark", data, userID, "create", userKey, onComp);
+  else{
+    //remove bookmark
+    var data = {
+        "id" : pageBookmarked
+    };
+    var onComp = function(xhr, stat){
+        message(xhr.responseText + "Bookmark removed!");
+        checkCurrentPage();
+    }
+    sendRequest("http://localhost/coagmentoCollaboratory/webservices/index.php", "bookmark", data, userID, "delete", userKey, onComp);
+  }
 }
 // Function to save or remove a page
 function save() {
@@ -493,7 +463,7 @@ function updateToolbarButtons()
             }
             else
             {
-                disableButtons(true);
+               // disableButtons(true);
                 document.getElementById("coagmento-Login-Button").label = "Connect";
                 cleanStatus();
             }
@@ -768,6 +738,7 @@ function login(){
             disableButtons(false);
             //get a list of user's projects, and add them to a drop down menu
             populateProjects();
+            checkCurrentPage();
         }
     }
     var data = {

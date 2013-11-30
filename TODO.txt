@@ -1,7 +1,18 @@
-- Get the front-end page up
-- Get Firefox plugin to show sidebar
+- Get the front-end page up [done]
+- Get Firefox plugin to show sidebar [done]
 - Add project membership to project class
 - Add retrievAll to page class to get user's history
 - Make other webservices for Query, Page, etc.
 - Make full-fledged example of how projects can be used to run single-user and multiple-user studies
-- Make all webservices offer JSON as well as XML (only user does this now)
+- Make all webservices offer JSON as well as XML (only user and project does this now)
+
+Before December 1st:
+- Check if page is bookmarked and add option to remove
+- Make full-fledged example of how projects can be used to run single-user and multiple-user studies (make a front-end showing the data they've collected)
+
+Afterwards:
+- Add annotations to the firefox plugin
+- Add review button which opens sidebar, sidebar can show user data
+- Clean up code
+- Authenticate login? HTTPS?
+- Document
