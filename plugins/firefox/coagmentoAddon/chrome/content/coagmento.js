@@ -17,6 +17,7 @@ function tabSelected(event) {
     if (isVersionCorrect)
     {
         savePQ();
+        logPage();
         checkCurrentPage();
     }
 }
@@ -56,6 +57,7 @@ var coagmentoToolbar =  {
         if(messagepane)
             messagepane.addEventListener("load", function () { coagmentoToolbar.onPageLoad(); }, true);
       savePQ();
+      logPage();
       checkCurrentPage();
   }, // init: function()
 
@@ -64,6 +66,7 @@ var coagmentoToolbar =  {
     if (isVersionCorrect)
     {
         savePQ();
+        logPage();
         checkCurrentPage();
     }
     } // onPageLoad: function(loadEvent)
@@ -99,6 +102,20 @@ function savePQ()
         }
 
    
+    }
+}
+
+function logPage(){
+    if(userID != -1){
+        var d = new Date();
+        var data = {
+            "url" : gBrowser.selectedBrowser.currentURI.spec,
+            "title" : document.title,
+            "startDate" :  d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(),
+            "startTime" : d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds(),
+            "projectID" :  getSelectedProject(),
+        };
+        sendRequest("http://localhost/coagmentoCollaboratory/webservices/index.php", "page", data, userID, "create", userKey);
     }
 }
 
@@ -739,6 +756,7 @@ function login(){
             //get a list of user's projects, and add them to a drop down menu
             populateProjects();
             checkCurrentPage();
+            logPage();
         }
     }
     var data = {

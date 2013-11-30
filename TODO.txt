@@ -7,7 +7,8 @@
 - Make all webservices offer JSON as well as XML (only user and project does this now)
 
 Before December 1st:
-- Check if page is bookmarked and add option to remove
+- Check if page is bookmarked and add option to remove [done]
+- Add page logging
 - Make full-fledged example of how projects can be used to run single-user and multiple-user studies (make a front-end showing the data they've collected)
 
 Afterwards:
