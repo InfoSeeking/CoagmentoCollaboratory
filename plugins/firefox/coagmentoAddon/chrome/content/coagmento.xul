@@ -90,9 +90,9 @@
 					oncommand="annotate()" />
 				<toolbarseparator />
 				<label id="lbluname" value="Username" control="username"/>
-				<textbox id="username" value="Test"/>
+				<textbox id="username" value=""/>
 				<label id="lblpass" value="Password" control="password"/>
-				<textbox id="password" value="" />
+				<textbox id="password" type="password" value="" />
 				<toolbarbutton id="login" style="font-size: 11px"
 					label="Login"
 					oncommand="login()" />

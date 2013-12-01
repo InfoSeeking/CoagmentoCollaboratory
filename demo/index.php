@@ -9,7 +9,7 @@
 	if (($_POST['userName'])&&(!Session::getInstance()->isSessionActive())){
 		//user is trying to log in
 		$userName = $_POST['userName'];
-		$password = sha1($_POST['password']);
+		$password = $_POST['password'];
 		$localDate = $_POST['clientDate'];
 		$localTime = $_POST['clientTime'];
 		$localTimeStamp = $_POST['clientTimestamp'];
@@ -89,14 +89,14 @@
 				?>
 				<div class="row">
 					<form action="snippet.php" method="post">
-						<textarea name="content"><?php echo $s['snippet']; ?></textarea>
+						<textarea name="content"><?php echo $s->getSnippet(); ?></textarea>
 						<input type="hidden" name="action" value="update" />
-						<input type="hidden" name="snippetID" value="<?php echo $s['snippetID']; ?>" />
+						<input type="hidden" name="snippetID" value="<?php echo $s->getSnippetID(); ?>" />
 						<br/>
 						<input type="submit" value="Update" />
 					</form>
 					<form action="snippet.php" method="post">
-						<input type="hidden" name="snippetID" value="<?php echo $s['snippetID']; ?>" />
+						<input type="hidden" name="snippetID" value="<?php echo $s->getSnippetID(); ?>" />
 						<input type="hidden" name="action" value="delete" />
 						<input type="submit" value="Delete" />
 					</form>

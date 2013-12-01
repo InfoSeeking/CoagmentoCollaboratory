@@ -18,14 +18,51 @@ class Snippet extends Base
 	public function __construct(){
 		$this->inDatabase = false;
 	}
-	//Check user credentials.
+	public static function sqlToObj($record){
+		if ($record) {
+			$snippet = new Snippet();
+			$snippet->snippetID = $record['snippetID'];
+			$snippet->title = $record['title'];
+			$snippet->status = $record['status'];
+			$snippet->projectID = $record['projectID'];
+			$snippet->userID = $record['userID'];
+			$snippet->stageID = $record['stageID'];
+			$snippet->questionID = $record['questionID'];
+			$snippet->url = $record['url'];
+			$snippet->snippet = $record['snippet'];
+			$snippet->note = $record['note'];
+			$snippet->type = $record['type'];
+			$snippet->status = $record['status'];
+			$snippet->date = $record['date'];
+			$snippet->time = $record['time'];
+			$snippet->timestamp = $record['timestamp'];
+			$snippet->localDate = $record['clientDate'];
+			$snippet->localTime = $record['clientTime'];
+			$snippet->localTimestamp = $record['clientTimestamp'];
+			$snippet->inDatabase = true;
+			return $snippet;
+		}
+	}
+	/**
+	* Returns an array of all of the snippets belonging to the specified user.
+	* @param int $userID
+	* @param int $projectID if set, it will only retrieve snippets from that specified project
+	* @return array Returns an array of Snippet objects
+	*/
 	public static function retrieveFromUser($userID){
 		$connection=Connection::getInstance();
 		$query = "SELECT * FROM snippets WHERE userID=:userID";
 		$params = array(':userID' => $userID);
+		if($projectID){
+			$query .= " AND projectID=:projectID";
+			$params[":projectID"] = $projectID;
+		}
+		$snippets = [];
 		$results = $connection->execute($query,$params);		
-		$records = $results->fetchAll(PDO::FETCH_ASSOC);
-		return $records;
+		while($record = $results->fetch(PDO::FETCH_ASSOC)){
+			array_push($snippets, Snippet::sqlToObj($record));
+		}
+		return $snippets;
 	}
 	public static function retrieve($snippetID)
 	{
@@ -38,27 +75,7 @@ class Snippet extends Base
 			$record = $results->fetch(PDO::FETCH_ASSOC);
 
 			if ($record) {
-				$snippet = new Snippet();
-				$snippet->snippetID = $record['snippetID'];
-				$snippet->title = $record['title'];
-				$snippet->status = $record['status'];
-  				$snippet->projectID = $record['projectID'];
-  				$snippet->userID = $record['userID'];
-  				$snippet->stageID = $record['stageID'];
-  				$snippet->questionID = $record['questionID'];
-  				$snippet->url = $record['url'];
-  				$snippet->snippet = $record['snippet'];
-  				$snippet->note = $record['note'];
-  				$snippet->type = $record['type'];
-  				$snippet->status = $record['status'];
-				$snippet->date = $record['date'];
-				$snippet->time = $record['time'];
-				$snippet->timestamp = $record['timestamp'];
-				$snippet->localDate = $record['clientDate'];
-				$snippet->localTime = $record['clientTime'];
-				$snippet->localTimestamp = $record['clientTimestamp'];
-				$snippet->inDatabase = true;
-				return $snippet;
+				return Snippet::sqlToObj($record);//return new snippet object from the sql row
 			}
 			else
 				return null;

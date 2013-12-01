@@ -62,6 +62,23 @@ class User
 		}
 	}
 	
+	public static function retrieveUsersFromProject($projectID){
+		$connection=Connection::getInstance();
+		$query = "SELECT u.* FROM users u, project_membership pm WHERE pm.projectID=:projectID AND u.userID = pm.userID";
+		$params = array(':projectID' => $projectID);
+		$results = $connection->execute($query,$params);		
+		
+		$users = [];
+		while($record = $results->fetch(PDO::FETCH_ASSOC)){
+			$user = new User();
+			$user->userID = $record['userID'];
+			$user->userName = $record['username'];
+			$user->status = $record['status'];
+			$user->key = $record['api_key'];
+			array_push($users, $user);
+		}
+		return $users;
+	}
 
 	/*
 	returns -1 if could not insert, otherwise returns user id

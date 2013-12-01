@@ -180,7 +180,7 @@ function bookmark(){
         "id" : pageBookmarked
     };
     var onComp = function(xhr, stat){
-        message(xhr.responseText + "Bookmark removed!");
+        message("Bookmark removed!");
         checkCurrentPage();
     }
     sendRequest("http://localhost/coagmentoCollaboratory/webservices/index.php", "bookmark", data, userID, "delete", userKey, onComp);

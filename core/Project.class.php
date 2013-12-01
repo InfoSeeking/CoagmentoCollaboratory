@@ -12,7 +12,16 @@ class Project extends Base
 	public function __construct(){
 		$this->inDatabase = false;
 	}
-
+	public static function sqlToObj($record){
+		if ($record) {
+			$project = new Project();
+			$project->projectID = $record['projectID'];
+			$project->title = $record['title'];
+			$project->description = $record['description'];
+			$project->status = $record['status'];	
+			return $project;
+		}
+	}
 	/* 
 		TODO: 
 		- add retrieval functions for pages,bookmarks,snippets collected from a project (or put them in respective classes) 
@@ -30,16 +39,31 @@ class Project extends Base
 			$record = $results->fetch(PDO::FETCH_ASSOC);
 
 			if ($record) {
-				$project = new Project();
-				$project->projectID = $record['projectID'];
-				$project->title = $record['title'];
-				$project->description = $record['description'];
-				$project->status = $record['status'];
-						
-				return $project;
+				return Project::sqlToObj($record);
 			}
 			else
 				return null;
+		}
+		catch(Exception $e)
+		{
+			throw($e);
+		}
+	}
+	/**
+	* Retrieves all projects
+	*/
+	public static function retrieveAll(){
+		try
+		{
+			$connection=Connection::getInstance();
+			$query = "SELECT * FROM projects p";
+			$params = array(':userID' => $userID);
+			$results = $connection->execute($query,$params);		
+			$projects = [];
+			while($record = $results->fetch(PDO::FETCH_ASSOC)){
+				array_push($projects, Project::sqlToObj($record));
+			}
+			return $projects;
 		}
 		catch(Exception $e)
 		{
@@ -60,12 +84,7 @@ class Project extends Base
 			$results = $connection->execute($query,$params);		
 			$projects = [];
 			while($record = $results->fetch(PDO::FETCH_ASSOC)){
-				$project = new Project();
-				$project->projectID = $record['projectID'];
-				$project->title = $record['title'];
-				$project->description = $record['description'];
-				$project->status = $record['status'];
-				array_push($projects, $project);
+				array_push($projects, Project::sqlToObj($record));
 			}
 			return $projects;
 		}

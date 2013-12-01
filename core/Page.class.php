@@ -31,7 +31,53 @@ class Page extends Base
 	public function __construct(){
 		$this->inDatabase = false;
 	}
-	//Check user credentials.
+	public static function sqlToObj($record){
+		if ($record) {
+			$page = new Page();
+			$page->pageID = $record['pageID'];
+			$page->userID = $record['userID'];
+			$page->projectID = $record['projectID'];
+			$page->stageID = $record['stageID'];
+			$page->questionID = $record['questionID'];
+			$page->url = $record['url'];
+			$page->title = $record['title'];
+			$page->source = $record['source'];
+			$page->query = $record['query'];
+			$page->startTimestamp = $record['startTimestamp'];
+			$page->startDate = $record['startDate'];
+			$page->startTime = $record['startTime'];
+			$page->clientStartTimestamp = $record['clientStartTimestamp'];
+			$page->clientStartDate = $record['clientStartDate'];
+			$page->clientStartTime = $record['clientStartTime'];
+			$page->bookmark = $record['bookmark'];
+			$page->snippet = $record['snippet'];
+			$page->status = $record['status'];
+			$page->valid = $record['valid'];
+			$page->endTimestamp = $record['endTimestamp'];
+			$page->endDate = $record['endDate'];
+			$page->endTime = $record['endTime'];
+			$page->clientEndTimestamp = $record['clientEndTimestamp'];
+			$page->clientEndDate = $record['clientEndDate'];
+			$page->clientEndTime = $record['clientEndTime'];
+			$page->inDatabase = true;
+			return $page;
+		}
+	}
+	public static function retrieveFromUser($userID, $projectID=FALSE){
+		$connection=Connection::getInstance();
+		$query = "SELECT * FROM pages WHERE userID=:userID";
+		$params = array(':userID' => $userID);
+		if($projectID){
+			$query .= " AND projectID=:projectID";
+			$params[":projectID"] = $projectID;
+		}
+		$pages = [];
+		$results = $connection->execute($query,$params);		
+		while($record = $results->fetch(PDO::FETCH_ASSOC)){
+			array_push($pages, Page::sqlToObj($record));
+		}
+		return $pages;
+	}
 	public static function retrieve($pageID)
 	{
 		try
@@ -43,34 +89,7 @@ class Page extends Base
 			$record = $results->fetch(PDO::FETCH_ASSOC);
 
 			if ($record) {
-				$page = new Page();
-				$page->pageID = $record['pageID'];
-				$page->userID = $record['userID'];
-				$page->projectID = $record['projectID'];
-				$page->stageID = $record['stageID'];
-				$page->questionID = $record['questionID'];
-				$page->url = $record['url'];
-				$page->title = $record['title'];
-				$page->source = $record['source'];
-				$page->query = $record['query'];
-				$page->startTimestamp = $record['startTimestamp'];
-				$page->startDate = $record['startDate'];
-				$page->startTime = $record['startTime'];
-				$page->clientStartTimestamp = $record['clientStartTimestamp'];
-				$page->clientStartDate = $record['clientStartDate'];
-				$page->clientStartTime = $record['clientStartTime'];
-				$page->bookmark = $record['bookmark'];
-				$page->snippet = $record['snippet'];
-				$page->status = $record['status'];
-				$page->valid = $record['valid'];
-				$page->endTimestamp = $record['endTimestamp'];
-				$page->endDate = $record['endDate'];
-				$page->endTime = $record['endTime'];
-				$page->clientEndTimestamp = $record['clientEndTimestamp'];
-				$page->clientEndDate = $record['clientEndDate'];
-				$page->clientEndTime = $record['clientEndTime'];
-				$page->inDatabase = true;
-				return $page;
+				return Page::sqlToObj($record);
 			}
 			else
 				return null;

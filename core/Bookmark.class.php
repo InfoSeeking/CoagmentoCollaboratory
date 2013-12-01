@@ -17,18 +17,48 @@ class Bookmark extends Base
 	public function __construct(){
 		$this->inDatabase = false;
 	}
+	public static function sqlToObj($record){
+		if ($record) {
+			$bookmark = new Bookmark();
+			$bookmark->bookmarkID = $record['bookmarkID'];
+			$bookmark->title = $record['title'];
+			$bookmark->status = $record['status'];
+			$bookmark->projectID = $record['projectID'];
+			$bookmark->userID = $record['userID'];
+			$bookmark->stageID = $record['stageID'];
+			$bookmark->url = $record['url'];
+			$bookmark->note = $record['note'];
+			$bookmark->type = $record['type'];
+			$bookmark->date = $record['date'];
+			$bookmark->time = $record['time'];
+			$bookmark->timestamp = $record['timestamp'];
+			$bookmark->localDate = $record['clientDate'];
+			$bookmark->localTime = $record['clientTime'];
+			$bookmark->localTimestamp = $record['clientTimestamp'];
+			$bookmark->inDatabase = true;
+			return $bookmark;
+		}
+	}
 	/**
 	* Returns an array of all of the bookmarks belonging to the specified user.
 	* @param int $userID
-	* @return array Returns an array of associative arrays for the bookmarks
+	* @param int $projectID if set, it will only retrieve bookmarks from that specified project
+	* @return array Returns an array of Bookmark objects
 	*/
-	public static function retrieveFromUser($userID){
+	public static function retrieveFromUser($userID, $projectID=FALSE){
 		$connection=Connection::getInstance();
 		$query = "SELECT * FROM bookmarks WHERE userID=:userID";
 		$params = array(':userID' => $userID);
+		if($projectID){
+			$query .= " AND projectID=:projectID";
+			$params[":projectID"] = $projectID;
+		}
+		$bookmarks = [];
 		$results = $connection->execute($query,$params);		
-		$records = $results->fetchAll(PDO::FETCH_ASSOC);
-		return $records;
+		while($record = $results->fetch(PDO::FETCH_ASSOC)){
+			array_push($bookmarks, Bookmark::sqlToObj($record));
+		}
+		return $bookmarks;
 	}
 
 	/**
@@ -64,24 +94,7 @@ class Bookmark extends Base
 			$record = $results->fetch(PDO::FETCH_ASSOC);
 
 			if ($record) {
-				$bookmark = new Bookmark();
-				$bookmark->bookmarkID = $record['bookmarkID'];
-				$bookmark->title = $record['title'];
-				$bookmark->status = $record['status'];
-  				$bookmark->projectID = $record['projectID'];
-  				$bookmark->userID = $record['userID'];
-  				$bookmark->stageID = $record['stageID'];
-  				$bookmark->url = $record['url'];
-  				$bookmark->note = $record['note'];
-  				$bookmark->type = $record['type'];
-				$bookmark->date = $record['date'];
-				$bookmark->time = $record['time'];
-				$bookmark->timestamp = $record['timestamp'];
-				$bookmark->localDate = $record['clientDate'];
-				$bookmark->localTime = $record['clientTime'];
-				$bookmark->localTimestamp = $record['clientTimestamp'];
-				$bookmark->inDatabase = true;
-				return $bookmark;
+				return Bookmark::sqlToObj($record);
 			}
 			else
 				return null;

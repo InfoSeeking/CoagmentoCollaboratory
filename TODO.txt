@@ -12,6 +12,7 @@ Before December 1st:
 - Make full-fledged example of how projects can be used to run single-user and multiple-user studies (make a front-end showing the data they've collected)
 
 Afterwards:
+- Bookmark check should also use the selected project (so a user can bookmark a page in any number of projects)
 - Add annotations to the firefox plugin
 - Add review button which opens sidebar, sidebar can show user data
 - Clean up code

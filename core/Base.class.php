@@ -197,5 +197,12 @@ class Base
 	//returns XML representation of this class
 	public function toXML(){}
 	public function toJSON(){}
+
+	/**
+	* Takes a sql record and returns an object of the class's type. This is the glue between the SQL and classes.
+	* @param String $record the sql record which is being converted
+	* @return Base the converted object
+	*/
+	public static function sqlToObj($record){}
 }
 ?>
