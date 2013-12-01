@@ -3,6 +3,7 @@ var rootURL = "http://localhost/coagmentoCollaboratory/plugins/pages/";
 var userID = -1;
 var userKey = null;
 var msgTimer = null;
+var initialized = false;
 var pageBookmarked = -1;//-1 if not, bookmark id if it is
 window.addEventListener("load", function() { coagmentoToolbar.init(); }, false);
 
@@ -17,11 +18,21 @@ function tabSelected(event) {
     if (isVersionCorrect)
     {
         savePQ();
-        logPage();
+       // logPage();
         checkCurrentPage();
     }
 }
 
+var addressChangeListener = {
+    onLocationChange: function(aProgress, aRequest, aURI) {
+        logPage();
+    },
+
+    onStateChange: function() {},
+    onProgressChange: function() {},
+    onStatusChange: function() {},
+    onSecurityChange: function() {}
+}
 // Constructor for the toolbar.
 var coagmentoToolbar =  {
     target:document.getElementsByTagName('TITLE')[0],
@@ -50,14 +61,12 @@ var coagmentoToolbar =  {
        var container = gBrowser.tabContainer;
 	container.addEventListener("TabSelect", tabSelected, false);
         container.addEventListener('DOMSubtreeModified',coagmentoToolbar.delay,false)
-        var appcontent = document.getElementById("appcontent");   // browser
-        if(appcontent)
-          appcontent.addEventListener("DOMContentLoaded", coagmentoToolbar.onPageLoad, true);
-        var messagepane = document.getElementById("messagepane"); // mail
-        if(messagepane)
-            messagepane.addEventListener("load", function () { coagmentoToolbar.onPageLoad(); }, true);
+        if(!initialized){
+          initialized= true;
+          gBrowser.addProgressListener(addressChangeListener);
+        }
       savePQ();
-      logPage();
+     // logPage();
       checkCurrentPage();
   }, // init: function()
 

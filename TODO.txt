@@ -13,6 +13,7 @@ Before December 1st:
 
 Afterwards:
 - Bookmark check should also use the selected project (so a user can bookmark a page in any number of projects)
+- Add logout button
 - Add annotations to the firefox plugin
 - Add review button which opens sidebar, sidebar can show user data
 - Clean up code
