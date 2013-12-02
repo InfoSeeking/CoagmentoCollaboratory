@@ -49,7 +49,7 @@ class Snippet extends Base
 	* @param int $projectID if set, it will only retrieve snippets from that specified project
 	* @return array Returns an array of Snippet objects
 	*/
-	public static function retrieveFromUser($userID){
+	public static function retrieveFromUser($userID, $projectID=FALSE){
 		$connection=Connection::getInstance();
 		$query = "SELECT * FROM snippets WHERE userID=:userID";
 		$params = array(':userID' => $userID);
