@@ -373,6 +373,7 @@ function showSnippets() {
 //Change connection status from the toolbar
 function changeConnectionStatus()
 {
+  /*
         if (document.getElementById("coagmento-Login-Button").label == "Disconnect")
         {
             if(confirm('Are you sure you want to logout?'))
@@ -391,6 +392,7 @@ function changeConnectionStatus()
             toggleSidebar('viewSidebar',true);
             populateSidebar();
         }
+    */
 }
 
  /*************************************************************************************************************************************/
@@ -410,6 +412,7 @@ function populateSidebar() {
 
 function setStatus(res)
 {
+  /*
     var button = document.getElementById("coagmento-Views-Status-Button");
     button.label = res[2];
     var button = document.getElementById("coagmento-Notes-Status-Button");
@@ -418,10 +421,12 @@ function setStatus(res)
     button.label = res[4];
     var button = document.getElementById("coagmento-Project-Status-Button");
     button.label = res[5];
+    */
 }
 
 function cleanStatus()
 {
+  /*
     var button = document.getElementById("coagmento-Views-Status-Button");
     button.label = "";
     var button = document.getElementById("coagmento-Notes-Status-Button");
@@ -430,6 +435,7 @@ function cleanStatus()
     button.label = "";
     var button = document.getElementById("coagmento-Project-Status-Button");
     button.label = "";
+    */
 }
 
 //DISABLE OR ENABLE BUTTONS
@@ -437,17 +443,17 @@ function disableButtons(value)
 {
     //if (isVersionCorrect)
     //{
-        document.getElementById('coagmento-CSpaceLogin-Button').disabled = value;
+    //    document.getElementById('coagmento-CSpaceLogin-Button').disabled = value;
         document.getElementById('coagmento-Save-Button').disabled = value;
         document.getElementById('coagmento-Recommend-Button').disabled = value;
         document.getElementById('coagmento-Annotate-Button').disabled = value;
         document.getElementById('coagmento-Snip-Button').disabled = value;
-        document.getElementById('coagmento-Sidebar-Button').disabled = value;
-        document.getElementById('coagmento-Etherpad-Button').disabled = value;
-        document.getElementById('coagmento-Views-Status-Button').disabled = value;
-        document.getElementById('coagmento-Notes-Status-Button').disabled = value;
-        document.getElementById('coagmento-Snippets-Status-Button').disabled = value;
-        document.getElementById('coagmento-Project-Status-Button').disabled = value;
+    //    document.getElementById('coagmento-Sidebar-Button').disabled = value;
+    //    document.getElementById('coagmento-Etherpad-Button').disabled = value;
+    //    document.getElementById('coagmento-Views-Status-Button').disabled = value;
+    //    document.getElementById('coagmento-Notes-Status-Button').disabled = value;
+    //    document.getElementById('coagmento-Snippets-Status-Button').disabled = value;
+    //    document.getElementById('coagmento-Project-Status-Button').disabled = value;
         //document.getElementById('coagmento-Mood-Menupopup').disabled = value;
         //if (value==true)
         //    document.getElementById('coagmento-Mood-Menupopup').label = "How do you feel now?";
@@ -561,6 +567,7 @@ function checkConnectivity()
 
  function serverDown()
  {
+  /*
        connectionFlag = false;
        disableButtons(true);
        document.getElementById("coagmento-Login-Button").label = "Connect";
@@ -571,6 +578,8 @@ function checkConnectivity()
                 if (broadcaster.hasAttribute('checked'))
                     toggleSidebar('viewSidebar',false);
        isExclusive = false;
+
+      */
  }
 
 
@@ -592,9 +601,9 @@ function loadURL(url) {
 }
 
 function search() {
-	var searchString = document.getElementById("coagmento-SearchTerms").value;
+	/*var searchString = document.getElementById("coagmento-SearchTerms").value;
 	var url = 'http://www.coagmento.org/CSpace/index.php?search='+searchString;
-	loadURL(url);
+	loadURL(url);*/
 }
 
 // Function to load a URL in a popup window
@@ -725,6 +734,10 @@ function populateProjects(){
         }
         else{
             var popup = document.getElementById("projectPopup");
+            //remove all children first
+            while(popup.firstChild){
+              popup.removeChild(popup.firstChild);
+            }
             for(var i = 0; i < resp.length; i++){
                 var p = resp[i];
                 var mi = document.createElement("menuitem");
@@ -738,11 +751,28 @@ function populateProjects(){
 }
 
 function login(){
+    var btn = document.getElementById("login");
+    var lbluname = document.getElementById("lbluname");
+    var lblpass = document.getElementById("lblpass");
     var unamebox = document.getElementById("username");
     var passbox = document.getElementById("password");
     var uname = unamebox.value;
     var pass = passbox.value;
-    //TODO: send a request to the webservice for logging in
+
+    if(userID != -1){
+      //user is trying to log out
+      userID = -1;
+      userKey = null;
+      passbox.hidden = false;
+      unamebox.hidden = false;
+      lbluname.hidden = false;
+      lblpass.hidden = false;
+      btn.label = "Log in";
+      disableButtons(true);
+      message("Logged out");
+      return;
+    }
+
     function succ(xhr,stat){
         var resp = $.parseJSON(xhr.responseText);
         if(resp.hasOwnProperty("error")){
@@ -750,17 +780,14 @@ function login(){
         }
         else{
             //success
-            alert("Logged in!");
+            message("Logged in!");
             userID = resp.userID;
             userKey = resp.key;
-            passbox.parentNode.removeChild(passbox);
-            unamebox.parentNode.removeChild(unamebox);
-            var lbluname = document.getElementById("lbluname");
-            lbluname.parentNode.removeChild(lbluname);
-            var lblpass = document.getElementById("lblpass");
-            lblpass.parentNode.removeChild(lblpass);
-            var btn = document.getElementById("login");
-            btn.parentNode.removeChild(btn);
+            passbox.hidden = true;
+            unamebox.hidden = true;
+            lbluname.hidden = true;
+            lblpass.hidden = true;
+            btn.label = "Log out";
             disableButtons(false);
             //get a list of user's projects, and add them to a drop down menu
             populateProjects();

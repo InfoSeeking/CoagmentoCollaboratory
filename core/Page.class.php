@@ -71,6 +71,7 @@ class Page extends Base
 			$query .= " AND projectID=:projectID";
 			$params[":projectID"] = $projectID;
 		}
+		$query .= " ORDER BY startDate DESC, startTime DESC";
 		$pages = [];
 		$results = $connection->execute($query,$params);		
 		while($record = $results->fetch(PDO::FETCH_ASSOC)){

@@ -54,3 +54,12 @@ hbox#browser > vbox {
   -moz-image-region: rect(256px 16px 272px 0px);
   -moz-box-orient: horizontal;
 }
+
+label, description{
+  margin-top: 6px;
+}
+
+#msgs{
+  margin-top: 8px;
+  font-weight: bold;
+}

@@ -14,7 +14,7 @@
         <toolbar id="coagmento-Toolbar" toolbarname="Coagmento Toolbar" accesskey="C"
                  class="chromeclass-toolbar" context="toolbar-context-menu"
                  hidden="false" persist="hidden">
-
+				<!-- 
 				<toolbarbutton id="coagmento-Login-Button" style="font-size: 11px; font-weight:bold"
 					tooltiptext="Connect/Disconnect with Coagmento" 
 					label="Connect"
@@ -26,9 +26,9 @@
 					label="Home"
                                         disabled="true"
 					oncommand="loadURL('http://www.coagmento.org/CSpace/')" />
-
-				<toolbarseparator />
 				
+				<toolbarseparator />
+				-->
 				<toolbarbutton id="coagmento-Save-Button" style="font-size: 11px; font-weight:bold"
 					tooltiptext="Save/remove the current page" 
 					label="Bookmark" 
@@ -52,15 +52,21 @@
 					label="Snip" 
                                         disabled="true"
 					oncommand="snip()" />
-
+				<toolbarseparator />
+				<menulist id="projectList">
+				  <menupopup id="projectPopup">
+				    <menuitem label="Select Project" value="-1"/>
+				  </menupopup>
+				</menulist>
+				<!--
  				<toolbarseparator />
-
-                                <toolbarbutton id="coagmento-Sidebar-Button" style="font-size: 11px; font-weight:bold"
+				
+                <toolbarbutton id="coagmento-Sidebar-Button" style="font-size: 11px; font-weight:bold"
 					tooltiptext="Shared resources"
 					label="Resources"
                                         disabled="true"
 					oncommand="toggleSidebar('viewSidebar')" />
-		
+				
 				<toolbarbutton id="coagmento-Etherpad-Button" style="font-size: 11px; font-weight:bold"
 					tooltiptext="Collaborative editor" 
 					label="Editor" 
@@ -88,6 +94,8 @@
 					label=""
                                         disabled="true"
 					oncommand="annotate()" />
+
+				-->
 				<toolbarseparator />
 				<label id="lbluname" value="Username" control="username"/>
 				<textbox id="username" value=""/>
@@ -96,13 +104,15 @@
 				<toolbarbutton id="login" style="font-size: 11px"
 					label="Login"
 					oncommand="login()" />
-				<toolbarseparator />
+				
+				<!--
 				<toolbarbutton id="coagmento-Snippets-Status-Button" style="font-size: 11px"
 					tooltiptext="Snippets status"
 					label=""
                                         disabled="true"
 					oncommand="showSnippets()" />
                 <toolbarseparator />
+            	-->
 <!--
                                <button id="coagmento-Mood-Menupopup" type="menu" label="How do you feel now?" disabled="true" style="font-size: 11px; font-weight:bold">
                                   <menupopup>
@@ -114,13 +124,7 @@
                                   </menupopup>
                                 </button>  
 -->
-				<menulist id="projectList">
-				  <menupopup id="projectPopup">
-				    <menuitem label="Select Project" value="-1"/>
-				  </menupopup>
-				</menulist>
-				<toolbarseparator />
-				<description class="blue" id="msgs"/>
+				<description id="msgs"/>
         </toolbar>
     </toolbox>
 
