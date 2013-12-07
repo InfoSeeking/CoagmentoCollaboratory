@@ -14,21 +14,6 @@
         <toolbar id="coagmento-Toolbar" toolbarname="Coagmento Toolbar" accesskey="C"
                  class="chromeclass-toolbar" context="toolbar-context-menu"
                  hidden="false" persist="hidden">
-				<!-- 
-				<toolbarbutton id="coagmento-Login-Button" style="font-size: 11px; font-weight:bold"
-					tooltiptext="Connect/Disconnect with Coagmento" 
-					label="Connect"
-                                        disabled="false"
-					oncommand="changeConnectionStatus()"/>
-       
-                                 <toolbarbutton id="coagmento-CSpaceLogin-Button" style="font-size: 11px; font-weight:bold"
-					tooltiptext="Coagmento home/CSpace" 
-					label="Home"
-                                        disabled="true"
-					oncommand="loadURL('http://www.coagmento.org/CSpace/')" />
-				
-				<toolbarseparator />
-				-->
 				<toolbarbutton id="coagmento-Save-Button" style="font-size: 11px; font-weight:bold"
 					tooltiptext="Save/remove the current page" 
 					label="Bookmark" 
@@ -45,7 +30,7 @@
 					tooltiptext="Make notes on the current page" 
 					label="Annotate" 
                                         disabled="true"
-					oncommand="annotate()" />
+					oncommand="openAnnotateWindow()" />
 					
 				<toolbarbutton id="coagmento-Snip-Button" style="font-size: 11px; font-weight:bold"
 					tooltiptext="Snip highlighted text from the current page" 
@@ -145,7 +130,7 @@
                  autoCheck="false"
                  type="checkbox"
                  group="sidebar"
-                 sidebarurl="http://www.coagmento.org/loginOnSideBar.php"
+                 sidebarurl="chrome://coagmento/content/sidebar.xul"
                  sidebartitle="&sidebar.title;"
                  oncommand="toggleSidebar('viewSidebar');" />
 	</broadcasterset>

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+<window id="annotate-window" title="Annotate this Page" orient="horizontal" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+<script type="application/x-javascript" src="chrome://coagmento/content/jquery.js" />
+<script type="application/x-javascript" src="chrome://coagmento/content/annotate.js" />
+<vbox>
+	<label value="Annotation Content:" />
+	<textbox multiline="true" rows="4" id="annotation_content" value=""/>
+	<button label="Save" oncommand="onSave();"/>
+</vbox>
+</window>

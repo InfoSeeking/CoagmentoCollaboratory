@@ -1,3 +1,4 @@
+pref("dom.allow_scripts_to_close_windows", true);
 // Add a listener to the current window.
 var rootURL = "http://localhost/coagmentoCollaboratory/plugins/pages/";
 var userID = -1;
@@ -5,7 +6,9 @@ var userKey = null;
 var msgTimer = null;
 var initialized = false;
 var pageBookmarked = -1;//-1 if not, bookmark id if it is
+var annotationWindow;
 window.addEventListener("load", function() { coagmentoToolbar.init(); }, false);
+
 
 //Return version
 function getVersion()
@@ -263,34 +266,38 @@ if (isVersionCorrect)
 	else
 		alert("Your session has expired. Please login again.");
     }
-} // function annotate()
+} 
 
-function annotate() {
+function saveAnnotation(content){
+  //todo
+  alert("Saving " + content);
+  var url = gBrowser.selectedBrowser.currentURI.spec;
+  var title = document.title;
+  var data = {
+    'annotation' : content,
+    'url' : url,
+    'title' : title,
+    'projectID' : projID
+  };
+  var onComp = function(xhr,stat){
+    message("Annotation saved!");
+  };
+  annotationWindow.close();
+  //sendRequest("http://localhost/coagmentoCollaboratory/webservices/index.php", "annotation", data, userID, "create", userKey, onComp);
+}
 
-        //var loggedIn = isLogedIn(); //Check on Server
-if (isVersionCorrect)
-    {
-	if (loggedIn) {
-		//req = new phpRequest("http://www.coagmento.org/CSpace/checkStatus.php");
-		//req.add('version',getVersion());
-		//var response = req.execute();
-		//var res = response.split(":");
-		//if (res[0]>0) {
-			var url = window.content.document.location;
-			url = encodeURIComponent(url);
-			var title = encodeURIComponent(document.title);
-                        var targetURL = 'http://www.coagmento.org/CSpace/annotations.php?'+'page='+url+'&title='+title;
-                        window.open(targetURL,'Annotations','resizable=yes,scrollbars=yes,width=640,height=480,left=600');
-		//} // if (loggedIn)
-		//else {
-		//	alert(res[1]);
-		//}
-	}
-	else
-		alert("Your session has expired. Please login again.");
-    }
-} // function annotate()
+function openAnnotateWindow() {
+  var w = 200;
+  var h = 150;
+  var left = (screen.width/2)-(w/2);
+  var top = (screen.height/2)-(h/2);
+  //open annotation window
+  annotationWindow = window.open("chrome://coagmento/content/annotate.xul", "annotate", 'chrome,width='+w+',height='+h+',top='+top+',left='+left);
+}
 
+function test(){
+  alert("From coagmento.js");
+}
 // Function to collect highlighted passage from the page as a snippet.
 function message(msg){
   document.getElementById("msgs").textContent = msg;
@@ -301,33 +308,6 @@ function cleanAlert()
 {
     document.getElementById('msgs').textContent = "";
 }
-/*function snip() {
-
-        //var loggedIn = isLogedIn(); //Check on Server
-if (isVersionCorrect)
-    {
-	if (loggedIn) {
-		//req = new phpRequest("http://www.coagmento.org/CSpace/checkStatus.php");
-		//req.add('version',getVersion());
-		//var response = req.execute();
-		//var res = response.split(":");
-		//if (res[0]>0) {
-                        var snippet = document.commandDispatcher.focusedWindow.getSelection().toString();
-                        var url = window.content.document.location;
-                        url = encodeURIComponent(url);
-                        var title = encodeURIComponent(document.title);
-                        targetURL = 'http://www.coagmento.org/CSpace/saveSnippet.php?'+'URL='+url+'&snippet='+snippet+'&title='+title;
-                        window.open(targetURL,'Snippet','resizable=yes,scrollbars=yes,width=640,height=480,left=600');
-		//}
-		//else {
-                //      alert(res[1]);
-		//}
-	}
-	else
-		alert("Your session has expired. Please login again.");
-    }
-}
-*/
 function snip(){
   var projID = getSelectedProject();
   if(projID == -1){
@@ -341,7 +321,6 @@ function snip(){
     return;
   }
   var url = gBrowser.selectedBrowser.currentURI.spec;
-  url = encodeURIComponent(url);
   var title = document.title;
   var data = {
     'snippet' : snippet,
@@ -406,8 +385,8 @@ function changeConnectionStatus()
 function populateSidebar() {
 	var sidebar = top.document.getElementById('sidebar');
         //var urlplace = "http://www.coagmento.org/loginOnSideBar.php";
-        var urlplace = rootURL + "login.php";
-	sidebar.setAttribute("src", urlplace);
+       // var urlplace = rootURL + "login.php";
+	//sidebar.setAttribute("src", urlplace);
 }
 
 function setStatus(res)

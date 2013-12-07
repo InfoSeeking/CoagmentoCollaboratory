@@ -8,12 +8,13 @@
 
 Before December 1st:
 - Check if page is bookmarked and add option to remove [done]
-- Add page logging
-- Make full-fledged example of how projects can be used to run single-user and multiple-user studies (make a front-end showing the data they've collected)
+- Add page logging [done]
+- Make full-fledged example of how projects can be used to run single-user and multiple-user studies (make a front-end showing the data they've collected) [done]
 
 Afterwards:
-- Bookmark check should also use the selected project (so a user can bookmark a page in any number of projects)
-- Add logout button
+- Bookmark check should also use the selected project (so a user can bookmark a page in any number of projects) [done]
+- Add logout button [done]
+- Log queries
 - Add annotations to the firefox plugin
 - Add review button which opens sidebar, sidebar can show user data
 - Clean up code

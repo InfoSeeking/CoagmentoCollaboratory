@@ -1,11 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html SYSTEM "chrome://sidebar/locale/sidebar.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"  title="&sidebar.title;" id="&sidebar.id;">
-<head>
-<title>&sidebar.title;</title>
-<script type="application/x-javascript" src="coagmento.js"></script>
-</head>
-<body onload="populateSidebar();">
+<?xml version="1.0"?>
+<!DOCTYPE overlay SYSTEM "chrome://coagmento/locale/sidebar.dtd">
 
-</body>
-</html>
+<page id="sidebar" title="&sidebar.title;"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" >
+</page>
