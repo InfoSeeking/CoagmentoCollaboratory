@@ -269,8 +269,15 @@ if (isVersionCorrect)
 } 
 
 function saveAnnotation(content){
-  //todo
-  alert("Saving " + content);
+  if(userID == -1){
+    message ("Not logged in");
+    return;
+  }
+  var projID = getSelectedProject();
+  if(projID == -1){
+    message("No project selected");
+    return;
+  }
   var url = gBrowser.selectedBrowser.currentURI.spec;
   var title = document.title;
   var data = {
@@ -283,7 +290,7 @@ function saveAnnotation(content){
     message("Annotation saved!");
   };
   annotationWindow.close();
-  //sendRequest("http://localhost/coagmentoCollaboratory/webservices/index.php", "annotation", data, userID, "create", userKey, onComp);
+  sendRequest("http://localhost/coagmentoCollaboratory/webservices/index.php", "annotation", data, userID, "create", userKey, onComp);
 }
 
 function openAnnotateWindow() {
@@ -309,6 +316,10 @@ function cleanAlert()
     document.getElementById('msgs').textContent = "";
 }
 function snip(){
+  if(userID == -1){
+    message ("Not logged in");
+    return;
+  }
   var projID = getSelectedProject();
   if(projID == -1){
     message("No project selected");

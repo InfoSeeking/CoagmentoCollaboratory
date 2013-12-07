@@ -42,3 +42,15 @@ $data = array(
 );
 $response = sendRequest("http://localhost/coagmentoCollaboratory/webservices/index.php", "bookmark", $data, 10, "retrieve", "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3", "json");
 echo $response;
+
+
+//check if user has a bookmark
+echo "<p>Adding annotaiton</p>";
+$data = array(
+	"annotation" => "test",
+	"url" => "http://google.com",
+	"title" => "google",
+	"projectID" => 2
+);
+$response = sendRequest("http://localhost/coagmentoCollaboratory/webservices/index.php", "annotation", $data, 10, "create", "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3", "json");
+echo $response;

@@ -20,3 +20,4 @@ Afterwards:
 - Clean up code
 - Authenticate login? HTTPS?
 - Document
+- Modify the db importer to take one SQL dump file and split it up so I only have to make the sql dump once and not modify it

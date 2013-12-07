@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS `users` (
   `condition` varchar(2) DEFAULT NULL,
   `conditionCode` tinyint(1) DEFAULT NULL,
   `observations` text,
+  `api_key` varchar(40) NOT NULL DEFAULT '0',
   PRIMARY KEY (`userID`),
   UNIQUE KEY `username` (`username`),
   KEY `userID` (`userID`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+);
