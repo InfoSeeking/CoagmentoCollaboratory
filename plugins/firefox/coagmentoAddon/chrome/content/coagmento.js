@@ -1,89 +1,35 @@
-pref("dom.allow_scripts_to_close_windows", true);
+//pref("dom.allow_scripts_to_close_windows", true); THIS REMOVED GLOBALS AND EVENTS!!!
 // Add a listener to the current window.
 var rootURL = "http://localhost/coagmentoCollaboratory/plugins/pages/";
 var userID = -1;
 var userKey = null;
 var msgTimer = null;
 var initialized = false;
-var pageBookmarked = -1;//-1 if not, bookmark id if it is
+var pageBookmarked = null;//-1 if not, bookmark id if it is
 var annotationWindow;
-window.addEventListener("load", function() { coagmentoToolbar.init(); }, false);
+var prevPage = null;
 
+window.addEventListener("load", init);
 
-//Return version
-function getVersion()
-{
-   return '308';
-}
-
-// WHEN THE USER SWITCH TAB
-function tabSelected(event) {
-    if (isVersionCorrect)
-    {
-        savePQ();
-       // logPage();
-        checkCurrentPage();
-    }
-}
-
-var addressChangeListener = {
-    onLocationChange: function(aProgress, aRequest, aURI) {
-        logPage();
-    },
-
-    onStateChange: function() {},
-    onProgressChange: function() {},
-    onStatusChange: function() {},
-    onSecurityChange: function() {}
-}
-// Constructor for the toolbar.
-var coagmentoToolbar =  {
-    target:document.getElementsByTagName('TITLE')[0],
-    oldValue:document.title,
-
-  // WHEN FIREFOX RUN FOR FIRST TIME
-    //This is for capturing events like those that take place on google instant.
-    onChange: function()
-                  {
-                    if(coagmentoToolbar.oldValue!==document.title)
-                    {
-                      coagmentoToolbar.oldValue=document.title;
-                      //alert('somebody changed the title');
-                        savePQ();
-                        //checkCurrentPage();
-                    }
-                 },
-
-    delay:function()
-                {
-                  setTimeout(coagmentoToolbar.onChange,1);
-                },
-                
-
-  init: function() {
-       var container = gBrowser.tabContainer;
-	container.addEventListener("TabSelect", tabSelected, false);
-        container.addEventListener('DOMSubtreeModified',coagmentoToolbar.delay,false)
-        if(!initialized){
-          initialized= true;
-          gBrowser.addProgressListener(addressChangeListener);
+function init(){
+  if(!initialized){
+    gBrowser.addProgressListener({
+      onLocationChange: function(aProgress, aRequest, aURI) {
+        if(userID != -1){
+          logPage();
+          checkCurrentPage();
         }
-      savePQ();
-     // logPage();
-      checkCurrentPage();
-  }, // init: function()
+      },
+      onStateChange: function() {},
+      onProgressChange: function() {},
+      onStatusChange: function() {},
+      onSecurityChange: function() {}
+    });
+  }
+}
 
-// WHEN THE PAGE IS LOADED
-  onPageLoad: function(loadEvent) {
-    if (isVersionCorrect)
-    {
-        savePQ();
-        logPage();
-        checkCurrentPage();
-    }
-    } // onPageLoad: function(loadEvent)
-} // var coagmentoToolbar
-  
+
+
 //SAVE CURRENT PAGE
 function savePQ()
 {
@@ -117,17 +63,39 @@ function savePQ()
     }
 }
 
+/*
+Logs the page, and saves the query (if possible)
+*/
 function logPage(){
     if(userID != -1){
+        var url = gBrowser.selectedBrowser.currentURI.spec;
+        if(url == "about:blank" || url == "about:newtab"){
+          return;//ignore these
+        }
+        if(url == prevPage){
+          return;
+        }
+        prevPage = url;
         var d = new Date();
+        //save page
         var data = {
-            "url" : gBrowser.selectedBrowser.currentURI.spec,
+            "url" : url,
             "title" : document.title,
             "startDate" :  d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(),
             "startTime" : d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds(),
             "projectID" :  getSelectedProject(),
         };
         sendRequest("http://localhost/coagmentoCollaboratory/webservices/index.php", "page", data, userID, "create", userKey);
+
+        //save query
+        var qdata = {
+            "url" : url,
+            "title" : document.title,
+            "date" :  d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(),
+            "time" : d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds(),
+            "projectID" :  getSelectedProject(),
+        };
+        sendRequest("http://localhost/coagmentoCollaboratory/webservices/index.php", "query", qdata, userID, "create", userKey);
     }
 }
 
@@ -302,9 +270,6 @@ function openAnnotateWindow() {
   annotationWindow = window.open("chrome://coagmento/content/annotate.xul", "annotate", 'chrome,width='+w+',height='+h+',top='+top+',left='+left);
 }
 
-function test(){
-  alert("From coagmento.js");
-}
 // Function to collect highlighted passage from the page as a snippet.
 function message(msg){
   document.getElementById("msgs").textContent = msg;
@@ -748,7 +713,6 @@ function login(){
     var passbox = document.getElementById("password");
     var uname = unamebox.value;
     var pass = passbox.value;
-
     if(userID != -1){
       //user is trying to log out
       userID = -1;
@@ -791,3 +755,4 @@ function login(){
     };
     sendRequest("http://localhost/coagmentoCollaboratory/webservices/index.php", "user", data, -1, "retrieve", "nokey", succ, "json");
 }
+

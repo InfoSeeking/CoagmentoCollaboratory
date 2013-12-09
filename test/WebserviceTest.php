@@ -54,3 +54,19 @@ $data = array(
 );
 $response = sendRequest("http://localhost/coagmentoCollaboratory/webservices/index.php", "annotation", $data, 10, "create", "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3", "json");
 echo $response;
+
+
+echo "<p>Adding a query</p>";
+$data = array(
+	'url' => 'https://www.google.com/search?q=what+is+the+meaning+of+life&oq=what+&aqs=chrome.1.69i57j69i59j69i60j69i61j0l2.2632j0j4&sourceid=chrome&ie=UTF-8',
+	'projectID' => 2,
+	'title' => "Google",
+	'date' => "2013-12-09",
+	'time' => "02:15:00"
+);
+
+echo "<p>Sending authenticated request to webservice to create action</p>";
+
+$response = sendRequest("http://localhost/coagmentoCollaboratory/webservices/index.php", "query", $data, 10, "create", "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3", "json");
+
+echo $response;

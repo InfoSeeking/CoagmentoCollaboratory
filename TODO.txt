@@ -1,7 +1,7 @@
 - Get the front-end page up [done]
 - Get Firefox plugin to show sidebar [done]
-- Add project membership to project class
-- Add retrievAll to page class to get user's history
+- Add project membership to project class [done]
+- Add retrievAll to page class to get user's history [done]
 - Make other webservices for Query, Page, etc.
 - Make full-fledged example of how projects can be used to run single-user and multiple-user studies
 - Make all webservices offer JSON as well as XML (only user and project does this now)
@@ -21,3 +21,4 @@ Afterwards:
 - Authenticate login? HTTPS?
 - Document
 - Modify the db importer to take one SQL dump file and split it up so I only have to make the sql dump once and not modify it
+- Add date/time to query, bookmark, snippet

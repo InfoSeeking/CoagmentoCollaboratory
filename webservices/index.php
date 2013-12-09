@@ -90,6 +90,7 @@ function init(){
 		case "project":
 		case "page":
 		case "annotation":
+		case "query":
 		$class = ucfirst($path) . "Listener";
 		$file = $class . ".class.php";
 		require_once($file);
