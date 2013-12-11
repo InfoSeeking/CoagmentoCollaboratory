@@ -19,6 +19,7 @@ class Project extends Base
 			$project->title = $record['title'];
 			$project->description = $record['description'];
 			$project->status = $record['status'];	
+			$project->inDatabase = true;
 			return $project;
 		}
 	}

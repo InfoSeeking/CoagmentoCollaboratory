@@ -1,4 +1,6 @@
 <?php
+	//if passed a get parameter projectID it will only show one project
+	// header("refresh:5"); //refreshes periodically
 	 require_once('../core/User.class.php');
 	 require_once('../core/Session.class.php');
 	 require_once("../core/Stage.class.php");
@@ -6,9 +8,10 @@
 	 require_once("../core/Snippet.class.php");
 	 require_once("../core/Project.class.php");
 	 require_once("../core/Bookmark.class.php");
+	 require_once("../core/Query.class.php");
 	 require_once("../core/Page.class.php");
 
-	 function shorten($txt, $maxC=25){
+	 function shorten($txt, $maxC=35){
 	 	if(strlen($txt) > $maxC){
 			$txt = substr($txt, 0, $maxC) . "...";
 		}
@@ -16,7 +19,14 @@
 	 }
 	 $output = array(0 => "", 1 => ""); //0 for individual, 1 for group
 	 //get all projects
-	 $projects = Project::retrieveAll();
+	 $projects = [];
+	 if(isset($_GET['projectID'])){
+	 	$projects[] = Project::retrieve($_GET['projectID']);
+	 }
+	 else{
+	 	$projects = Project::retrieveAll();	
+	 }
+	 
 	 foreach($projects as $proj){
 	 	//get users from this project
 	 	$pid = $proj->getProjectID();
@@ -27,7 +37,7 @@
 	 	}
 
 	 	
-	 	$output[$type] .= "<h2>" . $proj->getTitle() . "</h2>";
+	 	$output[$type] .= "<div class='project cf'><h2>" . $proj->getTitle() . "</h2>";
 	 	foreach($users as $u){
 	 		$uid = $u->getUserID();
 	 		//get bookmarks
@@ -36,28 +46,42 @@
 	 		$snippets = Snippet::retrieveFromUser($uid, $pid);
 	 		//get pages
 	 		$pages = Page::retrieveFromUser($uid, $pid);
+	 		//get queries
+	 		$queries = Query::retrieveFromUser($uid, $pid);
 
-	 		$output[$type] .= "<h3>Username: " . $u->getUserName() . "</h3>";
-	 		$output[$type] .= "<div class='memberinfo cf'><div><h5>Pages Visited</h5><table cellspacing=0>";
-	 		
+	 		$output[$type] .= "<div class='memberinfo'><h3>Username: " . $u->getUserName() . "</h3>";
+
+	 		$output[$type] .= "<div><h5>Queries</h5><table cellspacing=0>";
+	 		foreach($queries as $q){
+	 			$queryText = $q->getQuery();
+	 			$output[$type] .= sprintf("<tr><td>%s</td></tr>", $queryText);
+	 		}
+	 		$output[$type] .= "</table></div>";
+
+	 		$output[$type] .= "<div><h5>Bookmarks Collected</h5><table cellspacing=0>";
+	 		foreach($bookmarks as $b){
+	 			$url = $b->getUrl();
+	 			$short = $url;
+	 			$output[$type] .= sprintf("<tr><td><a href='%s' target='_blank'>%s</a></td></tr>", $url, $short);
+	 		}
+	 		$output[$type] .= "</table></div>";
+
+	 		$output[$type] .= "<div><h5>Snippets Collected</h5><table cellspacing=0>";
+	 		foreach($snippets as $s){
+	 			$short = $s->getSnippet();
+	 			$output[$type] .= sprintf("<tr><td>%s</td></tr>", $short);
+	 		}
+	 		$output[$type] .= "</table></div>";
+
+	 		$output[$type] .= "<div><h5>Pages Visited</h5><table cellspacing=0>";
 	 		foreach($pages as $p){
 	 			$url = $p->getUrl();
 	 			$short = shorten($url);
 	 			$output[$type] .= sprintf("<tr><td><a href='%s' target='_blank'>%s</a></td><td>%s</td><td>%s</td></tr>", $url, $short, $p->getStartDate(), $p->getStartTime());
 	 		}
-	 		$output[$type] .= "</table></div><div><h5>Bookmarks Collected</h5><table cellspacing=0>";
-	 		foreach($bookmarks as $b){
-	 			$url = $b->getUrl();
-	 			$short = shorten($url, 30);
-	 			$output[$type] .= sprintf("<tr><td><a href='%s' target='_blank'>%s</a></td></tr>", $url, $short);
-	 		}
-	 		$output[$type] .= "</table></div><div><h5>Snippets Collected</h5><table cellspacing=0>";
-	 		foreach($snippets as $s){
-	 			$short = shorten($s->getSnippet(), 30);
-	 			$output[$type] .= sprintf("<tr><td>%s</td></tr>", $short);
-	 		}
 	 		$output[$type] .= "</table></div></div>";
 	 	}
+	 	$output[$type] .= "</div>";
 	 }
 ?>
 <!doctype html>
@@ -90,15 +114,14 @@
 	}
 	.memberinfo{
 		padding-bottom: 5px;
-		border-bottom: 5px black solid;
 		margin-bottom: 10px;
+		float: left;
 	}
 	.memberGroup .memberinfo:last-child{
 		border-bottom: none;
 	}
 	.memberinfo div{
 		width: 300px;
-		float: left;
 	}
 	.memberinfo table{
 		width: 290px;
@@ -121,7 +144,12 @@
 		margin-bottom: 10px;
 	}
 	h5{
+		margin-top: 10px;
+		background: #000;
+		color: #FFF;
+		padding: 5px;
 		margin-bottom: 5px;
+		width: 280px;
 	}
 	a{
 		color: #000;
@@ -134,6 +162,18 @@
 </head>
 <body>
 <div id="container">
+	<?php
+	if(isset($_GET['projectID'])):
+	?>
+	<div class="memberGroup">
+		<?php
+			echo $output[0].$output[1];//one is blank
+		?>
+	</div>
+	<?php
+	else:
+	?>
+
 	<h1>Individual Studies</h1>
 	<div class="memberGroup">
 		<?php
@@ -147,6 +187,7 @@
 			echo $output[1];
 		?>
 	</div>
+	<?php endif; ?>
 </div>
 </body>
 </html>

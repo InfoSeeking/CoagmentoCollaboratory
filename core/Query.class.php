@@ -16,6 +16,20 @@ class Query extends Base{
 	public function __construct(){
 		$this->inDatabase = false;
 	}
+	public static function sqlToObj($record){
+		if ($record) {
+			$query = new Query();
+			$query->queryID = $record['queryID'];
+			$query->query = $record['query'];
+			$query->source = $record['source'];
+			$query->url = $record['url'];
+			$query->title = $record['title'];
+			$query->timestamp = $record['timestamp'];
+			$query->topResults = $record['topResults'];
+			$query->inDatabase = true;
+			return $query;
+		}
+	}
 	public static function retrieve($queryID){
 		try
 		{
@@ -26,16 +40,7 @@ class Query extends Base{
 			$record = $results->fetch(PDO::FETCH_ASSOC);
 
 			if ($record) {
-				$query = new Query();
-				$query->queryID = $record['queryID'];
-				$query->query = $record['query'];
-				$query->source = $record['source'];
-				$query->url = $record['url'];
-				$query->title = $record['title'];
-				$query->timestamp = $record['timestamp'];
-				$query->topResults = $record['topResults'];
-				$query->inDatabase = true;
-				return $query;
+				return Query::sqlToObj($record);
 			}
 			else
 				return null;
@@ -46,6 +51,27 @@ class Query extends Base{
 		}
 	}
 
+	/**
+	* Returns an array of all of the queries belonging to the specified user.
+	* @param int $userID
+	* @param int $projectID if set, it will only retrieve queries from that specified project
+	* @return array Returns an array of Snippet objects
+	*/
+	public static function retrieveFromUser($userID, $projectID=FALSE){
+		$connection=Connection::getInstance();
+		$query = "SELECT * FROM queries WHERE userID=:userID";
+		$params = array(':userID' => $userID);
+		if($projectID){
+			$query .= " AND projectID=:projectID";
+			$params[":projectID"] = $projectID;
+		}
+		$queries = [];
+		$results = $connection->execute($query,$params);		
+		while($record = $results->fetch(PDO::FETCH_ASSOC)){
+			array_push($queries, Query::sqlToObj($record));
+		}
+		return $queries;
+	}
 
 	public function save()
 	{
@@ -155,6 +181,8 @@ class Query extends Base{
 	public function setUrl($val){$this->url = $val;}
 	public function setTitle($val){$this->title = $val;}
 	public function setTopResults($val){$this->topResults = $val;}
+
+
 
 	public function __toString(){
 		return "QueryID: ".$this->queryID." | Query: ".$this->query." | Source: ".$this->source." | Url: ".$this->url . " | Title: " . $this->title . " | Top Results: " . $this->topResults;
